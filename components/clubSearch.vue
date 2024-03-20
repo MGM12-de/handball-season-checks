@@ -9,7 +9,7 @@
       </UButton>
     </UForm>
 
-    <UTable :rows="clubs" :loading="loading" />
+    <UTable :rows="clubs" :loading="loading" @select="onRowSelected" />
   </div>
 </template>
 
@@ -23,11 +23,20 @@ var loading = ref(false)
 
 const onSearch = async (event: FormSubmitEvent<any>) => {
   loading.value = true
-  const { data, pending, error, refresh } = useFetch("/api/dhb/searchClub", {
-    query: { clubName: state.clubName }
-  })
+  const { data, pending, error, refresh } = useAsyncData(`${state.clubName}`
+    , () => $fetch("/api/dhb/searchClub", {
+      query: { clubName: state.clubName }
+    }))
   clubs = data
   loading.value = false
+}
+
+const onRowSelected = (row) => {
+  navigateTo({
+    path: '/club/details/', query: {
+      id: row.id,
+    }
+  })
 }
 
 </script>
