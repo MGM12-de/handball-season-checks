@@ -32,11 +32,7 @@ const onSearch = async (event: FormSubmitEvent<any>) => {
 }
 
 const onRowSelected = (row) => {
-  navigateTo({
-    path: '/club/details/', query: {
-      id: row.id,
-    }
-  })
+  navigateTo(`/club/details/${row.id}`)
 }
 
 </script>

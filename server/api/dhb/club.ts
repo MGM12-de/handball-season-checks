@@ -12,5 +12,13 @@ export default defineEventHandler(async (event) => {
   }
   const club = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/${query.id}`)
 
+  if (club.data.logo) {
+    club.data.logo = club.data.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+  }
+
+  if (club.data.organization.logo) {
+    club.data.organization.logo = club.data.organization.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+  }
+
   return club.data
 })

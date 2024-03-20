@@ -1,8 +1,16 @@
 <template>
   <div>
     <UPage>
-      <UPageHeader headline="Handball" title="Club Details" />
+      <UPageHeader headline="Club details" :title="club.name" />
       <UPageBody>
+        <ULandingCard :title="club.acronym" :description="club.organization.name">
+          <!-- <NuxtImg :src="club.logo" width="200" height="100" /> -->
+          <UAvatarGroup size="2xl">
+            <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
+            <UAvatar :src="club.logo" :alt="club.acronym" />
+          </UAvatarGroup>
+        </ULandingCard>
+        <br /> <br />
         <p> {{ club }}</p>
       </UPageBody>
     </UPage>
@@ -11,7 +19,16 @@
 
 <script lang="ts" setup>
 const route = useRoute()
-let club = ref()
+let club = ref({
+  name: "",
+  logo: "",
+  acronym: "",
+  organization: {
+    name: "",
+    logo: "",
+    acronym: ""
+  }
+})
 
 const { data, pending, error, refresh } = await useAsyncData(
   `${route.params.id}`,
