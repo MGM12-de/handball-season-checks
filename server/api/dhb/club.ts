@@ -14,10 +14,14 @@ export default defineEventHandler(async (event) => {
 
   if (club.data.logo) {
     club.data.logo = club.data.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+
   }
 
   if (club.data.organization.logo) {
     club.data.organization.logo = club.data.organization.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+    if (club.data.organization.logo.startsWith('/')) {
+      club.data.organization.logo = 'https://handball.net' + club.data.organization.logo;
+    }
   }
 
   return club.data
