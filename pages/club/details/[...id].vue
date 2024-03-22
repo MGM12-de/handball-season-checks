@@ -26,7 +26,7 @@ let club = ref({
 })
 
 const { data, pending, error, refresh } = await useAsyncData(
-  `${route.params.id}`,
+  `club/${route.params.id}`,
   () => $fetch("/api/dhb/club", {
     query: { id: route.params.id }
   })
