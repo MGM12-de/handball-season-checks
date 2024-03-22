@@ -4,6 +4,8 @@
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
         <TeamStanding />
+        <br />
+        <TeamGames />
       </UPageBody>
     </UPage>
 
