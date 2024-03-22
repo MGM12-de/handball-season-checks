@@ -8,11 +8,15 @@
 import type { Team } from '~/types';
 
 const route = useRoute()
+
 const columns = [{
   key: "name",
   label: "Name"
 }, {
   key: "defaultTournament.name",
+  label: "Liga"
+}, {
+  key: "defaultTournament.acronym",
   label: "Liga"
 }]
 
@@ -28,6 +32,7 @@ const { data: teams, pending: teamsPending, error: teamsError, refresh: teamsRef
 const onRowSelected = (row: Team) => {
   navigateTo(`/team/details/${row.id}`)
 }
+
 </script>
 
 <style></style>
