@@ -8,7 +8,8 @@
 const route = useRoute()
 let games = ref()
 
-const columns = [{ key: 'homeTeam.name', label: 'Home Team' },
+const columns = [{ key: 'startsAt', label: 'Date' },
+{ key: 'homeTeam.name', label: 'Home Team' },
 { key: 'awayTeam.name', label: 'Away Team' },
 { key: 'field.name', label: 'Location' },
 { key: 'remarks', label: 'Remarks' }]

@@ -9,5 +9,11 @@ export default defineEventHandler(async (event) => {
   }
   const teamApi = await $fetch(`https://www.handball.net/a/sportdata/1/teams/${query.id}/schedule`)
 
+  teamApi.data.forEach(element => {
+    if (!element.startsAt)
+      return
+    element.startsAt = new Date(element.startsAt)
+  });
+
   return teamApi.data
 })
