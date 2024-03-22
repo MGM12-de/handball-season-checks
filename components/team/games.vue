@@ -12,7 +12,8 @@ const columns = [{ key: 'startsAt', label: 'Date' },
 { key: 'homeTeam.name', label: 'Home Team' },
 { key: 'awayTeam.name', label: 'Away Team' },
 { key: 'field.name', label: 'Location' },
-{ key: 'remarks', label: 'Remarks' }]
+{ key: 'remarks', label: 'Remarks' },
+{ key: 'result', label: 'Result' }]
 
 const { data, pending, error, refresh } = await useAsyncData(
   `team/${route.params.id}/games`,
