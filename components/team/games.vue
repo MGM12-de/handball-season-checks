@@ -9,9 +9,9 @@ const route = useRoute()
 let games = ref()
 
 const columns = [{ key: 'startsAt', label: 'Date' },
+{ key: 'field.name', label: 'Location' },
 { key: 'homeTeam.name', label: 'Home Team' },
 { key: 'awayTeam.name', label: 'Away Team' },
-{ key: 'field.name', label: 'Location' },
 { key: 'remarks', label: 'Remarks' },
 { key: 'result', label: 'Result' }]
 

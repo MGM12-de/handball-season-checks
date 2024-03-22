@@ -3,6 +3,8 @@
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
+        <TeamPrognose />
+        <br />
         <TeamStanding />
         <br />
         <TeamGames />
