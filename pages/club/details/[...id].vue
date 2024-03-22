@@ -11,7 +11,8 @@
           </UAvatarGroup>
         </ULandingCard>
         <br /> <br />
-        <p> {{ club }}</p>
+
+        <TeamTable />
       </UPageBody>
     </UPage>
   </div>
