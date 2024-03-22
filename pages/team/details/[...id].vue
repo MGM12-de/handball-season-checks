@@ -2,6 +2,9 @@
   <div>
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
+      <UPageBody>
+        <TeamStanding />
+      </UPageBody>
     </UPage>
 
   </div>
