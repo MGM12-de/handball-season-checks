@@ -1,14 +1,12 @@
 <template>
   <div>
-    <UPage>
-      <UPageHeader headline="Club details" :title="club.name" />
-      <UPageBody>
-        <ClubHeader />
-        <br /> <br />
-
-        <TeamTable />
-      </UPageBody>
-    </UPage>
+    <ULandingCard :title="club.acronym" :description="club.organization.name">
+      <!-- <NuxtImg :src="club.logo" width="200" height="100" /> -->
+      <UAvatarGroup size="2xl">
+        <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
+        <UAvatar :src="club.logo" :alt="club.acronym" />
+      </UAvatarGroup>
+    </ULandingCard>
   </div>
 </template>
 
@@ -32,7 +30,6 @@ const { data, pending, error, refresh } = await useAsyncData(
   })
 )
 club = data
-
 </script>
 
 <style></style>
