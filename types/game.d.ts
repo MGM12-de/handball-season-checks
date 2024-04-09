@@ -11,5 +11,6 @@ export interface Game {
     result?: string,
     homeGoals?: number,
     awayGoals?: number,
+    goalDifference?: number,
     remarks?: string
 }

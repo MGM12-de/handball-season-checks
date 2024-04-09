@@ -18,10 +18,10 @@
           </template>
 
           <template #games>
-            <TeamGames :teamId="team.id" />
+            <TeamGames :games="games || []" :games-pending="gamesPending" />
           </template>
           <template #stats>
-            <TeamPrognose :teamId="team.id" />
+            <TeamPrognose :teamId="team.id" :games="games || []" :games-pending="gamesPending" />
           </template>
         </UTabs>
       </UPageBody>
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Team } from '~/types';
 const route = useRoute()
 let team = ref()
 
@@ -55,6 +56,13 @@ const { data, pending, error, refresh } = await useAsyncData(
   })
 )
 team = data
+
+const { data: games, pending: gamesPending } = await useAsyncData(
+  `team/${route.params.id}/games`,
+  () => $fetch("/api/dhb/team/games", {
+    query: { id: route.params.id }
+  })
+)
 </script>
 
 <style></style>

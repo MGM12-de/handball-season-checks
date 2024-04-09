@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
+
   const teamApi = await $fetch(`https://www.handball.net/a/sportdata/1/teams/${query.id}/schedule`)
 
   teamApi.data.forEach(element => {
@@ -42,6 +43,7 @@ export default defineEventHandler(async (event) => {
       result: element.result,
       homeGoals: element.homeGoals,
       awayGoals: element.awayGoals,
+      goalDifference: element.homeGoals - element.awayGoals,
       remarks: element.remarks,
       field: {
         id: element.field.id,
@@ -49,6 +51,5 @@ export default defineEventHandler(async (event) => {
       }
     })
   });
-
   return games
 })
