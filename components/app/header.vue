@@ -7,7 +7,7 @@
     <template #right>
       <UColorModeButton />
 
-      <UButton to="https://github.com/miggi92/handball-season-checks" target="_blank" icon="i-simple-icons-github"
+      <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
         color="gray" variant="ghost" />
     </template>
 
