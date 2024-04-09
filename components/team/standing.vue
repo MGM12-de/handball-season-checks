@@ -5,8 +5,14 @@
 </template>
 
 <script lang="ts" setup>
-const route = useRoute()
 let standing = ref()
+const props = defineProps({
+  teamId: {
+    type: String,
+    required: true
+  }
+})
+const { teamId } = props;
 
 const columns = [{ key: 'rank', label: 'Rank' },
 { key: 'team.name', label: 'Team' },
@@ -20,9 +26,9 @@ const columns = [{ key: 'rank', label: 'Rank' },
 { key: 'goalDifference', label: 'Goal Difference' }]
 
 const { data, pending, error, refresh } = await useAsyncData(
-  `team/${route.params.id}/standing`,
+  `team/${teamId}/standing`,
   () => $fetch("/api/dhb/team/standing", {
-    query: { id: route.params.id }
+    query: { id: teamId }
   })
 )
 standing = data

@@ -6,8 +6,13 @@
 
 <script lang="ts" setup>
 import type { Team } from '~/types';
-
-const route = useRoute()
+const props = defineProps({
+  teamId: {
+    type: String,
+    required: true
+  }
+})
+const { teamId } = props;
 
 const columns = [{
   key: "name",
@@ -21,9 +26,9 @@ const columns = [{
 }]
 
 const { data: teams, pending: teamsPending, error: teamsError, refresh: teamsRefresh } = await useAsyncData(
-  `${route.params.id}/teams`,
+  `${teamId}/teams`,
   () => $fetch("/api/dhb/teams", {
-    query: { id: route.params.id }
+    query: { id: teamId }
   })
 ) as unknown as { data: Team[], pending: boolean, error: any, refresh: Function }
 

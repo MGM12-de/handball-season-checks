@@ -3,11 +3,11 @@
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
-        <TeamPrognose />
+        <TeamPrognose :teamId="team.id" />
         <br />
-        <TeamStanding />
+        <TeamStanding :teamId="team.id" />
         <br />
-        <TeamGames />
+        <TeamGames :teamId="team.id" />
       </UPageBody>
     </UPage>
 

@@ -3,7 +3,7 @@
     <UPage>
       <UPageHeader headline="Club details" :title="club.name" />
       <UPageBody>
-        <ClubHeader />
+        <ClubHeader :club="club" />
         <br /> <br />
 
         <TeamTable />

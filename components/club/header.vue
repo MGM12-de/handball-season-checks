@@ -11,25 +11,14 @@
 </template>
 
 <script lang="ts" setup>
-const route = useRoute()
-let club = ref({
-  name: "",
-  logo: "",
-  acronym: "",
-  organization: {
-    name: "",
-    logo: "",
-    acronym: ""
+
+const props = defineProps({
+  club: {
+    type: Object,
+    required: true
   }
 })
-
-const { data, pending, error, refresh } = await useAsyncData(
-  `${route.params.id}`,
-  () => $fetch("/api/dhb/club", {
-    query: { id: route.params.id }
-  })
-)
-club = data
+const { club } = props;
 </script>
 
 <style></style>

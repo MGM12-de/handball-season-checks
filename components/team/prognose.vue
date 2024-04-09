@@ -12,14 +12,19 @@
 
 <script lang="ts" setup>
 const rankIfWinning = ref('')
-
-const route = useRoute()
+const props = defineProps({
+  teamId: {
+    type: String,
+    required: true
+  }
+})
+const { teamId } = props;
 let games = ref()
 
 const { data, pending, error, refresh } = await useAsyncData(
-  `team/${route.params.id}/games`,
+  `team/${teamId}/games`,
   () => $fetch("/api/dhb/team/games", {
-    query: { id: route.params.id }
+    query: { id: teamId }
   })
 )
 games = data
