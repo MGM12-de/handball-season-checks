@@ -3,11 +3,27 @@
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
-        <TeamPrognose :teamId="team.id" />
-        <br />
-        <TeamStanding :teamId="team.id" />
-        <br />
-        <TeamGames :teamId="team.id" />
+        <UTabs :items="items" class="w-full">
+          <template #default="{ item, index, selected }">
+            <div class="flex items-center gap-2 relative truncate">
+              <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
+
+              <span class="truncate">{{ item.label }}</span>
+
+              <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+            </div>
+          </template>
+          <template #standing>
+            <TeamStanding :teamId="team.id" />
+          </template>
+
+          <template #games>
+            <TeamGames :teamId="team.id" />
+          </template>
+          <template #stats>
+            <TeamPrognose :teamId="team.id" />
+          </template>
+        </UTabs>
       </UPageBody>
     </UPage>
 
@@ -17,6 +33,20 @@
 <script lang="ts" setup>
 const route = useRoute()
 let team = ref()
+
+const items = [{
+  slot: 'standing',
+  label: 'Standing',
+  icon: 'i-mdi-trophy'
+}, {
+  slot: 'games',
+  label: 'Games',
+  icon: 'i-mdi-controller'
+}, {
+  slot: 'stats',
+  label: 'Statistics',
+  icon: 'i-mdi-chart-bar'
+}]
 
 const { data, pending, error, refresh } = await useAsyncData(
   `team/${route.params.id}`,
