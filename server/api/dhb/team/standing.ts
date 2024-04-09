@@ -8,6 +8,10 @@ export default defineEventHandler(async (event) => {
     })
   }
   const teamApi = await $fetch(`https://www.handball.net/a/sportdata/1/teams/${query.id}/table`)
+  var standings = teamApi.data.rows
 
-  return teamApi.data.rows
+  var currentTeam = standings.find((obj) => obj.team.id === query.id)
+  currentTeam.class = 'bg-primary-500/50 dark:primary-400/50 animate-pulse'
+
+  return standings
 })
