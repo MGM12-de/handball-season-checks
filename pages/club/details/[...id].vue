@@ -6,7 +6,7 @@
         <ClubHeader :club="club" />
         <br /> <br />
 
-        <TeamTable />
+        <TeamTable :clubId="club.id" />
       </UPageBody>
     </UPage>
   </div>
@@ -15,6 +15,7 @@
 <script lang="ts" setup>
 const route = useRoute()
 let club = ref({
+  id: "",
   name: "",
   logo: "",
   acronym: "",
