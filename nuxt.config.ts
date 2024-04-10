@@ -6,4 +6,5 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
+  target: "static"
 })
