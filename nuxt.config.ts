@@ -6,11 +6,4 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
-  nitro: {
-  prerender: {
-    crawlLinks: true,
-    routes: ['/'],
-    ignore: ["/api"]
-  }
-},
 })
