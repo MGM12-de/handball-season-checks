@@ -2,6 +2,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.clubName) {
+    return
     throw createError({
       statusCode: 400,
       statusMessage: 'Expected a clubname but got none',
