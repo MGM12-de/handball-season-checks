@@ -5,5 +5,8 @@ export default defineNuxtConfig({
   modules: ['@nuxt/content', '@nuxt/ui', "@nuxt/image"],
   ui: {
     icons: ['mdi', 'simple-icons']
-  }
+  },
+   routeRules: {
+    '/api/**': { prerender: true },
+   }
 })
