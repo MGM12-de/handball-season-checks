@@ -6,10 +6,11 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
-  routeRules: {
-    // Generated at build time for SEO purpose
-    '/': { prerender: true },
-    // Cached for 1 hour
-    '/api/*': { cache: { maxAge: 60 * 60 } }
+  nitro: {
+  prerender: {
+    crawlLinks: true,
+    routes: ['/'],
+    ignore: ["/api"]
   }
+},
 })
