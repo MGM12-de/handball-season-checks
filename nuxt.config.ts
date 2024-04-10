@@ -6,7 +6,4 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
-  routes: {
-    '/api/dhb/*': {ssr: false }
-  }
 })
