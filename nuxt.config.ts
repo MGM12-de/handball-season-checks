@@ -6,4 +6,7 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
+  routeRules: {
+    '/api/dhb/searchClub': { prerender: true}
+  }
 })
