@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ui: {
     icons: ['mdi', 'simple-icons']
   },
-   routeRules: {
-    '/api/**': { prerender: true },
-   }
+  serverMiddleware: {
+    '/api': '~/api'
+  }
 })
