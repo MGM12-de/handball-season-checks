@@ -1,13 +1,19 @@
-<template>
-  <div>
-    
-  </div>
-</template>
-
-<script lang="ts" setup>
-
+<script setup lang="ts">
+const links = [{
+  label: 'MGM12.dev',
+  to: 'https://mgm12.dev'
+}]
 </script>
 
-<style>
+<template>
+  <UFooter :links="links">
+    <template #left>
+      Copyright © 2024 - {{ new Date().getFullYear() }}
+    </template>
 
-</style>
+    <template #right>
+      <UButton icon="i-simple-icons-github" color="gray" variant="ghost" to="https://github.com/MGM12-de"
+        target="_blank" />
+    </template>
+  </UFooter>
+</template>
