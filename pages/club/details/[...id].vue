@@ -35,7 +35,8 @@ const { data, pending, error, refresh } = await useAsyncData(
 club = data
 
 useSeoMeta({
-  title: club.value.name
+  title: club.value.name,
+  ogImageUrl: club.value.logo
 })
 
 </script>
