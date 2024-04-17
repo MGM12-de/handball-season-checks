@@ -57,6 +57,11 @@ const { data, pending, error, refresh } = await useAsyncData(
 )
 team = data
 
+useSeoMeta({
+  title: `${team.value.defaultTournament.acronym} - ${team.value.name}`,
+  description: team.value.defaultTournament.name
+})
+
 const { data: games, pending: gamesPending } = await useAsyncData(
   `team/${route.params.id}/games`,
   () => $fetch("/api/dhb/team/games", {

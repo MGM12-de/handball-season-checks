@@ -34,6 +34,10 @@ const { data, pending, error, refresh } = await useAsyncData(
 )
 club = data
 
+useSeoMeta({
+  title: club.value.name
+})
+
 </script>
 
 <style></style>
