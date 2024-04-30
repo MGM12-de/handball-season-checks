@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   extends: ['@nuxt/ui-pro'],
-  modules: ["@scalar/nuxt", '@nuxt/content', '@nuxt/ui', "@nuxt/image"],
+  modules: ['@nuxt/content', '@nuxt/ui', "@nuxt/image"],
   app: {
     head: {
       charset: 'utf-8',
