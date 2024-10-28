@@ -9,7 +9,16 @@
       </UButton>
     </UForm>
 
-    <UTable :rows="clubs" :loading="loading" @select="onRowSelected" />
+    <UTable :rows="clubs" :columns="columns" :loading="loading" @select="onRowSelected">
+      <template #logo-data="{row}">
+        <UAvatar :src="row.logo" :alt="row.acronym" /> 
+      </template>
+
+      <template #organization-data="{row}">
+        <UAvatar :src="row.organization.logo" :alt="row.organization.name" /> 
+        <span>{{ row.organization.name }}</span>
+      </template>
+    </UTable>
   </div>
 </template>
 
@@ -20,6 +29,19 @@ const state = reactive({
 })
 var clubs = ref([])
 var loading = ref(false)
+
+const columns = [{
+  key: "logo",
+  label: "Logo"},{
+  key: "name",
+  label: "Name"
+}, {
+  key: "acronym",
+  label: "Acronym"
+},{
+  key: "organization",
+  label: "Organization"
+}]
 
 const onSearch = async (event: FormSubmitEvent<any>) => {
   loading.value = true
