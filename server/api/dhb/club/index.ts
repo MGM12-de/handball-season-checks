@@ -1,3 +1,6 @@
+/**
+ * Get Club data
+ */
 export default defineEventHandler(async (event) => {
 
 

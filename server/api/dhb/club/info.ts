@@ -1,3 +1,6 @@
+/**
+ * Get club info
+ */
 export default defineEventHandler(async (event) => {
 
   //https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/info
