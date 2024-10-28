@@ -4,6 +4,7 @@
     },
     "editor.quickSuggestions": {
         "strings": true
-    }
+    },
+    "nuxtr.defaultPackageManager": "pnpm"
   }
   
