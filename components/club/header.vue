@@ -6,13 +6,19 @@
         <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
         <UAvatar :src="club.logo" :alt="club.acronym" />
       </UAvatarGroup>
+      <div v-if="club.hasMemberClubs">
+        <h2>Stammvereine</h2>
+        <div v-for="member in memberClubs">
+          <span>{{ member.name }}</span>
+        </div>
+      </div>
       <ClubInfo :club="club" />
     </ULandingCard>
   </div>
 </template>
 
 <script lang="ts" setup>
-
+let memberClubs = reactive([])
 const props = defineProps({
   club: {
     type: Object,
@@ -20,6 +26,19 @@ const props = defineProps({
   }
 })
 const { club } = props;
+
+if(club.hasMemberClubs){
+  useAsyncData(
+  `club/${club.id}/memberClubs`,
+  () => $fetch("/api/dhb/club/memberClubs", {
+    query: { id: club.id }
+  })
+).then(
+  (response) => {
+    memberClubs = response.data
+  }
+)
+}
 </script>
 
 <style></style>
