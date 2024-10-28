@@ -14,6 +14,9 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       "vue.volar"
+      "Nuxt.mdc"
+      "Nuxtr.nuxt-vscode-extentions"
+      "Nuxtr.nuxtr-vscode"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
