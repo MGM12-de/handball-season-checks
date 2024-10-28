@@ -1,50 +1,37 @@
 # To learn more about how to use Nix to configure your environment
 # see: https://developers.google.com/idx/guides/customize-idx-env
-{ pkgs, ... }: {
+{pkgs}: {
   # Which nixpkgs channel to use.
-  channel = "stable-23.11"; # or "unstable"
-
+  channel = "stable-23.05"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.corepack_latest
+    pkgs.nodejs_20
+    pkgs.nodePackages.pnpm
   ];
-
   # Sets environment variables in the workspace
   env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      # "vscodevim.vim"
+      "vue.volar"
     ];
-
-    # Enable previews
+    workspace = {
+      # Runs when a workspace is first created with this `dev.nix` file
+      onCreate = {
+        pnpm-install = "pnpm install";
+        # Open editors for the following files by default, if they exist:
+        default.openFiles = [ "app.vue" ];
+      };
+      # To run something each time the workspace is (re)started, use the `onStart` hook
+    };
+    # Enable previews and customize configuration
     previews = {
       enable = true;
       previews = {
         web = {
-          # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-          # and show it in IDX's web preview panel
-          command = ["pnpm" "run" "dev"];
+          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
-          env = {
-            # Environment variables to set for your server
-            PORT = "$PORT";
-          };
         };
-      };
-    };
-
-    # Workspace lifecycle hooks
-    workspace = {
-      # Runs when a workspace is first created
-      onCreate = {
-        # Example: install JS dependencies from NPM
-        pnpm-install = "pnpm install -y";
-      };
-      # Runs when the workspace is (re)started
-      onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
       };
     };
   };
