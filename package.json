@@ -18,15 +18,14 @@
     "@nuxt/image": "^1.8.1",
     "@nuxt/ui": "^2.18.7",
     "@nuxt/ui-pro": "^1.4.4",
-    "@scalar/nuxt": "^0.2.128",
+    "@scalar/nuxt": "^0.2.131",
     "nuxt": "^3.13.2",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
-    "@unocss/eslint-plugin": "^0.62.4",
-    "eslint": "^9.12.0",
+    "eslint": "^9.13.0",
     "eslint-plugin-format": "^0.1.2"
   }
 }
