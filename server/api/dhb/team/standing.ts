@@ -1,3 +1,5 @@
+import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -7,7 +9,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const teamApi = await $fetch(`https://www.handball.net/a/sportdata/1/teams/${query.id}/table`)
+  const teamApi = await $fetch(`${getDHBBaseUrl()}/teams/${query.id}/table`)
   var standings = teamApi.data.rows
 
   var currentTeam = standings.find((obj) => obj.team.id === query.id)

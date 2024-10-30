@@ -1,3 +1,5 @@
+import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
+
 /**
  * Get club info
  */
@@ -12,7 +14,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const clubInfo = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/${query.id}/info`)
+  const clubInfo = await $fetch(`${getDHBBaseUrl()}/clubs/${query.id}/info`)
 
   return clubInfo.data
 })

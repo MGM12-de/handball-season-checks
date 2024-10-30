@@ -1,4 +1,4 @@
-import { normalizeDHBUrl } from "~/server/utils/dhbUtils";
+import { getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils";
 
 /**
  * Get Club data
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   try {
-    const club = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/${query.id}`);
+    const club = await $fetch(`${getDHBBaseUrl()}/clubs/${query.id}`);
 
     if (club.data.logo) {
       club.data.logo = normalizeDHBUrl(club.data.logo);

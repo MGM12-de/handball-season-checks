@@ -1,4 +1,4 @@
-import { normalizeDHBUrl } from "~/server/utils/dhbUtils"
+import { getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils"
 
 /**
  * Search for club
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Expected a clubname but got none',
     })
   }
-  const clubs = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/search?query=${query.clubName}`)
+  const clubs = await $fetch(`${getDHBBaseUrl()}/clubs/search?query=${query.clubName}`)
   
   clubs.data.forEach((club) => {
     if (club.logo) {

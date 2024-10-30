@@ -1,3 +1,4 @@
+import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
 import { Team } from "~/types"
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const teamApi = await $fetch(`https://www.handball.net/a/sportdata/1/teams/${query.id}`)
+  const teamApi = await $fetch(`${getDHBBaseUrl()}/teams/${query.id}`)
 
   return teamApi.data
 })

@@ -22,3 +22,13 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D> (
       return url.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
                  .replace(/^\//, 'https://handball.net/'); 
     };
+
+    /**
+     * Get base url of the DHB API
+     * @returns DHB base url
+     */
+    export const getDHBBaseUrl = () => {
+      return 'https://www.handball.net/a/sportdata/1';
+    };
+    
+
