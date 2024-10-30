@@ -17,6 +17,10 @@
       "Nuxt.mdc"
       "Nuxtr.nuxt-vscode-extentions"
       "Nuxtr.nuxtr-vscode"
+      "bradlc.vscode-tailwindcss"
+      "dbaeumer.vscode-eslint"
+      "eamodio.gitlens"
+      "vivaxy.vscode-conventional-commits"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
