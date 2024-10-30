@@ -1,4 +1,4 @@
-import { normalizeDHBUrl } from "~/server/utils/normalizeDHBUrl";
+import { normalizeDHBUrl } from "~/server/utils/dhbUtils";
 
 /**
  * Get Club data
