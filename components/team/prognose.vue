@@ -41,8 +41,11 @@ const items = [{
 }]
 
 const stats = ref({
-  highestHomeWin: {},
-  highestAwayWin: {},
+  highestHomeWin: { name: '', goalDifference: 0 },
+  highestAwayWin: {
+    name: '',
+    goalDifference: 0,
+  },
   homeWins: 0,
   homeGames: 0,
   homeGoalsShot: 0,
@@ -56,6 +59,7 @@ const stats = ref({
 const { teamId, games } = props
 
 games.forEach((element) => {
+  console.log(element)
   if (element.homeTeam.id === teamId && element.result) {
     stats.value.homeGames++
     stats.value.homeGoalsShot += element.homeGoals
@@ -75,11 +79,11 @@ games.forEach((element) => {
     }
   }
 
-  if (stats.value.highestHomeWin) {
+  if (stats.value.highestHomeWin?.awayTeam) {
     state.highestHomeWin = `${stats.value.highestHomeWin.awayTeam.name} (${stats.value.highestHomeWin.result})`
   }
 
-  if (stats.value.highestHomeLoose) {
+  if (stats.value.highestHomeLoose?.awayTeam) {
     state.highestHomeLoose = `${stats.value.highestHomeLoose.awayTeam.name} (${stats.value.highestHomeLoose.result})`
   }
 
@@ -102,11 +106,11 @@ games.forEach((element) => {
     }
   }
 
-  if (stats.value.highestAwayWin) {
+  if (stats.value.highestAwayWin?.homeTeam) {
     state.highestAwayWin = `${stats.value.highestAwayWin.homeTeam.name} (${stats.value.highestAwayWin.result})`
   }
 
-  if (stats.value.highestAwayLoose) {
+  if (stats.value.highestAwayLoose?.homeTeam) {
     state.highestAwayLoose = `${stats.value.highestAwayLoose.homeTeam.name} (${stats.value.highestAwayLoose.result})`
   }
 
