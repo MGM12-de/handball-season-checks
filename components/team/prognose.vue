@@ -59,7 +59,6 @@ const stats = ref({
 const { teamId, games } = props
 
 games.forEach((element) => {
-  console.log(element)
   if (element.homeTeam.id === teamId && element.result) {
     stats.value.homeGames++
     stats.value.homeGoalsShot += element.homeGoals
