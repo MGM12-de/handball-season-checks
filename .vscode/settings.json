@@ -5,6 +5,8 @@
     "editor.quickSuggestions": {
         "strings": true
     },
-    "nuxtr.defaultPackageManager": "pnpm"
+    "nuxtr.defaultPackageManager": "pnpm",
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
   }
   
