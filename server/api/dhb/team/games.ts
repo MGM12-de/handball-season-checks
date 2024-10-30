@@ -1,4 +1,4 @@
-import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
+import { getDHBBaseUrl, getTeamUrl } from "~/server/utils/dhbUtils"
 import { Game } from "~/types"
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +13,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const teamApi = await $fetch(`${getDHBBaseUrl()}/teams/${query.id}/schedule`)
+  const teamId = query.id as string
+  const teamApi = await $fetch(`${getTeamUrl(teamId)}/schedule`)
 
   teamApi.data.forEach(element => {
     if (element.startsAt)

@@ -1,4 +1,4 @@
-import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
+import { getClubUrl, getDHBBaseUrl } from "~/server/utils/dhbUtils"
 import { Team } from "~/types"
 
 export default defineEventHandler(async (event) => {
@@ -14,7 +14,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const teamsApi = await $fetch(`${getDHBBaseUrl()}/clubs/${query.id}/teams`)
+  const clubId = query.id as string;
+  const teamsApi = await $fetch(`${getClubUrl(clubId)}/teams`)
 
   teamsApi.data.forEach(element => {
     teams.push({

@@ -1,4 +1,4 @@
-import { getDHBBaseUrl } from "~/server/utils/dhbUtils"
+import { getClubUrl, getDHBBaseUrl } from "~/server/utils/dhbUtils"
 
 /**
  * Get club info
@@ -14,7 +14,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const clubInfo = await $fetch(`${getDHBBaseUrl()}/clubs/${query.id}/info`)
+  const clubId = query.id as string
+  const clubInfo = await $fetch(`${getClubUrl(clubId)}/info`)
 
   return clubInfo.data
 })

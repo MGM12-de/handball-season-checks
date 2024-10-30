@@ -30,5 +30,39 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D> (
     export const getDHBBaseUrl = () => {
       return 'https://www.handball.net/a/sportdata/1';
     };
+
+    /**
+     * Get Url for clubs
+     * @returns clubs url
+     */
+    export const getClubsUrl = () => {
+      return `${getDHBBaseUrl()}/clubs`;
+    }
+
+    /**
+     * Get url for specific club
+     * @param clubId Club id
+     * @returns Club url
+     */
+    export const getClubUrl = (clubId: string) => {
+      return `${getClubsUrl()}/${clubId}`;
+    }
+
+    /**
+     * Get url for teams
+     * @returns Teams url
+     */
+    export const getTeamsUrl = () => {
+      return `${getDHBBaseUrl()}/teams`;
+    }
+
+    /**
+     * Get url for specific team
+     * @param teamId Team id
+     * @returns Team url
+     */
+    export const getTeamUrl = (teamId: string) => {
+      return `${getTeamsUrl()}/${teamId}`;
+    }
     
 

@@ -1,4 +1,4 @@
-import { getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils";
+import { getClubUrl, getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils";
 
 /**
  * Get Club data
@@ -23,11 +23,9 @@ import { getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils";
  *         description: The club data
  */
 export default defineEventHandler(async (event) => {
-
-
   //https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36
   const query = getQuery(event)
-
+  
   if (!query.id) {
     throw createError({
       statusCode: 400,
@@ -35,7 +33,8 @@ export default defineEventHandler(async (event) => {
     })
   }
   try {
-    const club = await $fetch(`${getDHBBaseUrl()}/clubs/${query.id}`);
+    const clubId = query.id as string
+    const club = await $fetch(getClubUrl(clubId));
 
     if (club.data.logo) {
       club.data.logo = normalizeDHBUrl(club.data.logo);
