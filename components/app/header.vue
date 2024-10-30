@@ -1,22 +1,3 @@
-<template>
-  <UHeader :links="links">
-    <template #logo>
-      <AppLogo class="w-auto h-6" />
-    </template>
-
-    <template #right>
-      <UColorModeButton />
-
-      <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
-        color="gray" variant="ghost" />
-    </template>
-
-    <template #panel>
-      <UNavigationTree :links="mapContentNavigation(navigation)" />
-    </template>
-  </UHeader>
-</template>
-
 <script setup lang="ts">
 import type { NavItem } from '@nuxt/content/dist/runtime/types'
 
@@ -35,7 +16,27 @@ const links = []
 //   icon: 'i-heroicons-rocket-launch',
 //   to: '/releases'
 // }]
-
 </script>
+
+<template>
+  <UHeader :links="links">
+    <template #logo>
+      <AppLogo class="w-auto h-6" />
+    </template>
+
+    <template #right>
+      <UColorModeButton />
+
+      <UButton
+        to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
+        color="gray" variant="ghost"
+      />
+    </template>
+
+    <template #panel>
+      <UNavigationTree :links="mapContentNavigation(navigation)" />
+    </template>
+  </UHeader>
+</template>
 
 <style></style>

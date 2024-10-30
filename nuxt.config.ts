@@ -6,14 +6,14 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/content',
     '@nuxt/ui',
-    "@nuxt/image",
+    '@nuxt/image',
     '@scalar/nuxt',
   ],
   app: {
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-    }
+    },
   },
   nitro: {
     experimental: {

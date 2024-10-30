@@ -1,5 +1,5 @@
-import { getDHBBaseUrl, getTeamUrl } from "~/server/utils/dhbUtils"
-import { Game } from "~/types"
+import { getTeamUrl } from '~/server/utils/dhbUtils'
+import type { Game } from '~/types'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const teamId = query.id as string
   const teamApi = await $fetch(`${getTeamUrl(teamId)}/schedule`)
 
-  teamApi.data.forEach(element => {
+  teamApi.data.forEach((element) => {
     if (element.startsAt)
       element.startsAt = new Date(element.startsAt)
     if (element.homeGoals) {
@@ -30,17 +30,17 @@ export default defineEventHandler(async (event) => {
         id: element.homeTeam.id,
         teamGroupId: element.homeTeam.teamGroupId,
         name: element.homeTeam.name,
-        acronym: element.homeTeam.acronym
+        acronym: element.homeTeam.acronym,
       },
       awayTeam: {
         id: element.awayTeam.id,
         teamGroupId: element.awayTeam.teamGroupId,
         name: element.awayTeam.name,
-        acronym: element.awayTeam.acronym
+        acronym: element.awayTeam.acronym,
       },
       tournament: {
         id: element.tournament.id,
-        name: element.tournament.name
+        name: element.tournament.name,
       },
       result: element.result,
       homeGoals: element.homeGoals,
@@ -49,9 +49,9 @@ export default defineEventHandler(async (event) => {
       remarks: element.remarks,
       field: {
         id: element.field.id,
-        name: element.field.name
-      }
+        name: element.field.name,
+      },
     })
-  });
+  })
   return games
 })

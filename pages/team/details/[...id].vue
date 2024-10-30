@@ -1,3 +1,42 @@
+<script lang="ts" setup>
+const route = useRoute()
+const team = ref()
+
+const items = [{
+  slot: 'standing',
+  label: 'Standing',
+  icon: 'i-mdi-trophy',
+}, {
+  slot: 'games',
+  label: 'Games',
+  icon: 'i-mdi-controller',
+}, {
+  slot: 'stats',
+  label: 'Statistics',
+  icon: 'i-mdi-chart-bar',
+}]
+
+const { data, pending, error, refresh } = await useAsyncData(
+  `team/${route.params.id}`,
+  () => $fetch('/api/dhb/team', {
+    query: { id: route.params.id },
+  }),
+)
+team.value = data
+
+useSeoMeta({
+  title: `${team.value.defaultTournament.acronym} - ${team.value.name}`,
+  description: team.value.defaultTournament.name,
+})
+
+const { data: games, pending: gamesPending } = await useAsyncData(
+  `team/${route.params.id}/games`,
+  () => $fetch('/api/dhb/team/games', {
+    query: { id: route.params.id },
+  }),
+)
+</script>
+
 <template>
   <div>
     <UPage>
@@ -14,60 +53,19 @@
             </div>
           </template>
           <template #standing>
-            <TeamStanding :teamId="team.id" />
+            <TeamStanding :team-id="team.id" />
           </template>
 
           <template #games>
             <TeamGames :games="games || []" :games-pending="gamesPending" />
           </template>
           <template #stats>
-            <TeamPrognose :teamId="team.id" :games="games || []" :games-pending="gamesPending" />
+            <TeamPrognose :team-id="team.id" :games="games || []" :games-pending="gamesPending" />
           </template>
         </UTabs>
       </UPageBody>
     </UPage>
-
   </div>
 </template>
-
-<script lang="ts" setup>
-import type { Team } from '~/types';
-const route = useRoute()
-let team = ref()
-
-const items = [{
-  slot: 'standing',
-  label: 'Standing',
-  icon: 'i-mdi-trophy'
-}, {
-  slot: 'games',
-  label: 'Games',
-  icon: 'i-mdi-controller'
-}, {
-  slot: 'stats',
-  label: 'Statistics',
-  icon: 'i-mdi-chart-bar'
-}]
-
-const { data, pending, error, refresh } = await useAsyncData(
-  `team/${route.params.id}`,
-  () => $fetch("/api/dhb/team", {
-    query: { id: route.params.id }
-  })
-)
-team = data
-
-useSeoMeta({
-  title: `${team.value.defaultTournament.acronym} - ${team.value.name}`,
-  description: team.value.defaultTournament.name
-})
-
-const { data: games, pending: gamesPending } = await useAsyncData(
-  `team/${route.params.id}/games`,
-  () => $fetch("/api/dhb/team/games", {
-    query: { id: route.params.id }
-  })
-)
-</script>
 
 <style></style>

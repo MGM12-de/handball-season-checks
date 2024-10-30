@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const links = [{
   label: 'MGM12.dev',
-  to: 'https://mgm12.dev'
+  to: 'https://mgm12.dev',
 }]
 </script>
 
@@ -12,8 +12,10 @@ const links = [{
     </template>
 
     <template #right>
-      <UButton icon="i-simple-icons-github" color="gray" variant="ghost" to="https://github.com/MGM12-de"
-        target="_blank" />
+      <UButton
+        icon="i-simple-icons-github" color="gray" variant="ghost" to="https://github.com/MGM12-de"
+        target="_blank"
+      />
     </template>
   </UFooter>
 </template>

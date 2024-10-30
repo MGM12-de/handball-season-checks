@@ -1,5 +1,5 @@
-import { getClubUrl, getDHBBaseUrl } from "~/server/utils/dhbUtils"
-import { Team } from "~/types"
+import { getClubUrl } from '~/server/utils/dhbUtils'
+import type { Team } from '~/types'
 
 export default defineEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/teams
@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const clubId = query.id as string;
+  const clubId = query.id as string
   const teamsApi = await $fetch(`${getClubUrl(clubId)}/teams`)
 
-  teamsApi.data.forEach(element => {
+  teamsApi.data.forEach((element) => {
     teams.push({
       id: element.id,
       teamGroupId: element.teamGroupId,
@@ -27,10 +27,10 @@ export default defineEventHandler(async (event) => {
         id: element.defaultTournament.id,
         name: element.defaultTournament.name,
         acronym: element.defaultTournament.acronym,
-        logo: element.defaultTournament.logo
-      }
+        logo: element.defaultTournament.logo,
+      },
     })
-  });
+  })
 
   return teams
 })

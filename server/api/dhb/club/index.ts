@@ -1,10 +1,10 @@
-import { getClubUrl, getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUtils";
+import { getClubUrl, normalizeDHBUrl } from '~/server/utils/dhbUtils'
 
 /**
  * Get Club data
  * @param {string} id - The id of the club to get
  * @returns {Club} The club data
- * 
+ *
  * @swagger
  * /api/dhb/club:
  *   get:
@@ -23,9 +23,9 @@ import { getClubUrl, getDHBBaseUrl, normalizeDHBUrl } from "~/server/utils/dhbUt
  *         description: The club data
  */
 export default defineEventHandler(async (event) => {
-  //https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36
+  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36
   const query = getQuery(event)
-  
+
   if (!query.id) {
     throw createError({
       statusCode: 400,
@@ -34,22 +34,23 @@ export default defineEventHandler(async (event) => {
   }
   try {
     const clubId = query.id as string
-    const club = await $fetch(getClubUrl(clubId));
+    const club = await $fetch(getClubUrl(clubId))
 
     if (club.data.logo) {
-      club.data.logo = normalizeDHBUrl(club.data.logo);
+      club.data.logo = normalizeDHBUrl(club.data.logo)
     }
 
     if (club.data.organization.logo) {
-      club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo);
+      club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo)
     }
 
-    return club.data;
-  } catch (error) {
+    return club.data
+  }
+  catch (error) {
     // Handle potential errors from $fetch
     throw createError({
       statusCode: 500,
       statusMessage: 'Error fetching club data',
-    });
+    })
   }
 })

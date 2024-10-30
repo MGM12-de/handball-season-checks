@@ -1,11 +1,10 @@
-import { getClubUrl, getDHBBaseUrl } from "~/server/utils/dhbUtils"
+import { getClubUrl } from '~/server/utils/dhbUtils'
 
 /**
  * Get members clubs
  */
 export default defineEventHandler(async (event) => {
-
-  //https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.1187/member-clubs
+  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.1187/member-clubs
   const query = getQuery(event)
 
   if (!query.id) {

@@ -1,6 +1,6 @@
 export interface Tournament {
-    id: string,
-    name: string,
-    acronym?: string,
-    logo?: string
+  id: string
+  name: string
+  acronym?: string
+  logo?: string
 }

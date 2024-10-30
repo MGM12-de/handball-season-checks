@@ -1,4 +1,4 @@
-import { getTeamUrl } from "~/server/utils/dhbUtils"
+import { getTeamUrl } from '~/server/utils/dhbUtils'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -11,9 +11,9 @@ export default defineEventHandler(async (event) => {
   }
   const teamId = query.id as string
   const teamApi = await $fetch(`${getTeamUrl(teamId)}/table`)
-  var standings = teamApi.data.rows
+  const standings = teamApi.data.rows
 
-  var currentTeam = standings.find((obj) => obj.team.id === query.id)
+  const currentTeam = standings.find(obj => obj.team.id === query.id)
   currentTeam.class = 'bg-primary-500/50 dark:primary-400/50 animate-pulse'
 
   return standings

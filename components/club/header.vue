@@ -1,3 +1,27 @@
+<script lang="ts" setup>
+const props = defineProps({
+  club: {
+    type: Object,
+    required: true,
+  },
+})
+let memberClubs = reactive([])
+const { club } = props
+
+if (club.hasMemberClubs) {
+  useAsyncData(
+    `club/${club.id}/memberClubs`,
+    () => $fetch('/api/dhb/club/memberClubs', {
+      query: { id: club.id },
+    }),
+  ).then(
+    (response) => {
+      memberClubs = response.data
+    },
+  )
+}
+</script>
+
 <template>
   <div>
     <ULandingCard :title="club.acronym" :description="club.organization.name" orientation="horizontal">
@@ -16,29 +40,5 @@
     </ULandingCard>
   </div>
 </template>
-
-<script lang="ts" setup>
-let memberClubs = reactive([])
-const props = defineProps({
-  club: {
-    type: Object,
-    required: true
-  }
-})
-const { club } = props;
-
-if(club.hasMemberClubs){
-  useAsyncData(
-  `club/${club.id}/memberClubs`,
-  () => $fetch("/api/dhb/club/memberClubs", {
-    query: { id: club.id }
-  })
-).then(
-  (response) => {
-    memberClubs = response.data
-  }
-)
-}
-</script>
 
 <style></style>
