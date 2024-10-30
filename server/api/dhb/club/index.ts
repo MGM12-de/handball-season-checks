@@ -1,5 +1,26 @@
+import { normalizeDHBUrl } from "~/server/utils/normalizeDHBUrl";
+
 /**
  * Get Club data
+ * @param {string} id - The id of the club to get
+ * @returns {Club} The club data
+ * 
+ * @swagger
+ * /api/dhb/club:
+ *   get:
+ *     summary: Get Club data
+ *     description: Get Club data
+ *     tags: [Club]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id of the club to get
+ *     responses:
+ *       200:
+ *         description: The club data
  */
 export default defineEventHandler(async (event) => {
 
@@ -13,19 +34,23 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const club = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/${query.id}`)
+  try {
+    const club = await $fetch(`https://www.handball.net/a/sportdata/1/clubs/${query.id}`);
 
-  if (club.data.logo) {
-    club.data.logo = club.data.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
-
-  }
-
-  if (club.data.organization.logo) {
-    club.data.organization.logo = club.data.organization.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
-    if (club.data.organization.logo.startsWith('/')) {
-      club.data.organization.logo = 'https://handball.net' + club.data.organization.logo;
+    if (club.data.logo) {
+      club.data.logo = normalizeDHBUrl(club.data.logo);
     }
-  }
 
-  return club.data
+    if (club.data.organization.logo) {
+      club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo);
+    }
+
+    return club.data;
+  } catch (error) {
+    // Handle potential errors from $fetch
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Error fetching club data',
+    });
+  }
 })

@@ -1,3 +1,5 @@
+import { normalizeDHBUrl } from "~/server/utils/normalizeDHBUrl"
+
 /**
  * Search for club
  * @param {import('node:http').IncomingMessage} event
@@ -17,11 +19,11 @@ export default defineEventHandler(async (event) => {
   
   clubs.data.forEach((club) => {
     if (club.logo) {
-      club.logo = club.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+      club.logo = normalizeDHBUrl(club.logo)
     }
 
     if(club.organization.logo) {
-      club.organization.logo = club.organization.logo.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
+      club.organization.logo = normalizeDHBUrl(club.organization.logo)
     }
 
   })
