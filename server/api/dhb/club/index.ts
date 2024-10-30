@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     // Handle potential errors from $fetch
     throw createError({
       statusCode: 500,
-      statusMessage: 'Error fetching club data',
+      statusMessage: `Error fetching club data. (${error})`,
     })
   }
 })

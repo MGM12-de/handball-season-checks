@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { FormSubmitEvent } from '#ui/types'
-
 const state = reactive({
   clubName: undefined,
 })
@@ -21,7 +19,7 @@ const columns = [{
   label: 'Organization',
 }]
 
-async function onSearch(event: FormSubmitEvent<any>) {
+async function onSearch() {
   loading.value = true
   const { data } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
     query: { clubName: state.clubName },

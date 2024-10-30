@@ -20,12 +20,12 @@ const columns = [{
   label: 'Liga',
 }]
 
-const { data: teams, pending: teamsPending, error: teamsError, refresh: teamsRefresh } = await useAsyncData(
+const { data: teams, pending: teamsPending } = await useAsyncData(
   `${clubId}/teams`,
   () => $fetch('/api/dhb/teams', {
     query: { id: clubId },
   }),
-) as unknown as { data: Team[], pending: boolean, error: any, refresh: Function }
+) as unknown as { data: Team[], pending: boolean, error: any, refresh: () => object }
 
 function onRowSelected(row: Team) {
   navigateTo(`/team/details/${row.id}`)

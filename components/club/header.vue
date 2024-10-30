@@ -32,7 +32,7 @@ if (club.hasMemberClubs) {
       </UAvatarGroup>
       <div v-if="club.hasMemberClubs">
         <h2>Stammvereine</h2>
-        <div v-for="member in memberClubs">
+        <div v-for="member in memberClubs" :key="member.id">
           <span>{{ member.name }}</span>
         </div>
       </div>
