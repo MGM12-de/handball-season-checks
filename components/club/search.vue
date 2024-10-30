@@ -24,7 +24,7 @@ async function onSearch() {
   const { data } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
     query: { clubName: state.clubName },
   }))
-  clubs.value = data
+  clubs.value = data.value
   loading.value = false
 }
 
