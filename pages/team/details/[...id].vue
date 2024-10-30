@@ -22,7 +22,7 @@ const { data } = await useAsyncData(
     query: { id: route.params.id },
   }),
 )
-team.value = data
+team.value = data.value
 
 useSeoMeta({
   title: `${team.value.defaultTournament.acronym} - ${team.value.name}`,

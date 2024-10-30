@@ -18,7 +18,7 @@ const { data } = await useAsyncData(
     query: { id: route.params.id },
   }),
 )
-club.value = data
+club.value = data.value
 
 useSeoMeta({
   title: club.value.name,

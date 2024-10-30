@@ -16,7 +16,7 @@ const { data, pending } = await useAsyncData(
     query: { id: teamId },
   }),
 )
-standing.value = data
+standing.value = data.value
 </script>
 
 <template>
