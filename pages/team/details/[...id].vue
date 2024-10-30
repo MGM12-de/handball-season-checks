@@ -16,7 +16,7 @@ const items = [{
   icon: 'i-mdi-chart-bar',
 }]
 
-const { data, pending, error, refresh } = await useAsyncData(
+const { data } = await useAsyncData(
   `team/${route.params.id}`,
   () => $fetch('/api/dhb/team', {
     query: { id: route.params.id },
@@ -43,7 +43,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
         <UTabs :items="items" class="w-full">
-          <template #default="{ item, index, selected }">
+          <template #default="{ item, selected }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->
 

@@ -53,7 +53,7 @@ const stats = ref({
   awayGoalsGot: 0,
 })
 
-const { teamId, games, gamesPending } = props
+const { teamId, games } = props
 
 games.forEach((element) => {
   if (element.homeTeam.id === teamId && element.result) {
@@ -137,7 +137,7 @@ games.forEach((element) => {
         </UFormGroup>
         <br>
         <UTabs :items="items" class="w-full">
-          <template #default="{ item, index, selected }">
+          <template #default="{ item, selected }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->
 

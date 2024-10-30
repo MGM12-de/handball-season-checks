@@ -23,7 +23,7 @@ const columns = [{
 
 async function onSearch(event: FormSubmitEvent<any>) {
   loading.value = true
-  const { data, pending, error, refresh } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
+  const { data } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
     query: { clubName: state.clubName },
   }))
   clubs.value = data

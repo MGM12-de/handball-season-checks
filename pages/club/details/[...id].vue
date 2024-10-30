@@ -12,7 +12,7 @@ const club = ref({
   },
 })
 
-const { data, pending, error, refresh } = await useAsyncData(
+const { data } = await useAsyncData(
   `club/${route.params.id}`,
   () => $fetch('/api/dhb/club', {
     query: { id: route.params.id },
