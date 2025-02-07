@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@scalar/nuxt',
   ],
+  future: {
+    compatibilityVersion: 4,
+  },
   app: {
     head: {
       charset: 'utf-8',
