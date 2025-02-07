@@ -1,4 +1,4 @@
-import type { Location, Team } from '.'
+import type { Location, Team } from '../handball-season-checks'
 import type { Tournament } from './tournament'
 
 export interface Game {
