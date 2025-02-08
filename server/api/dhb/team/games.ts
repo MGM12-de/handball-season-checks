@@ -1,5 +1,5 @@
-import { getTeamUrl } from '~/server/utils/dhbUtils'
 import type { Game } from '~/types'
+import { getTeamUrl } from '~/server/utils/dhbUtils'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
