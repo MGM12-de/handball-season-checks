@@ -17,8 +17,13 @@ export default defineEventHandler(async (event) => {
   const teamApi = await $fetch(`${getTeamUrl(teamId)}/schedule`)
 
   teamApi.data.forEach((element) => {
-    if (element.startsAt)
-      element.startsAt = new Date(element.startsAt)
+    if (element.startsAt) {
+      const date = new Date(element.startsAt)
+      element.startsAt = `${date.toLocaleDateString('de')}, ${date.toLocaleTimeString('de', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`
+    }
     if (element.homeGoals) {
       element.result = `${element.homeGoals}:${element.awayGoals}`
     }
