@@ -22,6 +22,7 @@
     "@nuxt/ui": "^2.21.0",
     "@nuxt/ui-pro": "^1.7.0",
     "@scalar/nuxt": "^0.2.197",
+    "better-sqlite3": "^11.8.1",
     "nuxt": "^3.15.4",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
