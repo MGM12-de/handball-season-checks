@@ -19,15 +19,6 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1',
     },
   },
-  build: {
-    extend(config, { isClient }) {
-      if (isClient) {
-        config.externals = {
-          'better-sqlite3': 'commonjs better-sqlite3',
-        }
-      }
-    },
-  },
   nitro: {
     experimental: {
       openAPI: true,
