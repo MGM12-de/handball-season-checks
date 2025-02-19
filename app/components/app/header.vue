@@ -2,11 +2,13 @@
 import type { NavItem } from '@nuxt/content'
 
 const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
-const links = [{
-  label: 'Docs',
-  icon: 'i-heroicons-book-open',
-  to: '/getting-started',
-}]
+const links = [
+//   {
+//   label: 'Docs',
+//   icon: 'i-heroicons-book-open',
+//   to: '/getting-started',
+// }
+]
 </script>
 
 <template>
