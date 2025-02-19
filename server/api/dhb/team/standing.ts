@@ -1,4 +1,4 @@
-import { getTeamUrl } from '~/server/utils/dhbUtils'
+import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)

@@ -1,4 +1,4 @@
-import { getClubUrl } from '~/server/utils/dhbUtils'
+import { getClubUrl } from '../../../../server/utils/dhbUtils'
 
 /**
  * Get members clubs

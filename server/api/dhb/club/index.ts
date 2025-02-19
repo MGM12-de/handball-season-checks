@@ -1,4 +1,4 @@
-import { getClubUrl, normalizeDHBUrl } from '~/server/utils/dhbUtils'
+import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
 /**
  * Get Club data
