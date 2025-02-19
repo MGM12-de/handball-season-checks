@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const standings = teamApi.data.rows
 
   const currentTeam = standings.find(obj => obj.team.id === query.id)
-  currentTeam.class = 'bg-primary-500/50 dark:primary-400/50 animate-pulse'
+  currentTeam.class = 'bg-primary-500 animate-pulse'
 
   return standings
 })
