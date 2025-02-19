@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/image',
     '@scalar/nuxt',
+    '@nuxt/eslint',
   ],
   future: {
     compatibilityVersion: 4,
