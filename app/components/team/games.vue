@@ -11,7 +11,7 @@ const props = defineProps({
 })
 const { games, gamesPending } = props
 
-const columns = [{ key: 'startsAt', label: 'Date' }, { key: 'field.name', label: 'Location' }, { key: 'homeTeam.name', label: 'Home Team' }, { key: 'awayTeam.name', label: 'Away Team' }, { key: 'remarks', label: 'Remarks' }, { key: 'result', label: 'Result' }]
+const columns = [{ key: 'startsAt', label: 'Date' }, { key: 'field.name', label: 'Location' }, { key: 'homeTeam.name', label: 'Home Team' }, { key: 'awayTeam.name', label: 'Away Team' }, { key: 'result', label: 'Result' }, { key: 'remarks', label: 'Remarks' }]
 </script>
 
 <template>
