@@ -3,6 +3,7 @@ import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 defineRouteMeta({
   openAPI: {
     description: 'Get team data',
+    summary: 'Get team data',
     tags: ['Team', 'DHB'],
     parameters: [
       {

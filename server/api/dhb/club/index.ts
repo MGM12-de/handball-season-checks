@@ -4,6 +4,7 @@ import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 defineRouteMeta({
   openAPI: {
     description: 'Get Club data',
+    summary: 'Get Club data',
     tags: ['Club', 'DHB'],
     parameters: [
       {
