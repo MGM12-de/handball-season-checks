@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@scalar/nuxt',
     '@nuxt/eslint',
+    '@nuxthub/core',
   ],
   future: {
     compatibilityVersion: 4,
