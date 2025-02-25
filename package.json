@@ -33,5 +33,12 @@
     "eslint": "^9.21.0",
     "eslint-plugin-format": "^1.0.1",
     "wrangler": "^3.109.3"
-  }
+  },
+  "onlyBuiltDependencies": [
+    "@parcel/watcher",
+    "@sentry/cli",
+    "better-sqlite3",
+    "esbuild",
+    "sharp"
+  ]
 }
