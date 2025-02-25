@@ -1,6 +1,20 @@
 import type { Game } from '../../../../types'
 import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 
+defineRouteMeta({
+  openAPI: {
+    description: 'Get team games data',
+    parameters: [
+      {
+        in: 'query',
+        name: 'id',
+        required: true,
+        example: 'handball4all.wuerttemberg.36',
+        summary: 'Team id'
+      }],
+  }
+})
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
