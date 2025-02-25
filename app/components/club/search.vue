@@ -35,7 +35,7 @@ function onRowSelected(row) {
 
 <template>
   <div>
-    <UForm class="space-y-4" @submit="onSearch">
+    <UForm class="space-y-4" @submit="onSearch" :state="state">
       <UFormGroup label="Club name">
         <UInput v-model="state.clubName" />
       </UFormGroup>
