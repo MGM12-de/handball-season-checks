@@ -1,5 +1,18 @@
 import { getClubsUrl, normalizeDHBUrl } from '../../../server/utils/dhbUtils'
 
+defineRouteMeta({
+  openAPI: {
+    description: 'Search for a club',
+    parameters: [
+      {
+        in: 'query',
+        name: 'clubName',
+        required: true,
+        example: 'THW Kiel',
+      }],
+  }
+})
+
 /**
  * Search for club
  * @param {import('node:http').IncomingMessage} event
