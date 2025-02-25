@@ -3,6 +3,7 @@ import { getClubUrl } from '../../../../server/utils/dhbUtils'
 defineRouteMeta({
   openAPI: {
     description: 'Get member clubs',
+    tags: ['Club', 'DHB'],
     parameters: [
       {
         in: 'query',
