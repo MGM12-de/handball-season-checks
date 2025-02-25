@@ -1,6 +1,20 @@
 import type { Team } from '../../../types'
 import { getClubUrl } from '../../../server/utils/dhbUtils'
 
+defineRouteMeta({
+  openAPI: {
+    description: 'Get club teams',
+    parameters: [
+      {
+        in: 'query',
+        name: 'id',
+        required: true,
+        example: 'handball4all.wuerttemberg.36',
+        summary: 'Club id'
+      }],
+  }
+})
+
 export default defineEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/teams
 
