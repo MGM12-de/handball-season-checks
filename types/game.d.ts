@@ -13,4 +13,5 @@ export interface Game {
   awayGoals?: number
   goalDifference?: number
   remarks?: string
+  pdfUrl?: string
 }

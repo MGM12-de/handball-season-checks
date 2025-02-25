@@ -56,6 +56,7 @@ export default defineEventHandler(async (event) => {
         id: element.field.id,
         name: element.field.name,
       },
+      pdfUrl: element.pdfUrl,
     })
   })
   return games

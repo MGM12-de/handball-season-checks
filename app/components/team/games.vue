@@ -16,7 +16,8 @@ const columns = [{ key: 'startsAt', label: 'Date' }, { key: 'field.name', label:
 
 <template>
   <div>
-    <UTable :rows="games" :loading="gamesPending" :columns="columns" />
+    <UTable :rows="games" :loading="gamesPending" :columns="columns">
+    </UTable>
   </div>
 </template>
 
