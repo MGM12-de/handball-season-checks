@@ -15,6 +15,7 @@ defineRouteMeta({
     responses: {
       400: {
         description: "Bad Request",
+        summary: "Expected a clubname but got none",
         content: {
           'application/json': {
             schema: {
@@ -25,6 +26,7 @@ defineRouteMeta({
       },
       200: {
         description: "Found a club",
+        summary: "Found a club",
         content: {
           'application/json': {
             schema: {
