@@ -17,7 +17,7 @@ const columns = [{
   label: 'Liga',
 }, {
   key: 'defaultTournament.acronym',
-  label: 'Liga',
+  label: 'Acronym',
 }]
 
 const { data: teams, pending: teamsPending } = await useAsyncData(
