@@ -3,6 +3,10 @@ import { getClubsUrl, normalizeDHBUrl } from '../../../server/utils/dhbUtils'
 defineRouteMeta({
   openAPI: {
     description: 'Search for a club',
+    tags: {
+      name: "DHB",
+      description: "DHB Data"
+    },
     parameters: [
       {
         in: 'query',
@@ -10,6 +14,13 @@ defineRouteMeta({
         required: true,
         example: 'THW Kiel',
       }],
+    responses: {
+      200: {
+        description: "Found a club",
+        content: {
+        }
+      }
+    }
   }
 })
 
