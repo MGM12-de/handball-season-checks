@@ -1,5 +1,19 @@
 import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
+
+defineRouteMeta({
+  openAPI: {
+    description: 'Get Club data',
+    parameters: [
+      {
+        in: 'query',
+        name: 'id',
+        required: true,
+        example: 'handball4all.wuerttemberg.36',
+      }],
+  }
+})
+
 /**
  * Get Club data
  * @param {string} id - The id of the club to get
