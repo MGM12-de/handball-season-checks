@@ -20,6 +20,8 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1',
     },
   },
+  hub: {
+  },
   nitro: {
     experimental: {
       openAPI: true,
