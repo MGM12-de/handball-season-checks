@@ -27,7 +27,11 @@ const sort = ref<{ column: string; direction: 'desc' | 'asc' }>({
   column: 'goals',
   direction: 'desc'
 })
-const columns = [{ key: 'firstname', label: 'Firstname', sortable: true }, { key: 'lastname', label: 'Lastname', sortable: true }, { key: 'goals', label: 'Goals', sortable: true }, { key: 'penaltyGoals', label: 'Penalty goals', sortable: true }, { key: 'penaltyMissed', label: 'Penalty missed', sortable: true }, { key: 'yellowCards', label: 'Yellow Cards', sortable: true }, { key: 'penalties', label: 'Penalties', sortable: true }, { key: 'redCards', label: 'Red Cards', sortable: true }, { key: 'blueCards', label: 'Blue Cards', sortable: true }]
+const columns = [{ key: 'firstname', label: 'Firstname', sortable: true }, { key: 'lastname', label: 'Lastname', sortable: true },
+{ key: 'gamesPlayed', label: 'Games played', sortable: true }, { key: 'goals', label: 'Goals', sortable: true },
+{ key: 'penaltyGoals', label: 'Penalty goals', sortable: true }, { key: 'penaltyMissed', label: 'Penalty missed', sortable: true },
+{ key: 'yellowCards', label: 'Yellow Cards', sortable: true }, { key: 'penalties', label: 'Penalties', sortable: true },
+{ key: 'redCards', label: 'Red Cards', sortable: true }, { key: 'blueCards', label: 'Blue Cards', sortable: true }]
 
 var teamLineup = Array<Lineup>()
 
@@ -50,11 +54,12 @@ for (const game of games) {
   }
 }
 function addPlayer2Lineup(player: Player) {
-
+  player.gamesPlayed = 1
   const existingPlayerIndex = teamLineup.findIndex(
     (p) => p.firstname === player.firstname && p.lastname === player.lastname
   )
   if (existingPlayerIndex !== -1) {
+    teamLineup[existingPlayerIndex].gamesPlayed += player.gamesPlayed
     teamLineup[existingPlayerIndex].goals += player.goals
     teamLineup[existingPlayerIndex].penaltyGoals += player.penaltyGoals
     teamLineup[existingPlayerIndex].penaltyMissed += player.penaltyMissed

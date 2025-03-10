@@ -11,5 +11,6 @@ export interface Player {
     yellowCards: number,
     redCards: number,
     blueCards: number,
-    type: string
+    type: string,
+    gamesPlayed: number,
 }
