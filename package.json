@@ -2,7 +2,7 @@
   "name": "nuxt-app",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.5.0",
+  "packageManager": "pnpm@10.6.2",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -14,25 +14,25 @@
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/simple-icons": "^1.2.26",
-    "@nuxt/content": "^3.2.2",
-    "@nuxt/eslint": "1.1.0",
+    "@iconify-json/simple-icons": "^1.2.28",
+    "@nuxt/content": "^3.3.0",
+    "@nuxt/eslint": "1.2.0",
     "@nuxt/image": "^1.9.0",
     "@nuxt/kit": "^3.15.4",
-    "@nuxt/ui": "^2.21.0",
-    "@nuxt/ui-pro": "^1.7.0",
-    "@nuxthub/core": "^0.8.17",
-    "@scalar/nuxt": "^0.2.200",
+    "@nuxt/ui": "^2.21.1",
+    "@nuxt/ui-pro": "^1.7.1",
+    "@nuxthub/core": "^0.8.18",
+    "@scalar/nuxt": "^0.2.209",
     "better-sqlite3": "^11.8.1",
     "nuxt": "^3.15.4",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.3.0",
-    "eslint": "^9.21.0",
+    "@antfu/eslint-config": "^4.8.1",
+    "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
-    "wrangler": "^3.109.3"
+    "wrangler": "^3.112.0"
   },
   "onlyBuiltDependencies": [
     "@parcel/watcher",
