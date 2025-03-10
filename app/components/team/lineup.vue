@@ -33,8 +33,14 @@ for (const game of games) {
       query: { id: game.id },
     })
   )
+
+  if (game.homeTeam.id === teamId) {
+    teamLineup.push(lineup.value.data.home)
+  } else {
+    teamLineup.push(lineup.value.data.away)
+  }
   console.log(lineup)
-  teamLineup.push(lineup.value)
+
 }
 </script>
 
