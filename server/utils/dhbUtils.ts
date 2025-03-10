@@ -64,3 +64,20 @@ export function getTeamsUrl() {
 export function getTeamUrl(teamId: string) {
   return `${getTeamsUrl()}/${teamId}`
 }
+
+/**
+ * Get url for games
+ * @returns Games url
+ */
+export function getGamesUrl() {
+  return `${getDHBBaseUrl()}/games`
+}
+
+/**
+ * Get url for specific game
+ * @param gameId Game id
+ * @returns Game url
+ */
+export function getGameUrl(gameId: string) {
+  return `${getGamesUrl()}/${gameId}`
+}
