@@ -14,6 +14,10 @@ const items = [{
   slot: 'stats',
   label: 'Statistics',
   icon: 'i-mdi-chart-bar',
+}, {
+  slot: 'lineup',
+  label: 'Lineup',
+  icon: 'i-mdi-account-group',
 }]
 
 const { data } = await useAsyncData(
@@ -61,6 +65,10 @@ const { data: games, pending: gamesPending } = await useAsyncData(
           </template>
           <template #stats>
             <TeamPrognose :team-id="team.id" :games="games || []" :games-pending="gamesPending" />
+          </template>
+
+          <template #lineup>
+            <TeamLineup :team-id="team.id" :games="games || []" :games-pending="gamesPending" />
           </template>
         </UTabs>
       </UPageBody>
