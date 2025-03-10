@@ -1,6 +1,10 @@
 <template>
   <div>
-    <UTable :rows="teamLineup" :columns="columns" :sort="sort" />
+    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+      <UInput v-model="q" placeholder="Filter ..." />
+    </div>
+
+    <UTable :rows="filteredRows" :columns="columns" :sort="sort" />
   </div>
 </template>
 
@@ -72,6 +76,19 @@ function addPlayer2Lineup(player: Player) {
     teamLineup.push(player)
   }
 }
+const q = ref('')
+
+const filteredRows = computed(() => {
+  if (!q.value) {
+    return teamLineup
+  }
+
+  return teamLineup.filter((player) => {
+    return Object.values(player).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase())
+    })
+  })
+})
 
 </script>
 
