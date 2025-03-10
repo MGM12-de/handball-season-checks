@@ -3,11 +3,11 @@ import type { NavItem } from '@nuxt/content'
 
 const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 const links = [
-//   {
-//   label: 'Docs',
-//   icon: 'i-heroicons-book-open',
-//   to: '/getting-started',
-// }
+   {
+   label: 'Liga suchen',
+   icon: 'i-heroicons-search',
+   to: '/tournament',
+ }
 ]
 </script>
 
@@ -27,6 +27,8 @@ const links = [
     </template>
 
     <template #panel>
+      <UAsideLinks :links="links" />
+
       <UNavigationTree :links="mapContentNavigation(navigation)" />
     </template>
   </UHeader>
