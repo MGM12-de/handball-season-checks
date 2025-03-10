@@ -1,13 +1,11 @@
 <template>
   <div>
-    <UTable :rows="teamLineup" />
+    <UTable :rows="teamLineup" :columns="columns" :sort="sort" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Game, Lineup } from '~~/types'
-
-var teamLineup = Array<Lineup>()
+import type { Game, Lineup, Player } from '~~/types'
 
 const props = defineProps({
   teamId: {
@@ -25,8 +23,15 @@ const props = defineProps({
 })
 const { teamId, games } = props
 
+const sort = ref<{ column: string; direction: 'desc' | 'asc' }>({
+  column: 'goals',
+  direction: 'desc'
+})
+const columns = [{ key: 'firstname', label: 'Firstname', sortable: true }, { key: 'lastname', label: 'Lastname', sortable: true }, { key: 'goals', label: 'Goals', sortable: true }, { key: 'penaltyGoals', label: 'Penalty goals', sortable: true }, { key: 'penaltyMissed', label: 'Penalty missed', sortable: true }, { key: 'yellowCards', label: 'Yellow Cards', sortable: true }, { key: 'penalties', label: 'Penalties', sortable: true }, { key: 'redCards', label: 'Red Cards', sortable: true }, { key: 'blueCards', label: 'Blue Cards', sortable: true }]
+
+var teamLineup = Array<Lineup>()
+
 for (const game of games) {
-  console.log(game)
   const { data: lineup, pending: lineupPending } = await useAsyncData(
     `${game.id}/lineup`,
     () => $fetch('/api/dhb/game/lineup', {
@@ -35,13 +40,34 @@ for (const game of games) {
   )
 
   if (game.homeTeam.id === teamId) {
-    // teamLineup.push(lineup.value.data.home)
+    lineup.value.home.forEach(homePlayer => {
+      addPlayer2Lineup(homePlayer)
+    });
   } else {
-    // teamLineup.push(lineup.value.data.away)
+    lineup.value.away.forEach(awayPlayer => {
+      addPlayer2Lineup(awayPlayer)
+    });
   }
-  console.log(lineup)
-
 }
+function addPlayer2Lineup(player: Player) {
+
+  const existingPlayerIndex = teamLineup.findIndex(
+    (p) => p.firstname === player.firstname && p.lastname === player.lastname
+  )
+  if (existingPlayerIndex !== -1) {
+    teamLineup[existingPlayerIndex].goals += player.goals
+    teamLineup[existingPlayerIndex].penaltyGoals += player.penaltyGoals
+    teamLineup[existingPlayerIndex].penaltyMissed += player.penaltyMissed
+    teamLineup[existingPlayerIndex].penalties += player.penalties
+    teamLineup[existingPlayerIndex].yellowCards += player.yellowCards
+    teamLineup[existingPlayerIndex].redCards += player.redCards
+    teamLineup[existingPlayerIndex].blueCards += player.blueCards
+  }
+  else {
+    teamLineup.push(player)
+  }
+}
+
 </script>
 
 <style></style>

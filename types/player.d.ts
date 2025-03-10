@@ -9,7 +9,7 @@ export interface Player {
     penaltyMissed: number,
     penalties: number,
     yellowCards: number,
-    readCards: number,
+    redCards: number,
     blueCards: number,
     type: string
 }
