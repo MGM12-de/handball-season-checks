@@ -35,9 +35,9 @@ for (const game of games) {
   )
 
   if (game.homeTeam.id === teamId) {
-    teamLineup.push(lineup.value.data.home)
+    // teamLineup.push(lineup.value.data.home)
   } else {
-    teamLineup.push(lineup.value.data.away)
+    // teamLineup.push(lineup.value.data.away)
   }
   console.log(lineup)
 
