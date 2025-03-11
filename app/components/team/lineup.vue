@@ -9,8 +9,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Game, Lineup, Player } from '~~/types'
-
 const props = defineProps({
   teamId: {
     type: String,
@@ -40,14 +38,14 @@ const q = ref('')
 
 const filteredRows = computed(() => {
   if (!q.value) {
-    return teamLineup
+    return teamLineup.value || []
   }
 
   return teamLineup.value?.filter((player) => {
     return Object.values(player).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase())
     })
-  })
+  }) || []
 })
 
 </script>
