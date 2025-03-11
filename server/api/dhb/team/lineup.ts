@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
       query: { id: game.id },
     })
 
-    const mergePlayerStats = (player, team, isHome) => {
+    const mergePlayerStats = (player) => {
       const existingPlayerIndex = teamLineup.findIndex((p) => p.firstname === player.firstname && p.lastname === player.lastname);
       if (existingPlayerIndex !== -1) {
         teamLineup[existingPlayerIndex].gamesPlayed += 1
@@ -54,15 +54,14 @@ export default defineEventHandler(async (event) => {
         teamLineup.push({
           ...player,
           gamesPlayed: 1,
-          team: team,
         })
       }
     }
 
     if (game.homeTeam.id === teamId) {
-      lineup.home.forEach(homePlayer => mergePlayerStats(homePlayer, game.homeTeam, true));
+      lineup.home.forEach(homePlayer => mergePlayerStats(homePlayer));
     } else {
-      lineup.away.forEach(awayPlayer => mergePlayerStats(awayPlayer, game.awayTeam, false));
+      lineup.away.forEach(awayPlayer => mergePlayerStats(awayPlayer));
     }
   }))
   return teamLineup
