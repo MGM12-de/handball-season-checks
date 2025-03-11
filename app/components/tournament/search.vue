@@ -29,7 +29,7 @@ async function onSearch() {
 }
 
 function onRowSelected(row) {
-  navigateTo(`/club/details/${row.id}`)
+  navigateTo(`/tournament/${row.id}`)
 }
 </script>
 
