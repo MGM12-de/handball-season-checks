@@ -68,7 +68,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
           </template>
 
           <template #lineup>
-            <TeamLineup :team-id="team.id" :games="games || []" :games-pending="gamesPending" />
+            <TeamLineup :team-id="team.id" />
           </template>
         </UTabs>
       </UPageBody>

@@ -81,3 +81,20 @@ export function getGamesUrl() {
 export function getGameUrl(gameId: string) {
   return `${getGamesUrl()}/${gameId}`
 }
+
+/**
+ * Get url for tournaments
+ * @returns Tournaments url
+ */
+export function getTournamentsUrl() {
+  return `${getDHBBaseUrl()}/tournaments`
+}
+
+/**
+ * Get url for specific tournament
+ * @param tournamentId tournament id
+ * @returns tournament url
+ */
+export function getTournamentUrl(tournamentId: string) {
+  return `${getTournamentsUrl()}/${tournamentId}`
+}
