@@ -16,16 +16,8 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  games: {
-    type: Array as () => Game[],
-    required: true,
-  },
-  gamesPending: {
-    type: Boolean,
-    required: true,
-  },
 })
-const { teamId, games } = props
+const { teamId } = props
 
 const sort = ref<{ column: string; direction: 'desc' | 'asc' }>({
   column: 'goals',
@@ -51,7 +43,7 @@ const filteredRows = computed(() => {
     return teamLineup
   }
 
-  return teamLineup.filter((player) => {
+  return teamLineup.value?.filter((player) => {
     return Object.values(player).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase())
     })
