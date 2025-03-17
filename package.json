@@ -29,7 +29,7 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.8.1",
+    "@antfu/eslint-config": "^4.10.1",
     "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
     "wrangler": "^3.114.1"
