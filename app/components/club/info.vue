@@ -59,55 +59,35 @@ useAsyncData(
       </UFormGroup>
       <UFormGroup label="Contact" name="contact">
         <UInput v-if="state.contact" v-model="state.contact" disabled />
-        <UButton
-          v-if="state.email" icon="i-heroicons-envelope" color="primary" variant="link" :label="state.email"
-          :to="state.email"
-        />
-        <UButton
-          v-if="state.telephone" icon="i-heroicons-phone" color="primary" variant="link" :label="state.telephone"
-          :to="state.telephone"
-        />
-        <UButton
-          v-if="state.fax" icon="i-heroicons-printer" color="primary" variant="link" :label="state.fax"
-          :to="state.fax"
-        />
+        <UButton v-if="state.email" icon="i-heroicons-envelope" color="primary" variant="link" :label="state.email"
+          :to="state.email" />
+        <UButton v-if="state.telephone" icon="i-heroicons-phone" color="primary" variant="link" :label="state.telephone"
+          :to="state.telephone" />
+        <UButton v-if="state.fax" icon="i-heroicons-printer" color="primary" variant="link" :label="state.fax"
+          :to="state.fax" />
       </UFormGroup>
       <UFormGroup v-if="state.address" label="Address" name="address">
         <UTextarea v-model="state.address" disabled />
       </UFormGroup>
       <UFormGroup v-if="state.website" label="Website" name="website">
-        <UButton
-          icon="i-heroicons-globe-alt" color="primary" variant="link" :label="state.website"
-          :to="state.website"
-        />
+        <UButton icon="i-heroicons-globe-alt" color="primary" variant="link" :label="state.website"
+          :to="state.website" />
       </UFormGroup>
       <UFormGroup v-if="state.ticketshop" label="Ticketshop" name="tickets">
-        <UButton
-          icon="i-heroicons-ticket" color="primary" variant="link" :label="state.ticketshop"
-          :to="state.ticketshop"
-        />
+        <UButton icon="i-heroicons-ticket" color="primary" variant="link" :label="state.ticketshop"
+          :to="state.ticketshop" />
       </UFormGroup>
       <UFormGroup label="Socials" name="socials">
-        <UButton
-          v-if="state.facebook" icon="i-simple-icons-facebook" color="blue" variant="link" label="Facebook"
-          :to="state.facebook"
-        />
-        <UButton
-          v-if="state.instagram" icon="i-simple-icons-instagram" color="pink" variant="link" label="Instagram"
-          :to="state.instagram"
-        />
-        <UButton
-          v-if="state.youtube" icon="i-simple-icons-youtube" color="red" variant="link" label="YouTube"
-          :to="state.youtube"
-        />
-        <UButton
-          v-if="state.twitter" icon="i-simple-icons-x" color="white" variant="link" label="X"
-          :to="state.twitter"
-        />
-        <UButton
-          v-if="state.tikTok" icon="i-simple-icons-tiktok" color="white" variant="link" label="TikTok"
-          :to="state.tikTok"
-        />
+        <UButton v-if="state.facebook" icon="i-simple-icons-facebook" color="primary" variant="link" label="Facebook"
+          :to="state.facebook" />
+        <UButton v-if="state.instagram" icon="i-simple-icons-instagram" color="primary" variant="link" label="Instagram"
+          :to="state.instagram" />
+        <UButton v-if="state.youtube" icon="i-simple-icons-youtube" color="primary" variant="link" label="YouTube"
+          :to="state.youtube" />
+        <UButton v-if="state.twitter" icon="i-simple-icons-x" color="primary" variant="link" label="X"
+          :to="state.twitter" />
+        <UButton v-if="state.tikTok" icon="i-simple-icons-tiktok" color="primary" variant="link" label="TikTok"
+          :to="state.tikTok" />
       </UFormGroup>
     </UForm>
   </div>

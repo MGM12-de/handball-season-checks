@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { TableColumn } from '@nuxt/ui'
+
 const props = defineProps({
   teamId: {
     type: String,
@@ -8,9 +10,9 @@ const props = defineProps({
 const standing = ref()
 const { teamId } = props
 
-const columns = [{ key: 'rank', label: 'Rank' }, { key: 'team.name', label: 'Team' }, { key: 'points', label: 'Points' }, { key: 'games', label: 'Games' }, { key: 'wins', label: 'Wins' }, { key: 'draws', label: 'Draws' }, { key: 'losses', label: 'Losses' }, { key: 'goals', label: 'Goals' }, { key: 'goalsAgainst', label: 'Goals Against' }, { key: 'goalDifference', label: 'Goal Difference' }]
+const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, { accessorKey: 'team.name', header: 'Team' }, { accessorKey: 'points', header: 'Points' }, { accessorKey: 'games', header: 'Games' }, { accessorKey: 'wins', header: 'Wins' }, { accessorKey: 'draws', header: 'Draws' }, { accessorKey: 'losses', header: 'Losses' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'goalsAgainst', header: 'Goals Against' }, { accessorKey: 'goalDifference', header: 'Goal Difference' }]
 
-const { data, pending } = await useAsyncData(
+const { data, status } = await useAsyncData(
   `team/${teamId}/standing`,
   () => $fetch('/api/dhb/team/standing', {
     query: { id: teamId },
@@ -21,7 +23,7 @@ standing.value = data.value
 
 <template>
   <div>
-    <UTable :rows="standing" :loading="pending" :columns="columns" />
+    <UTable :data="standing" :loading="status === 'pending'" :columns="columns" />
   </div>
 </template>
 

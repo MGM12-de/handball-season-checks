@@ -1,14 +1,6 @@
-<template>
-  <div>
-    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="q" placeholder="Filter ..." />
-    </div>
-
-    <UTable :rows="filteredRows" :columns="columns" :sort="sort" />
-  </div>
-</template>
-
 <script lang="ts" setup>
+import type { TableColumn } from '@nuxt/ui'
+
 const props = defineProps({
   teamId: {
     type: String,
@@ -17,15 +9,7 @@ const props = defineProps({
 })
 const { teamId } = props
 
-const sort = ref<{ column: string; direction: 'desc' | 'asc' }>({
-  column: 'goals',
-  direction: 'desc'
-})
-const columns = [{ key: 'firstname', label: 'Firstname', sortable: true }, { key: 'lastname', label: 'Lastname', sortable: true },
-{ key: 'gamesPlayed', label: 'Games played', sortable: true }, { key: 'goals', label: 'Goals', sortable: true },
-{ key: 'penaltyGoals', label: 'Penalty goals', sortable: true }, { key: 'penaltyMissed', label: 'Penalty missed', sortable: true },
-{ key: 'yellowCards', label: 'Yellow Cards', sortable: true }, { key: 'penalties', label: 'Penalties', sortable: true },
-{ key: 'redCards', label: 'Red Cards', sortable: true }, { key: 'blueCards', label: 'Blue Cards', sortable: true }]
+const columns: TableColumn<any>[] = [{ accessorKey: 'firstname', header: 'Firstname' }, { accessorKey: 'lastname', header: 'Lastname' }, { accessorKey: 'gamesPlayed', header: 'Games played' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'penaltyGoals', header: 'Penalty goals' }, { accessorKey: 'penaltyMissed', header: 'Penalty missed' }, { accessorKey: 'yellowCards', header: 'Yellow Cards' }, { accessorKey: 'penalties', header: 'Penalties' }, { accessorKey: 'redCards', header: 'Red Cards' }, { accessorKey: 'blueCards', header: 'Blue Cards' }]
 
 const { data: teamLineup, status: teamLineupState } = await useAsyncData(
   `team/${teamId}/lineup`,
@@ -47,7 +31,16 @@ const filteredRows = computed(() => {
     })
   }) || []
 })
-
 </script>
+
+<template>
+  <div>
+    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+      <UInput v-model="q" placeholder="Filter ..." />
+    </div>
+
+    <UTable :data="filteredRows" :columns="columns" :loading="teamLineupState === 'pending'" class="flex-1" />
+  </div>
+</template>
 
 <style></style>

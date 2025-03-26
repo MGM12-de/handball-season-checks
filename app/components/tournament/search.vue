@@ -1,23 +1,48 @@
 <script lang="ts" setup>
+import type { TableColumn, TableRow } from '@nuxt/ui'
+import { h, resolveComponent } from 'vue'
+
+const UAvatar = resolveComponent('UAvatar')
+
 const state = reactive({
   tournament: undefined,
 })
 const clubs = ref([])
 const loading = ref(false)
 
-const columns = [{
-  key: 'logo',
-  label: 'Logo',
+const columns: TableColumn<any>[] = [{
+  accessorKey: 'id',
+  header: 'ID',
 }, {
-  key: 'name',
-  label: 'Name',
+  accessorKey: 'logo',
+  header: 'Logo',
+  cell: ({ row }) => {
+    const logo = row.getValue('logo')
+    const acronym = row.getValue('acronym')
+
+    return h(UAvatar, { alt: acronym, src: logo })
+  },
 }, {
-  key: 'acronym',
-  label: 'Acronym',
+  accessorKey: 'name',
+  header: 'Name',
 }, {
-  key: 'organization',
-  label: 'Organization',
+  accessorKey: 'acronym',
+  header: 'Acronym',
+}, {
+  accessorKey: 'organization',
+  header: 'Organization',
+  cell: ({ row }) => {
+    const organization = row.getValue('organization')
+    if (organization && typeof organization === 'object' && 'name' in organization && 'logo' in organization) {
+      return h(UAvatar, { alt: organization.name, src: organization.logo })
+    }
+    return null
+  },
 }]
+
+const columnVisibility = ref({
+  id: false,
+})
 
 async function onSearch() {
   loading.value = true
@@ -28,32 +53,25 @@ async function onSearch() {
   loading.value = false
 }
 
-function onRowSelected(row) {
-  navigateTo(`/tournament/${row.id}`)
+function onRowSelected(row: TableRow<any>) {
+  const tournamentId = row.getValue('id')
+  navigateTo(`/tournament/${tournamentId}`)
 }
 </script>
 
 <template>
   <div>
-    <UForm class="space-y-4" @submit="onSearch" :state="state">
-      <UFormGroup label="Tournament">
-        <UInput v-model="state.tournament" />
-      </UFormGroup>
+    <UForm class="space-y-4" :state="state" @submit="onSearch">
+      <UFormField label="Tournament">
+        <UInput v-model="state.tournament" placeholder="HBL" />
+      </UFormField>
       <UButton type="submit">
         Search
       </UButton>
     </UForm>
 
-    <UTable :rows="clubs" :columns="columns" :loading="loading" @select="onRowSelected">
-      <template #logo-data="{ row }">
-        <UAvatar :src="row.logo" :alt="row.acronym" />
-      </template>
-
-      <template #organization-data="{ row }">
-        <UAvatar :src="row.organization.logo" :alt="row.organization.name" />
-        <span>{{ row.organization.name }}</span>
-      </template>
-    </UTable>
+    <UTable v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
+      @select="onRowSelected" />
   </div>
 </template>
 

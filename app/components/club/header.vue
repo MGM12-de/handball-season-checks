@@ -5,7 +5,7 @@ const props = defineProps({
     required: true,
   },
 })
-let memberClubs = reactive([])
+const memberClubs = ref<{ id: number, name: string }[]>([])
 const { club } = props
 
 if (club.hasMemberClubs) {
@@ -16,7 +16,7 @@ if (club.hasMemberClubs) {
     }),
   ).then(
     (response) => {
-      memberClubs = response.data
+      memberClubs.value = response.data as unknown as { id: number, name: string }[]
     },
   )
 }

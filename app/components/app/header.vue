@@ -1,35 +1,30 @@
 <script setup lang="ts">
-import type { NavItem } from '@nuxt/content'
-
-const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 const links = [
-   {
-   label: 'Liga suchen',
-   icon: 'i-heroicons-search',
-   to: '/tournament',
- }
+  {
+    label: 'Liga suchen',
+    icon: 'i-lucide-search',
+    to: '/tournament',
+  },
 ]
 </script>
 
 <template>
-  <UHeader :links="links">
-    <template #logo>
+  <UHeader>
+    <template #title>
       <AppLogo class="w-auto h-6" />
     </template>
+
+    <UNavigationMenu :items="links" />
 
     <template #right>
       <UColorModeButton />
 
-      <UButton
-        to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
-        color="gray" variant="ghost"
-      />
+      <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
+        color="neutral" variant="ghost" />
     </template>
 
-    <template #panel>
-      <UAsideLinks :links="links" />
-
-      <UNavigationTree :links="mapContentNavigation(navigation)" />
+    <template #body>
+      <UNavigationMenu :items="links" orientation="vertical" class="-mx-2.5" />
     </template>
   </UHeader>
 </template>
