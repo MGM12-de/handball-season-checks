@@ -1,5 +1,4 @@
-import { getTournamentUrl } from '../../../../server/utils/dhbUtils'
-
+import { getTournamentUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -12,8 +11,9 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.m-bol_hf',
-      }],
-  }
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {
@@ -29,6 +29,12 @@ export default defineEventHandler(async (event) => {
   try {
     const tournamentId = query.id as string
     const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
+
+    tournamentTable.data.rows.forEach((row) => {
+      if (row.team.logo) {
+        row.team.logo = normalizeDHBUrl(row.team.logo)
+      }
+    })
 
     return tournamentTable.data.rows
   }

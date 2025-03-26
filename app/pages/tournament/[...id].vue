@@ -4,6 +4,7 @@ import type { Column } from '@tanstack/vue-table'
 import { h, resolveComponent } from 'vue'
 
 const UButton = resolveComponent('UButton')
+const UAvatar = resolveComponent('UAvatar')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const route = useRoute()
@@ -34,7 +35,20 @@ const { data: tournament } = await useAsyncData(
   }),
 )
 
-const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, { accessorKey: 'team.name', header: 'Team' }, { accessorKey: 'points', header: 'Points' }, { accessorKey: 'games', header: 'Games' }, { accessorKey: 'wins', header: 'Wins' }, { accessorKey: 'draws', header: 'Draws' }, { accessorKey: 'losses', header: 'Losses' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'goalsAgainst', header: 'Goals Against' }, { accessorKey: 'goalDifference', header: 'Goal Difference' }]
+const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, {
+  accessorKey: 'team.logo',
+  header: '',
+  cell: ({ row }) => {
+    const logo = row.getValue('team_logo') as string
+    const name = row.getValue('team_name') as string
+    return h(UAvatar, {
+      src: logo,
+      alt: name,
+      class: 'w-8 h-8',
+      size: 'xl'
+    })
+  },
+}, { accessorKey: 'team.name', header: 'Team' }, { accessorKey: 'points', header: 'Points' }, { accessorKey: 'games', header: 'Games' }, { accessorKey: 'wins', header: 'Wins' }, { accessorKey: 'draws', header: 'Draws' }, { accessorKey: 'losses', header: 'Losses' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'goalsAgainst', header: 'Goals Against' }, { accessorKey: 'goalDifference', header: 'Goal Difference' }]
 
 const { data: tournamentTable, status: tournamentTableStatus } = await useAsyncData(
   `tournament/${route.params.id}/table`,
