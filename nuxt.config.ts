@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/content',
     '@nuxt/ui-pro',
+    '@nuxtjs/i18n',
     '@nuxt/image',
     '@scalar/nuxt',
     '@nuxt/eslint',
@@ -27,5 +28,8 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true,
     },
+  },
+  i18n: {
+    locales: [{ code: 'en', name: 'English' }, { code: 'de', name: 'Deutsch' }],
   },
 })

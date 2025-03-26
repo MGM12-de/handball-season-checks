@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import * as locales from '@nuxt/ui-pro/locale'
+
+const { locale } = useI18n()
+
 const colorMode = useColorMode()
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 const title = 'Handball checks'
@@ -29,7 +33,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UApp>
+  <UApp :locale="locales[locale]">
     <NuxtLayout>
       <NuxtLoadingIndicator />
       <NuxtPage />
