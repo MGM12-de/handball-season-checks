@@ -2,7 +2,7 @@
 const links = [
   {
     label: 'Liga suchen',
-    icon: 'i-heroicons-search',
+    icon: 'i-lucide-search',
     to: '/tournament',
   },
 ]

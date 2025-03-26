@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type { Team } from '~/types'
+import type { TableColumn, TableRow } from '@nuxt/ui'
+import type { Team } from '../../../types'
 
 const props = defineProps({
   clubId: {
@@ -9,16 +10,23 @@ const props = defineProps({
 })
 const { clubId } = props
 
-const columns = [{
-  key: 'name',
-  label: 'Name',
+const columns: TableColumn<Team>[] = [{
+  accessorKey: 'id',
+  header: 'ID',
 }, {
-  key: 'defaultTournament.name',
-  label: 'Liga',
+  accessorKey: 'name',
+  header: 'Name',
 }, {
-  key: 'defaultTournament.acronym',
-  label: 'Acronym',
+  accessorKey: 'defaultTournament.name',
+  header: 'Liga',
+}, {
+  accessorKey: 'defaultTournament.acronym',
+  header: 'Acronym',
 }]
+
+const columnVisibility = ref({
+  id: false,
+})
 
 const { data: teams, pending: teamsPending } = await useAsyncData(
   `${clubId}/teams`,
@@ -27,14 +35,16 @@ const { data: teams, pending: teamsPending } = await useAsyncData(
   }),
 ) as unknown as { data: Team[], pending: boolean, error: any, refresh: () => object }
 
-function onRowSelected(row: Team) {
-  navigateTo(`/team/details/${row.id}`)
+function onRowSelected(row: TableRow<Team>) {
+  const teamId = row.getValue('id')
+  navigateTo(`/team/details/${teamId}`)
 }
 </script>
 
 <template>
   <div>
-    <UTable :rows="teams" :columns="columns" :loading="teamsPending" @select="onRowSelected" />
+    <UTable v-model:column-visibility="columnVisibility" :data="teams" :columns="columns" :loading="teamsPending"
+      @select="onRowSelected" />
   </div>
 </template>
 

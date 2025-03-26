@@ -22,6 +22,9 @@ const clubs = ref([])
 const loading = ref(false)
 
 const columns: TableColumn<Club>[] = [{
+  accessorKey: 'id',
+  header: 'ID',
+}, {
   accessorKey: 'logo',
   header: 'Logo',
   cell: ({ row }) => {
@@ -44,6 +47,10 @@ const columns: TableColumn<Club>[] = [{
   },
 }]
 
+const columnVisibility = ref({
+  id: false
+})
+
 async function onSearch() {
   loading.value = true
   const { data } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
@@ -54,7 +61,8 @@ async function onSearch() {
 }
 
 function onRowSelected(row: TableRow<Club>) {
-  navigateTo(`/club/details/${row.id}`)
+  const clubId = row.getValue('id')
+  navigateTo(`/club/details/${clubId}`)
 }
 </script>
 
@@ -69,7 +77,7 @@ function onRowSelected(row: TableRow<Club>) {
       </UButton>
     </UForm>
 
-    <UTable :data="clubs" :columns="columns" :loading="loading" @select="onRowSelected" />
+    <UTable :data="clubs" :columns="columns" :loading="loading" @select="onRowSelected" v-model:column-visibility="columnVisibility" />
   </div>
 </template>
 

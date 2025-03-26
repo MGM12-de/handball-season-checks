@@ -131,79 +131,79 @@ games.forEach((element) => {
   <div>
     <UContainer>
       <UForm :state="state" class="space-y-4">
-        <UFormGroup label="Durchschnittlich geworfene Tore">
+        <UFormField label="Durchschnittlich geworfene Tore">
           <UInput v-model="state.averageGoalsShot" disabled />
-        </UFormGroup>
+        </UFormField>
 
-        <UFormGroup label="Durchschnittlich bekommene Tore">
+        <UFormField label="Durchschnittlich bekommene Tore">
           <UInput v-model="state.averageGoalsGot" disabled />
-        </UFormGroup>
+        </UFormField>
         <br>
         <UTabs :items="items" class="w-full">
-          <template #default="{ item, selected }">
+          <template #default="{ item }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->
 
               <span class="truncate">{{ item.label }}</span>
 
-              <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
             </div>
           </template>
           <template #home>
-            <UFormGroup label="Höchster Heimsieg">
+            <UFormField label="Höchster Heimsieg">
               <UInput v-model="state.highestHomeWin" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Höchste Heimniederlage">
+            <UFormField label="Höchste Heimniederlage">
               <UInput v-model="state.highestHomeLoose" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Heimquote">
+            <UFormField label="Heimquote">
               <UInput v-model="state.homeQuota" disabled>
                 <template #trailing>
                   <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
                 </template>
               </UInput>
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Durchschnittlich Daheim geworfene Tore">
+            <UFormField label="Durchschnittlich Daheim geworfene Tore">
               <UInput v-model="state.homeAverageGoalsShot" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Durchschnittlich Daheim bekommene Tore">
+            <UFormField label="Durchschnittlich Daheim bekommene Tore">
               <UInput v-model="state.homeAverageGoalsGot" disabled />
-            </UFormGroup>
+            </UFormField>
           </template>
           <template #away>
-            <UFormGroup label="Höchster Auswärtssieg">
+            <UFormField label="Höchster Auswärtssieg">
               <UInput v-model="state.highestAwayWin" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Höchste Auswärtsniederlage">
+            <UFormField label="Höchste Auswärtsniederlage">
               <UInput v-model="state.highestAwayLoose" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Auswärtsquote">
+            <UFormField label="Auswärtsquote">
               <UInput v-model="state.awayQuota" disabled>
                 <template #trailing>
                   <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
                 </template>
               </UInput>
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Durchschnittlich Auswärts geworfene Tore">
+            <UFormField label="Durchschnittlich Auswärts geworfene Tore">
               <UInput v-model="state.awayAverageGoalsShot" disabled />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Durchschnittlich Auswärts bekommene Tore">
+            <UFormField label="Durchschnittlich Auswärts bekommene Tore">
               <UInput v-model="state.awayAverageGoalsGot" disabled />
-            </UFormGroup>
+            </UFormField>
           </template>
         </UTabs>
 
-        <!-- <UFormGroup label="Möglicher Platz, wenn alle offene Spiele gewonnen werden">
+        <!-- <UFormField label="Möglicher Platz, wenn alle offene Spiele gewonnen werden">
           <UInput v-model="state.rankIfWinning" icon="i-mdi-trophy" disabled />
-        </UFormGroup> -->
+        </UFormField> -->
       </UForm>
     </UContainer>
   </div>

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { TableColumn } from '@nuxt/ui'
+
 const props = defineProps({
   games: {
     type: Array,
@@ -11,13 +13,12 @@ const props = defineProps({
 })
 const { games, gamesPending } = props
 
-const columns = [{ key: 'startsAt', label: 'Date' }, { key: 'field.name', label: 'Location' }, { key: 'homeTeam.name', label: 'Home Team' }, { key: 'awayTeam.name', label: 'Away Team' }, { key: 'result', label: 'Result' }, { key: 'remarks', label: 'Remarks' }]
+const columns: TableColumn<any>[] = [{ accessorKey: 'startsAt', header: 'Date' }, { accessorKey: 'field.name', header: 'Location' }, { accessorKey: 'homeTeam.name', header: 'Home Team' }, { accessorKey: 'awayTeam.name', header: 'Away Team' }, { accessorKey: 'result', header: 'Result' }, { accessorKey: 'remarks', header: 'Remarks' }]
 </script>
 
 <template>
   <div>
-    <UTable :rows="games" :loading="gamesPending" :columns="columns">
-    </UTable>
+    <UTable :data="games" :loading="gamesPending" :columns="columns" />
   </div>
 </template>
 
