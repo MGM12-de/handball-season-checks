@@ -37,13 +37,16 @@ importers:
         version: 0.8.18(db0@0.3.1(better-sqlite3@11.8.1))(ioredis@5.6.0)(magicast@0.3.5)(vite@6.2.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))
       '@scalar/nuxt':
         specifier: ^0.2.211
-        version: 0.2.211(@hyperjump/browser@1.2.0)(change-case@5.4.4)(magicast@0.3.5)(tailwindcss@3.4.17)(typescript@5.7.3)
+        version: 0.2.211(@hyperjump/browser@1.2.0)(change-case@5.4.4)(magicast@0.3.5)(tailwindcss@4.0.17)(typescript@5.7.3)
       better-sqlite3:
         specifier: ^11.8.1
         version: 11.8.1
       nuxt:
         specifier: ^3.16.0
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.5)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.35.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.2.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+      tailwindcss:
+        specifier: ^4.0.17
+        version: 4.0.17
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
@@ -5482,6 +5485,9 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  tailwindcss@4.0.17:
+    resolution: {integrity: sha512-OErSiGzRa6rLiOvaipsDZvLMSpsBZ4ysB4f0VKGXUrjw2jfkJRd6kjRKV2+ZmTCNvwtvgdDam5D7w6WXsdLJZw==}
+
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
@@ -6866,6 +6872,10 @@ snapshots:
     dependencies:
       tailwindcss: 3.4.17
 
+  '@headlessui/tailwindcss@0.2.2(tailwindcss@4.0.17)':
+    dependencies:
+      tailwindcss: 4.0.17
+
   '@headlessui/vue@1.7.23(vue@3.5.13(typescript@5.7.3))':
     dependencies:
       '@tanstack/vue-virtual': 3.13.2(vue@3.5.13(typescript@5.7.3))
@@ -8066,9 +8076,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.35.0':
     optional: true
 
-  '@scalar/api-client@2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@3.4.17)(typescript@5.7.3)':
+  '@scalar/api-client@2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.17)(typescript@5.7.3)':
     dependencies:
-      '@headlessui/tailwindcss': 0.2.2(tailwindcss@3.4.17)
+      '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.0.17)
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.7.3))
       '@scalar/components': 0.13.33(typescript@5.7.3)
       '@scalar/draggable': 0.1.11(typescript@5.7.3)
@@ -8117,11 +8127,11 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference@1.26.2(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@3.4.17)(typescript@5.7.3)':
+  '@scalar/api-reference@1.26.2(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.17)(typescript@5.7.3)':
     dependencies:
       '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.7.3))
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.7.3))
-      '@scalar/api-client': 2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@3.4.17)(typescript@5.7.3)
+      '@scalar/api-client': 2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.17)(typescript@5.7.3)
       '@scalar/code-highlight': 0.0.24
       '@scalar/components': 0.13.33(typescript@5.7.3)
       '@scalar/oas-utils': 0.2.116(@hyperjump/browser@1.2.0)
@@ -8219,11 +8229,11 @@ snapshots:
     transitivePeerDependencies:
       - '@hyperjump/browser'
 
-  '@scalar/nuxt@0.2.211(@hyperjump/browser@1.2.0)(change-case@5.4.4)(magicast@0.3.5)(tailwindcss@3.4.17)(typescript@5.7.3)':
+  '@scalar/nuxt@0.2.211(@hyperjump/browser@1.2.0)(change-case@5.4.4)(magicast@0.3.5)(tailwindcss@4.0.17)(typescript@5.7.3)':
     dependencies:
       '@nuxt/kit': 3.16.0(magicast@0.3.5)
-      '@scalar/api-client': 2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@3.4.17)(typescript@5.7.3)
-      '@scalar/api-reference': 1.26.2(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@3.4.17)(typescript@5.7.3)
+      '@scalar/api-client': 2.2.62(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.17)(typescript@5.7.3)
+      '@scalar/api-reference': 1.26.2(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.17)(typescript@5.7.3)
       '@scalar/types': 0.0.40
     transitivePeerDependencies:
       - '@hyperjump/browser'
@@ -13074,6 +13084,8 @@ snapshots:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
+
+  tailwindcss@4.0.17: {}
 
   tapable@2.2.1: {}
 
