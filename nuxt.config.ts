@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxthub/core',
   ],
+  css: ['~/assets/css/main.css'],
   future: {
     compatibilityVersion: 4,
   },
