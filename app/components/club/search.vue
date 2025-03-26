@@ -59,12 +59,12 @@ function onRowSelected(row: TableRow<Club>) {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col flex-1 w-full">
     <UForm class="space-y-4" :state="state" @submit="onSearch">
-      <UFormGroup label="Club name">
-        <UInput v-model="state.clubName" />
-      </UFormGroup>
-      <UButton type="submit">
+      <UFormField label="Club name">
+        <UInput v-model="state.clubName" placeholder="THW Kiel" />
+      </UFormField>
+      <UButton type="submit" icon="i-lucide-search">
         Search
       </UButton>
     </UForm>
