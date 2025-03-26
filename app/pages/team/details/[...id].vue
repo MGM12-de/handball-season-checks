@@ -47,13 +47,13 @@ const { data: games, pending: gamesPending } = await useAsyncData(
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
         <UTabs :items="items" class="w-full">
-          <template #default="{ item, selected }">
+          <template #default="{ item }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->
 
               <span class="truncate">{{ item.label }}</span>
 
-              <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
             </div>
           </template>
           <template #standing>
