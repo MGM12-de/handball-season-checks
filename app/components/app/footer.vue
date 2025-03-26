@@ -6,16 +6,16 @@ const links = [{
 </script>
 
 <template>
-  <UFooter :links="links">
+  <UFooter>
     <template #left>
       Copyright © 2024 - {{ new Date().getFullYear() }}
     </template>
 
+    <UNavigationMenu :items="links" variant="link" />
+
     <template #right>
-      <UButton
-        icon="i-simple-icons-github" color="gray" variant="ghost" to="https://github.com/MGM12-de"
-        target="_blank"
-      />
+      <UButton icon="i-simple-icons-github" color="neutral" variant="ghost" to="https://github.com/MGM12-de"
+        target="_blank" />
     </template>
   </UFooter>
 </template>

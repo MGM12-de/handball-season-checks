@@ -1,22 +1,47 @@
 <script lang="ts" setup>
+import type { TableColumn, TableRow } from '@nuxt/ui'
+import { UAvatar } from '#components'
+import { h } from 'vue'
+
+interface Club {
+  id: number
+  name: string
+  acronym: string
+  logo: string
+  organization: {
+    id: number
+    name: string
+    logo: string
+  }
+}
+
 const state = reactive({
   clubName: undefined,
 })
 const clubs = ref([])
 const loading = ref(false)
 
-const columns = [{
-  key: 'logo',
-  label: 'Logo',
+const columns: TableColumn<Club>[] = [{
+  accessorKey: 'logo',
+  header: 'Logo',
+  cell: ({ row }) => {
+    const alt = row.getValue('acronym') || ''
+    const logo = row.getValue('logo') || ''
+    return h(UAvatar, { alt: alt as string, src: logo as string })
+  },
 }, {
-  key: 'name',
-  label: 'Name',
+  accessorKey: 'name',
+  header: 'Name',
 }, {
-  key: 'acronym',
-  label: 'Acronym',
+  accessorKey: 'acronym',
+  header: 'Acronym',
 }, {
-  key: 'organization',
-  label: 'Organization',
+  accessorKey: 'organization',
+  header: 'Organization',
+  cell: ({ row }) => {
+    const org = row.getValue('organization') as Club['organization'] || { name: '', logo: '' }
+    return h(UAvatar, { src: org.logo, alt: org.name })
+  },
 }]
 
 async function onSearch() {
@@ -28,14 +53,14 @@ async function onSearch() {
   loading.value = false
 }
 
-function onRowSelected(row) {
+function onRowSelected(row: TableRow<Club>) {
   navigateTo(`/club/details/${row.id}`)
 }
 </script>
 
 <template>
   <div>
-    <UForm class="space-y-4" @submit="onSearch" :state="state">
+    <UForm class="space-y-4" :state="state" @submit="onSearch">
       <UFormGroup label="Club name">
         <UInput v-model="state.clubName" />
       </UFormGroup>
@@ -44,16 +69,7 @@ function onRowSelected(row) {
       </UButton>
     </UForm>
 
-    <UTable :rows="clubs" :columns="columns" :loading="loading" @select="onRowSelected">
-      <template #logo-data="{ row }">
-        <UAvatar :src="row.logo" :alt="row.acronym" />
-      </template>
-
-      <template #organization-data="{ row }">
-        <UAvatar :src="row.organization.logo" :alt="row.organization.name" />
-        <span>{{ row.organization.name }}</span>
-      </template>
-    </UTable>
+    <UTable :data="clubs" :columns="columns" :loading="loading" @select="onRowSelected" />
   </div>
 </template>
 
