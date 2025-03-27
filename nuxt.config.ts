@@ -33,8 +33,8 @@ export default defineNuxtConfig({
     strategy: 'no_prefix',
     defaultLocale: 'en',
     baseUrl: 'https://handball-checks.mgm12.dev',
-    locales: [{ code: 'en', name: 'English', language: 'en-US', file: 'en.ts' }, { code: 'de', name: 'Deutsch', language: 'de-DE', file: 'de.ts' }],
-    langDir: 'locales/',
+    locales: [{ code: 'en', name: 'English', language: 'en-US' }, { code: 'de', name: 'Deutsch', language: 'de-DE' }],
+    vueI18n: './i18n.config.ts',
     detectBrowserLanguage: {
       useCookie: true,
       cookieCrossOrigin: true,
