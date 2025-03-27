@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as locales from '@nuxt/ui/locale'
+import { de, en } from '@nuxt/ui/locale'
 
 const { locale, t } = useI18n()
 
@@ -23,7 +23,7 @@ const links = [
     <template #right>
       <UColorModeButton />
 
-      <ULocaleSelect v-model="locale" :locales="Object.values(locales)" class="w-48" />
+      <ULocaleSelect v-model="locale" :locales="[en, de]" class="w-48" />
 
       <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
         color="neutral" variant="ghost" />
