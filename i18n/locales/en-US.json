@@ -6,5 +6,6 @@
   "siteDescription": "A website to check the current season",
   "name": "Name",
   "clubName": "Club name",
-  "search": "Search"
+  "search": "Search",
+  "memberClubs": "Member clubs"
 }

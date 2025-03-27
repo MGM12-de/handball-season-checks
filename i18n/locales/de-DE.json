@@ -6,5 +6,6 @@
   "siteDescription": "Eine Webseite um die Handball-Saison zu überprüfen",
   "name": "Name",
   "clubName": "Vereinsname",
-  "search": "Suchen"
+  "search": "Suchen",
+  "memberClubs": "Stammvereine"
 }

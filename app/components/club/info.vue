@@ -51,13 +51,13 @@ useAsyncData(
 <template>
   <div>
     <UForm :state="state" class="space-y-4">
-      <UFormGroup v-if="state.ceo" label="CEO" name="ceo">
+      <UFormField v-if="state.ceo" label="CEO" name="ceo">
         <UInput v-model="state.ceo" disabled />
-      </UFormGroup>
-      <UFormGroup v-if="state.president" label="President" name="president">
+      </UFormField>
+      <UFormField v-if="state.president" label="President" name="president">
         <UInput v-model="state.president" disabled />
-      </UFormGroup>
-      <UFormGroup label="Contact" name="contact">
+      </UFormField>
+      <UFormField label="Contact" name="contact">
         <UInput v-if="state.contact" v-model="state.contact" disabled />
         <UButton v-if="state.email" icon="i-heroicons-envelope" color="primary" variant="link" :label="state.email"
           :to="state.email" />
@@ -65,19 +65,19 @@ useAsyncData(
           :to="state.telephone" />
         <UButton v-if="state.fax" icon="i-heroicons-printer" color="primary" variant="link" :label="state.fax"
           :to="state.fax" />
-      </UFormGroup>
-      <UFormGroup v-if="state.address" label="Address" name="address">
+      </UFormField>
+      <UFormField v-if="state.address" label="Address" name="address">
         <UTextarea v-model="state.address" disabled />
-      </UFormGroup>
-      <UFormGroup v-if="state.website" label="Website" name="website">
+      </UFormField>
+      <UFormField v-if="state.website" label="Website" name="website">
         <UButton icon="i-heroicons-globe-alt" color="primary" variant="link" :label="state.website"
           :to="state.website" />
-      </UFormGroup>
-      <UFormGroup v-if="state.ticketshop" label="Ticketshop" name="tickets">
+      </UFormField>
+      <UFormField v-if="state.ticketshop" label="Ticketshop" name="tickets">
         <UButton icon="i-heroicons-ticket" color="primary" variant="link" :label="state.ticketshop"
           :to="state.ticketshop" />
-      </UFormGroup>
-      <UFormGroup label="Socials" name="socials">
+      </UFormField>
+      <UFormField label="Socials" name="socials">
         <UButton v-if="state.facebook" icon="i-simple-icons-facebook" color="primary" variant="link" label="Facebook"
           :to="state.facebook" />
         <UButton v-if="state.instagram" icon="i-simple-icons-instagram" color="primary" variant="link" label="Instagram"
@@ -88,7 +88,7 @@ useAsyncData(
           :to="state.twitter" />
         <UButton v-if="state.tikTok" icon="i-simple-icons-tiktok" color="primary" variant="link" label="TikTok"
           :to="state.tikTok" />
-      </UFormGroup>
+      </UFormField>
     </UForm>
   </div>
 </template>
