@@ -75,7 +75,7 @@ function onRowSelected(row: TableRow<Club>) {
         <UInput v-model="state.clubName" placeholder="THW Kiel" />
       </UFormField>
       <UButton type="submit" icon="i-lucide-search">
-        t('search')
+        {{ t('search') }}
       </UButton>
     </UForm>
 

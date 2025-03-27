@@ -65,6 +65,13 @@
   "i18n-ally.localesPaths": [
     "./i18n/locales"
   ],
-  "i18n-ally.enabledFrameworks": ["vue"]
+  "i18n-ally.enabledFrameworks": ["vue"],
+  "i18n-ally.enabledFeatures": [
+    "auto-complete",
+    "auto-import"
+  ],
+  "i18n-ally.enabledParsers": [
+    "ts"
+  ]
 
 }
