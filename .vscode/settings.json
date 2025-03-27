@@ -71,7 +71,8 @@
     "auto-import"
   ],
   "i18n-ally.enabledParsers": [
-    "ts"
+    "ts",
+    "json"
   ]
 
 }
