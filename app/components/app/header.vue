@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { de, en } from '@nuxt/ui/locale'
+
+const { locale, t } = useI18n()
+
 const links = [
   {
-    label: 'Liga suchen',
+    label: t('searchTournament'),
     icon: 'i-lucide-search',
     to: '/tournament',
   },
@@ -18,6 +22,8 @@ const links = [
 
     <template #right>
       <UColorModeButton />
+
+      <ULocaleSelect v-model="locale" :locales="[en, de]" class="w-48" />
 
       <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
         color="neutral" variant="ghost" />

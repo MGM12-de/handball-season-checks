@@ -3,6 +3,8 @@ import type { TableColumn, TableRow } from '@nuxt/ui'
 import { UAvatar } from '#components'
 import { h } from 'vue'
 
+const { t } = useI18n()
+
 interface Club {
   id: number
   name: string
@@ -34,7 +36,7 @@ const columns: TableColumn<Club>[] = [{
   },
 }, {
   accessorKey: 'name',
-  header: 'Name',
+  header: `${t('name')}`,
 }, {
   accessorKey: 'acronym',
   header: 'Acronym',
@@ -48,7 +50,7 @@ const columns: TableColumn<Club>[] = [{
 }]
 
 const columnVisibility = ref({
-  id: false
+  id: false,
 })
 
 async function onSearch() {
@@ -69,15 +71,16 @@ function onRowSelected(row: TableRow<Club>) {
 <template>
   <div class="flex flex-col flex-1 w-full">
     <UForm class="space-y-4" :state="state" @submit="onSearch">
-      <UFormField label="Club name">
+      <UFormField :label="t('clubName')">
         <UInput v-model="state.clubName" placeholder="THW Kiel" />
       </UFormField>
       <UButton type="submit" icon="i-lucide-search">
-        Search
+        {{ t('search') }}
       </UButton>
     </UForm>
 
-    <UTable :data="clubs" :columns="columns" :loading="loading" @select="onRowSelected" v-model:column-visibility="columnVisibility" />
+    <UTable v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
+      @select="onRowSelected" />
   </div>
 </template>
 

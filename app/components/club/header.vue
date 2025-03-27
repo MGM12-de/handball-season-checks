@@ -5,6 +5,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 const memberClubs = ref<{ id: number, name: string }[]>([])
 const { club } = props
 
@@ -24,20 +25,20 @@ if (club.hasMemberClubs) {
 
 <template>
   <div>
-    <ULandingCard :title="club.acronym" :description="club.organization.name" orientation="horizontal">
+    <UPageCard :title="club.acronym" :description="club.organization.name" orientation="horizontal">
       <!-- <NuxtImg :src="club.logo" width="200" height="100" /> -->
       <UAvatarGroup size="2xl">
         <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
         <UAvatar :src="club.logo" :alt="club.acronym" />
       </UAvatarGroup>
       <div v-if="club.hasMemberClubs">
-        <h2>Stammvereine</h2>
+        <h2>{{ t('memberClubs') }}</h2>
         <div v-for="member in memberClubs" :key="member.id">
           <span>{{ member.name }}</span>
         </div>
       </div>
       <ClubInfo :club="club" />
-    </ULandingCard>
+    </UPageCard>
   </div>
 </template>
 
