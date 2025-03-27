@@ -3,6 +3,9 @@ import * as locales from '@nuxt/ui-pro/locale'
 
 const { locale } = useI18n()
 
+const lang = computed(() => locales[locale.value].code)
+const dir = computed(() => locales[locale.value].dir)
+
 const colorMode = useColorMode()
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 const title = 'Handball checks'
@@ -20,7 +23,8 @@ useHead({
     { rel: 'icon', href: '/favicon.ico' },
   ],
   htmlAttrs: {
-    lang: 'en',
+    lang,
+    dir,
   },
 })
 
