@@ -1,6 +1,5 @@
 import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
-
 defineRouteMeta({
   openAPI: {
     description: 'Get Club data',
@@ -12,8 +11,9 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.36',
-      }],
-  }
+      },
+    ],
+  },
 })
 
 /**
@@ -38,7 +38,7 @@ defineRouteMeta({
  *       200:
  *         description: The club data
  */
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36
   const query = getQuery(event)
 
@@ -69,4 +69,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Error fetching club data. (${error})`,
     })
   }
+}, {
+  maxAge: 60 * 60 * 24 * 7, // 1 week
+  name: 'club',
+  swr: true,
+  getKey: event => event.path,
 })
