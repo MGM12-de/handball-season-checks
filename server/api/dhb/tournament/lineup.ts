@@ -1,7 +1,6 @@
 import { getTournamentUrl } from '../../../../server/utils/dhbUtils'
 import team from '../team'
 
-
 defineRouteMeta({
   openAPI: {
     description: 'Get tournament lineup',
@@ -13,8 +12,9 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.m-bol_hf',
-      }],
-  }
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {
@@ -27,24 +27,29 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
+  const lineup = []
+
   try {
-    var lineup = []
     const tournamentId = query.id as string
     const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
 
-    for (const row of tournamentTable.data.rows) {
-      const teamLineup = await $fetch(`/api/dhb/team/lineup`, {
+    // Create an array of promises for fetching team lineups
+    const lineupPromises = tournamentTable.data.rows.map(row =>
+      $fetch(`/api/dhb/team/lineup`, {
         query: { id: row.team.id },
-      })
-
-      teamLineup.forEach((player) => {
-        lineup.push({
+      }).then(teamLineup =>
+        teamLineup.map(player => ({
           ...player,
-          team: row.team
-        })
-      }
-      )
-    }
+          team: row.team,
+        })),
+      ),
+    )
+
+    // Wait for all promises to resolve
+    const resolvedLineups = await Promise.all(lineupPromises)
+
+    // Flatten the array of arrays into a single array
+    resolvedLineups.forEach(teamPlayers => lineup.push(...teamPlayers))
 
     return lineup
   }
