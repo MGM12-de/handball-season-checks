@@ -18,6 +18,7 @@ const links = ref([
     trailingIcon: 'i-lucide-arrow-right',
     variant: 'subtle',
     color: 'neutral',
+    target: '_blank',
   },
 ])
 </script>
