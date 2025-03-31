@@ -9,9 +9,27 @@ export const pwa: ModuleOptions = {
         theme_color: '#FFBF00',
         background_color: '#ffffff',
         display: 'standalone',
+        start_url: '/',
+        categories: ['games', 'sports', 'handball'],
     },
     pwaAssets: {
         image: '../public/favicon.svg',
     },
-
+    workbox: {
+        navigateFallback: '/',
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    injectManifest: {
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    client: {
+        installPrompt: true,
+    },
+    devOptions: {
+        enabled: true,
+        suppressWarnings: true,
+        navigateFallback: '/',
+        navigateFallbackAllowlist: [/^\/$/],
+        type: 'module',
+    },
 }
