@@ -1,5 +1,4 @@
-import type { Game, Lineup, Player } from '~~/types'
-import { getTeamUrl } from '../../../../server/utils/dhbUtils'
+import type { Game, Lineup } from '~~/types'
 
 defineRouteMeta({
   openAPI: {
