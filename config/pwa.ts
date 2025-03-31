@@ -20,9 +20,7 @@ export const pwa: ModuleOptions = {
     workbox: {
         navigateFallback: '/',
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-    },
-    injectManifest: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        maximumFileSizeToCacheInBytes: 3000000,
     },
     client: {
         installPrompt: true,
