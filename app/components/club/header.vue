@@ -6,7 +6,7 @@ const props = defineProps({
   },
 })
 const { t } = useI18n()
-const memberClubs = ref<{ id: number, name: string }[]>([])
+const memberClubs = ref(useState(() => []))
 const { club } = props
 
 if (club.hasMemberClubs) {
@@ -17,7 +17,7 @@ if (club.hasMemberClubs) {
     }),
   ).then(
     (response) => {
-      memberClubs.value = response.data as unknown as { id: number, name: string }[]
+      memberClubs.value = response.data || []
     },
   )
 }
@@ -26,7 +26,6 @@ if (club.hasMemberClubs) {
 <template>
   <div>
     <UPageCard :title="club.acronym" :description="club.organization.name" orientation="horizontal">
-      <!-- <NuxtImg :src="club.logo" width="200" height="100" /> -->
       <UAvatarGroup size="2xl">
         <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
         <UAvatar :src="club.logo" :alt="club.acronym" />
@@ -34,7 +33,10 @@ if (club.hasMemberClubs) {
       <div v-if="club.hasMemberClubs">
         <h2>{{ t('memberClubs') }}</h2>
         <div v-for="member in memberClubs" :key="member.id">
-          <span>{{ member.name }}</span>
+          <UBadge :avatar="{ src: member.logo, alt: member.acronym }" size="lg" variant="outline" color="neutral"
+            class="m-1">
+            {{ member.name }}
+          </UBadge>
         </div>
       </div>
       <ClubInfo :club="club" />
