@@ -11,6 +11,8 @@ export const pwa: ModuleOptions = {
         display: 'standalone',
         start_url: '/',
         categories: ['games', 'sports', 'handball'],
+        id: '/',
+        orientation: 'portrait',
     },
     pwaAssets: {
         image: '../public/favicon.svg',
