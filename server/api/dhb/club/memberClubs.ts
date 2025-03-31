@@ -11,8 +11,9 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.1187',
-      }],
-  }
+      },
+    ],
+  },
 })
 
 /**
@@ -30,6 +31,12 @@ export default defineEventHandler(async (event) => {
   }
   const clubId = query.id as string
   const clubInfo = await $fetch(`${getClubUrl(clubId)}/member-clubs`)
+
+  clubInfo.data.forEach((club: any) => {
+    if (club.logo) {
+      club.logo = normalizeDHBUrl(club.logo)
+    }
+  })
 
   return clubInfo.data
 })
