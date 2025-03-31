@@ -1,5 +1,4 @@
-import { i18n } from './config/i18n'
-import { pwa } from './config/pwa'
+import { i18n, pwa } from './config/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
