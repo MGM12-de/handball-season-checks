@@ -17,7 +17,7 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
   const query = getQuery(event)
 
@@ -60,4 +60,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Error fetching tournament data. (${error})`,
     })
   }
+}, {
+  maxAge: 60 * 60 * 24, // 1 day
+  name: 'tournament-lineup',
+  swr: true,
+  getKey: event => event.path,
 })

@@ -11,12 +11,13 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.36',
-        summary: 'Team id'
-      }],
-  }
+        summary: 'Team id',
+      },
+    ],
+  },
 })
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.id) {
@@ -33,4 +34,9 @@ export default defineEventHandler(async (event) => {
   currentTeam.class = 'bg-primary-500 animate-pulse'
 
   return standings
+}, {
+  maxAge: 60 * 60 * 24, // 1 day
+  name: 'team-standing',
+  swr: true,
+  getKey: event => event.path,
 })

@@ -88,5 +88,7 @@ export default cachedEventHandler(async (event) => {
   }
 }, {
   maxAge: 60 * 60 * 24, // 1 day
+  name: 'team-games',
+  swr: true,
   getKey: event => event.path,
 })
