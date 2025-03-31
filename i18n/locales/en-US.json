@@ -7,5 +7,8 @@
   "name": "Name",
   "clubName": "Club name",
   "search": "Search",
-  "memberClubs": "Member clubs"
+  "memberClubs": "Member clubs",
+  "searchClub": "Search club",
+  "searchClubDescription": "Here you can search for a club.",
+  "visitOriginalSite": "Visit handball.net"
 }

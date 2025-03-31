@@ -7,5 +7,8 @@
   "name": "Name",
   "clubName": "Vereinsname",
   "search": "Suchen",
-  "memberClubs": "Stammvereine"
+  "memberClubs": "Stammvereine",
+  "searchClub": "Vereinssuche",
+  "searchClubDescription": "Hier kann nach einem Verein gesucht werden.",
+  "visitOriginalSite": "handball.net besuchen"
 }

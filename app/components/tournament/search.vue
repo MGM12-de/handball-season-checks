@@ -2,6 +2,8 @@
 import type { TableColumn, TableRow } from '@nuxt/ui'
 import { h, resolveComponent } from 'vue'
 
+const { t } = useI18n()
+
 const UAvatar = resolveComponent('UAvatar')
 
 const state = reactive({
@@ -65,8 +67,8 @@ function onRowSelected(row: TableRow<any>) {
       <UFormField label="Tournament">
         <UInput v-model="state.tournament" placeholder="HBL" />
       </UFormField>
-      <UButton type="submit">
-        Search
+      <UButton type="submit" icon="i-lucide-search">
+        {{ t('search') }}
       </UButton>
     </UForm>
 

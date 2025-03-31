@@ -73,6 +73,7 @@
   "i18n-ally.enabledParsers": [
     "ts",
     "json"
-  ]
+  ],
+  "i18n-ally.keystyle": "flat"
 
 }

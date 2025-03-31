@@ -5,6 +5,11 @@ const { locale, t } = useI18n()
 
 const links = [
   {
+    label: t('searchClub'),
+    icon: 'i-lucide-search',
+    to: '/club',
+  },
+  {
     label: t('searchTournament'),
     icon: 'i-lucide-search',
     to: '/tournament',
