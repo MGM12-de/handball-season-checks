@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     autoImport: true,
   },
   hub: {
+    cache: true,
   },
   nitro: {
     experimental: {
