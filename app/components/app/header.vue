@@ -20,7 +20,7 @@ const links = [
 <template>
   <UHeader>
     <template #title>
-      <AppLogo class="w-auto h-6" />
+      <AppLogo class="w-15 h-auto " />
     </template>
 
     <UNavigationMenu :items="links" />

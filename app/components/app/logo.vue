@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    <UIcon name="i-mdi-abacus" />
+    <NuxtImg src="/logo.svg" class="dark:invert-100" />
   </div>
 </template>
 
