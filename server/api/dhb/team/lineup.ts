@@ -17,7 +17,7 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   try {
     const query = getQuery(event)
     const games: Game[] = []
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       query: { id: teamId },
     })
 
-    let teamLineup = new Array<Lineup>()
+    const teamLineup = new Array<Lineup>()
 
     await Promise.all(teamApi.map(async (game) => {
       const lineup = await $fetch('/api/dhb/game/lineup', {
@@ -75,4 +75,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Error fetching team lineup data. (${error})`,
     })
   }
+}, {
+  maxAge: 60 * 60 * 24, // 1 day
+  name: 'team-lineup',
+  swr: true,
+  getKey: event => event.path,
 })
