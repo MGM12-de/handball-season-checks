@@ -11,7 +11,7 @@ export const pwa: ModuleOptions = {
         display: 'standalone',
     },
     pwaAssets: {
-
+        image: '../public/favicon.svg',
     },
 
 }
