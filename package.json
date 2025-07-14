@@ -16,7 +16,7 @@
     "@iconify-json/heroicons": "^1.2.2",
     "@iconify-json/lucide": "^1.2.48",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/simple-icons": "^1.2.38",
+    "@iconify-json/simple-icons": "^1.2.43",
     "@nuxt/content": "^3.6.0",
     "@nuxt/eslint": "1.4.1",
     "@nuxt/image": "^1.10.0",
