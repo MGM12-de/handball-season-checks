@@ -19,7 +19,7 @@ export const pwa: ModuleOptions = {
     },
     workbox: {
         navigateFallback: '/',
-        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         maximumFileSizeToCacheInBytes: 3000000,
     },
     client: {
