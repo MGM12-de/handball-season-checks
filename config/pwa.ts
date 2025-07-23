@@ -20,6 +20,7 @@ export const pwa: ModuleOptions = {
     workbox: {
         navigateFallback: '/',
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        globIgnores: ['**/_payload.json'],
         maximumFileSizeToCacheInBytes: 3000000,
     },
     client: {
