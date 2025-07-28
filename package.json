@@ -23,7 +23,7 @@
     "@nuxt/kit": "^4.0.1",
     "@nuxt/ui-pro": "^3.2.0",
     "@nuxthub/core": "^0.9.0",
-    "@nuxtjs/i18n": "^10.0.2",
+    "@nuxtjs/i18n": "^10.0.3",
     "@scalar/nuxt": "^0.4.34",
     "@vite-pwa/nuxt": "1.0.4",
     "better-sqlite3": "^12.2.0",
