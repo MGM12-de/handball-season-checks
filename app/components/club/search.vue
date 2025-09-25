@@ -72,7 +72,7 @@ function onRowSelected(row: TableRow<Club>) {
   <div class="flex flex-col flex-1 w-full">
     <UForm class="space-y-4" :state="state" @submit="onSearch">
       <UFormField :label="t('clubName')">
-        <UInput v-model="state.clubName" placeholder="THW Kiel" />
+        <UInput v-model="state.clubName" placeholder="THW Kiel" @keydown.enter="onSearch" />
       </UFormField>
       <UButton type="submit" icon="i-lucide-search">
         {{ t('search') }}
