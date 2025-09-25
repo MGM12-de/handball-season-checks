@@ -1,5 +1,5 @@
 import type { Game } from '../../../../types'
-import { de } from '@nuxt/ui-pro/runtime/locale/index.js'
+import { de } from '@nuxt/ui/runtime/locale/index.js'
 import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
