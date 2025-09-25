@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   extends: [],
-  modules: ['@nuxt/content', '@nuxt/ui-pro', '@nuxtjs/i18n', '@nuxt/image', '@scalar/nuxt', '@nuxt/eslint', '@nuxthub/core', '@vite-pwa/nuxt'],
+  modules: ['@nuxt/content', '@nuxt/ui', '@nuxtjs/i18n', '@nuxt/image', '@scalar/nuxt', '@nuxt/eslint', '@nuxthub/core', '@vite-pwa/nuxt'],
   css: ['~/assets/css/main.css'],
   future: {
     compatibilityVersion: 4,
