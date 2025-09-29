@@ -37,7 +37,7 @@
     "@vite-pwa/assets-generator": "^1.0.1",
     "eslint": "^9.36.0",
     "eslint-plugin-format": "^1.0.2",
-    "wrangler": "^4.40.0"
+    "wrangler": "^4.40.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
