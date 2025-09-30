@@ -24,7 +24,7 @@
     "@nuxt/ui": "^4.0.0",
     "@nuxthub/core": "^0.9.0",
     "@nuxtjs/i18n": "^10.1.0",
-    "@scalar/nuxt": "^0.5.15",
+    "@scalar/nuxt": "^0.5.17",
     "@vite-pwa/nuxt": "1.0.4",
     "better-sqlite3": "^12.4.1",
     "nuxt": "^4.1.2",
@@ -37,7 +37,7 @@
     "@vite-pwa/assets-generator": "^1.0.1",
     "eslint": "^9.36.0",
     "eslint-plugin-format": "^1.0.2",
-    "wrangler": "^4.40.0"
+    "wrangler": "^4.40.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
