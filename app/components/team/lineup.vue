@@ -14,7 +14,19 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const { teamId } = props
 
-const columns: TableColumn<any>[] = [{ accessorKey: 'firstname', header: ({ column }) => getHeader(column, 'Firstname') }, { accessorKey: 'lastname', header: ({ column }) => getHeader(column, 'Lastname') }, { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') }, { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') }, { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') }, { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') }, { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') }, { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') }]
+const columns: TableColumn<any>[] = [
+  {
+    accessorKey: 'name',
+    header: ({ column }) => getHeader(column, 'Name'),
+    cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
+  },
+  { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
+  { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+  { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') },
+  { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') },
+  { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') },
+  { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') },
+]
 
 const { data: teamLineup, status: teamLineupState } = await useAsyncData(
   `team/${teamId}/lineup`,
