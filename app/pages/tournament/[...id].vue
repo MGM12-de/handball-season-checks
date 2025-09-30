@@ -57,9 +57,21 @@ const { data: tournamentTable, status: tournamentTableStatus } = await useAsyncD
   }),
 )
 
-const lineupCols: TableColumn<any>[] = [{ accessorKey: 'firstname', header: ({ column }) => getHeader(column, 'Firstname') }, { accessorKey: 'lastname', header: ({ column }) => getHeader(column, 'Lastname') }, { accessorKey: 'team.name', header: ({ column }) => getHeader(column, 'Team') }, { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') }, { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+const lineupCols: TableColumn<any>[] = [
+  { 
+    accessorKey: 'name', 
+    header: ({ column }) => getHeader(column, 'Name'),
+    cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`
+  }, 
+  { accessorKey: 'team.name', header: ({ column }) => getHeader(column, 'Team') }, 
+  { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') }, 
+  { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
 // { accessorKey: 'penaltyGoals', header: 'Penalty goals' }, { accessorKey: 'penaltyMissed', header: 'Penalty missed' },
-{ accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') }, { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') }, { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') }, { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') }]
+  { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') }, 
+  { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') }, 
+  { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') }, 
+  { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') }
+]
 
 const { data: tournamentLineup, status: tournamentLineupStatus } = await useAsyncData(
   `tournament/${route.params.id}/lineup`,
