@@ -30,6 +30,27 @@ function shouldShowColumn(fieldName: string) {
 // Define conditional columns with their visibility logic
 const conditionalColumns = [
   { key: 'remarks', label: 'Remarks', shouldShow: shouldShowColumn('remarks') },
+  {
+    key: 'pdfUrl',
+    label: 'PDF',
+    shouldShow: shouldShowColumn('pdfUrl'),
+    cell: ({ row }) => {
+      if (!row.original.pdfUrl)
+        return ''
+      return h('a', {
+        'href': row.original.pdfUrl,
+        'target': '_blank',
+        'rel': 'noopener noreferrer',
+        'class': 'inline-flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors',
+        'aria-label': 'Open PDF',
+      }, [
+        h(resolveComponent('UIcon'), {
+          name: 'i-heroicons-document-text',
+          class: 'w-5 h-5',
+        }),
+      ])
+    },
+  },
 ]
 
 const columns = computed<TableColumn<any>[]>(() => {
@@ -42,12 +63,19 @@ const columns = computed<TableColumn<any>[]>(() => {
   ]
 
   // Add conditional columns
-  conditionalColumns.forEach(({ key, label, shouldShow }) => {
+  conditionalColumns.forEach(({ key, label, shouldShow, cell }) => {
     if (shouldShow.value) {
-      baseColumns.push({
+      const column = {
         accessorKey: key,
         header: label,
-      })
+      }
+
+      // Add custom cell renderer if provided
+      if (cell) {
+        column.cell = cell
+      }
+
+      baseColumns.push(column)
     }
   })
 
