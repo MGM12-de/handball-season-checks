@@ -1,5 +1,5 @@
 import type { Game } from '../../../../types'
-import { de } from '@nuxt/ui/runtime/locale/index.js'
+import { de, el } from '@nuxt/ui/runtime/locale/index.js'
 import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
@@ -66,6 +66,7 @@ export default cachedEventHandler(async (event) => {
           id: element.tournament.id,
           name: element.tournament.name,
         },
+        referee: element.refereeInfo,
         result: element.result,
         homeGoals: element.homeGoals,
         awayGoals: element.awayGoals,
@@ -73,7 +74,9 @@ export default cachedEventHandler(async (event) => {
         remarks: element.remarks,
         field: {
           id: element.field.id,
+          fieldNumber: element.field.fieldNumber,
           name: element.field.name,
+          city: element.field.city,
         },
         pdfUrl: element.pdfUrl,
       })
