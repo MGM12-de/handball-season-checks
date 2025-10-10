@@ -46,7 +46,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
-        <UTabs :items="items" class="w-full">
+        <UTabs :items="items" class="w-full" variant="link">
           <template #default="{ item }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->
