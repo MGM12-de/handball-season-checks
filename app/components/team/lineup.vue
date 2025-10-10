@@ -14,26 +14,53 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const { teamId } = props
 
-const columns: TableColumn<any>[] = [
-  {
-    accessorKey: 'name',
-    header: ({ column }) => getHeader(column, 'Name'),
-    cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
-  },
-  { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
-  { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
-  { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') },
-  { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') },
-  { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') },
-  { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') },
-]
-
 const { data: teamLineup, status: teamLineupState } = await useAsyncData(
   `team/${teamId}/lineup`,
   () => $fetch('/api/dhb/team/lineup', {
     query: { id: teamId },
   }),
 )
+
+// Helper function to check if a column should be shown
+function shouldShowColumn(fieldName: string) {
+  return computed(() => {
+    if (!teamLineup.value || teamLineup.value.length === 0)
+      return false
+    return teamLineup.value.some(player => player[fieldName] > 0)
+  })
+}
+
+// Define conditional columns with their visibility logic
+const conditionalColumns = [
+  { key: 'yellowCards', label: 'Yellow Cards', shouldShow: shouldShowColumn('yellowCards') },
+  { key: 'penalties', label: 'Penalties', shouldShow: shouldShowColumn('penalties') },
+  { key: 'redCards', label: 'Red Cards', shouldShow: shouldShowColumn('redCards') },
+  { key: 'blueCards', label: 'Blue Cards', shouldShow: shouldShowColumn('blueCards') },
+]
+
+const columns = computed<TableColumn<any>[]>(() => {
+  const baseColumns: TableColumn<any>[] = [
+    {
+      accessorKey: 'name',
+      header: ({ column }) => getHeader(column, 'Name'),
+      cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
+    },
+    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
+    { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+  ]
+
+  // Add conditional columns
+  conditionalColumns.forEach(({ key, label, shouldShow }) => {
+    if (shouldShow.value) {
+      baseColumns.push({
+        accessorKey: key,
+        header: ({ column }) => getHeader(column, label),
+      })
+    }
+  })
+
+  return baseColumns
+})
 
 const q = ref('')
 
