@@ -18,7 +18,6 @@ defineRouteMeta({
 })
 
 export default defineCachedEventHandler(async (event) => {
-  // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
   const query = getQuery(event)
 
   if (!query.id) {
@@ -27,34 +26,49 @@ export default defineCachedEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const lineup = []
 
   try {
     const tournamentId = query.id as string
     const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
 
-    // Create an array of promises for fetching team lineups
-    const lineupPromises = tournamentTable.data.rows.map(row =>
-      $fetch(`/api/dhb/team/lineup`, {
-        query: { id: row.team.id },
-      }).then(teamLineup =>
-        teamLineup.map(player => ({
+    // Helper function to process promises in batches
+    const processInBatches = async (items, batchSize, callback) => {
+      const results = []
+      for (let i = 0; i < items.length; i += batchSize) {
+        const batch = items.slice(i, i + batchSize)
+        const batchResults = await Promise.all(batch.map(callback))
+        results.push(...batchResults)
+        // Optional: Add small delay between batches to prevent overwhelming the API
+        if (i + batchSize < items.length) {
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+      }
+      return results
+    }
+
+    // Process team lineups in batches of 3-5
+    const batchSize = 3
+    const resolvedLineups = await processInBatches(
+      tournamentTable.data.rows,
+      batchSize,
+      async (row) => {
+        const teamLineup = await $fetch(`/api/dhb/team/lineup`, {
+          query: { id: row.team.id },
+        })
+        return teamLineup.map(player => ({
           ...player,
           team: row.team,
-        })),
-      ),
+        }))
+      },
     )
 
-    // Wait for all promises to resolve
-    const resolvedLineups = await Promise.all(lineupPromises)
-
-    // Flatten the array of arrays into a single array
+    // Flatten results
+    const lineup = []
     resolvedLineups.forEach(teamPlayers => lineup.push(...teamPlayers))
 
     return lineup
   }
   catch (error) {
-    // Handle potential errors from $fetch
     throw createError({
       statusCode: 500,
       statusMessage: `Error fetching tournament data. (${error})`,
@@ -64,5 +78,5 @@ export default defineCachedEventHandler(async (event) => {
   maxAge: 60 * 60 * 24, // 1 day
   name: 'tournament-lineup',
   swr: true,
-  getKey: event => event.path,
+  getKey: event => `${event.path}`,
 })
