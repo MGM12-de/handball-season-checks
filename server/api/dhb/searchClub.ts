@@ -11,35 +11,36 @@ defineRouteMeta({
         name: 'clubName',
         required: true,
         example: 'THW Kiel',
-      }],
+      },
+    ],
     responses: {
       400: {
-        description: "Bad Request",
-        summary: "Expected a clubname but got none",
+        description: 'Bad Request',
+        summary: 'Expected a clubname but got none',
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/Error'
-            }
-          }
-        }
+              $ref: '#/components/schemas/Error',
+            },
+          },
+        },
       },
       200: {
-        description: "Found a club",
-        summary: "Found a club",
+        description: 'Found a club',
+        summary: 'Found a club',
         content: {
           'application/json': {
             schema: {
               type: 'array',
               items: {
-                $ref: '#/components/schemas/Club'
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                $ref: '#/components/schemas/Club',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 })
 
 /**
@@ -48,7 +49,7 @@ defineRouteMeta({
  * @returns {Promise<Club[]>}
  * @throws {Error}
  */
-export default defineEventHandler(async (event) => {
+export default cachedEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.clubName) {
@@ -69,4 +70,9 @@ export default defineEventHandler(async (event) => {
     }
   })
   return clubs.data
+}, {
+  maxAge: 60 * 60, // 1 hour
+  name: 'search-club',
+  swr: true,
+  getKey: event => getQuery(event).clubName,
 })
