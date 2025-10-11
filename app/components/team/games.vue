@@ -85,7 +85,7 @@ const columns = computed<TableColumn<any>[]>(() => {
 
 <template>
   <div>
-    <UTable :data="games" :loading="gamesPending" :columns="columns" />
+    <UTable :data="games" :loading="gamesPending" :columns="columns" sticky />
   </div>
 </template>
 

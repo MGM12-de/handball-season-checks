@@ -148,7 +148,7 @@ function getHeader(column: Column<any>, label: string) {
     </div>
 
     <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="teamLineupState === 'pending'"
-      class="flex-1" />
+      class="flex-1" sticky />
   </div>
 </template>
 
