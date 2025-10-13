@@ -162,8 +162,13 @@ function getHeader(column: Column<any>, label: string) {
     <UPage>
       <UPageHeader headline="Club Lineup" :title="`${club?.name} - Players`" />
       <UPageBody>
-        <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="pending" class="flex-1"
-          sticky />
+        <div class="flex flex-col flex-1 w-full">
+          <div class="flex px-4 py-3.5 border-b border-accented">
+            <UInput v-model="q" class="max-w-sm" placeholder="Spieler suchen..." />
+          </div>
+          <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="pending" class="flex-1"
+            sticky />
+        </div>
       </UPageBody>
     </UPage>
   </div>
