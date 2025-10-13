@@ -9,12 +9,14 @@ interface ClubPlayer extends Player {
   teams: Array<{
     id: string
     name: string
+    acronym?: string
+    ageGroup?: string
   }>
 }
 
 // Helper function to create a unique player key
 function getPlayerKey(player: Player): string {
-  return `${player.firstname?.toLowerCase()}_${player.lastname?.toLowerCase()}_${player.number}`
+  return `${player.firstname?.toLowerCase()}_${player.lastname?.toLowerCase()}`
 }
 
 export default defineCachedEventHandler(async (event) => {
@@ -57,7 +59,8 @@ export default defineCachedEventHandler(async (event) => {
           existingPlayer.teams.push({
             id: team.id,
             name: team.name,
-            // ageGroup: team.defaultTournament.ageGroup,
+            acronym: team.defaultTournament?.acronym,
+            ageGroup: team.defaultTournament?.ageGroup,
           })
         }
       }
@@ -68,7 +71,8 @@ export default defineCachedEventHandler(async (event) => {
           teams: [{
             id: team.id,
             name: team.name,
-
+            acronym: team.defaultTournament?.acronym,
+            ageGroup: team.defaultTournament?.ageGroup,
           }],
         })
       }

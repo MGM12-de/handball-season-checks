@@ -1,5 +1,11 @@
 <script lang="ts" setup>
+import type { TableColumn } from '@nuxt/ui'
+import type { Column } from '@tanstack/vue-table'
+
 const route = useRoute()
+
+const UButton = resolveComponent('UButton')
+const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const { data: lineup, pending } = await useAsyncData(
   `club-lineup/${route.params.id}`,
@@ -20,6 +26,135 @@ useSeoMeta({
   title: `${club.value?.name} - Lineup`,
   description: `Player lineup and statistics for ${club.value?.name}`,
 })
+
+function shouldShowColumn(fieldName: string) {
+  return computed(() => {
+    if (!lineup.value || lineup.value.length === 0)
+      return false
+    return lineup.value.some(player => (player as any)[fieldName] > 0)
+  })
+}
+
+// Define conditional columns with their visibility logic
+const conditionalColumns = [
+  { key: 'yellowCards', label: 'Yellow Cards', shouldShow: shouldShowColumn('yellowCards') },
+  { key: 'penalties', label: 'Penalties', shouldShow: shouldShowColumn('penalties') },
+  { key: 'redCards', label: 'Red Cards', shouldShow: shouldShowColumn('redCards') },
+  { key: 'blueCards', label: 'Blue Cards', shouldShow: shouldShowColumn('blueCards') },
+]
+
+const columns = computed<TableColumn<any>[]>(() => {
+  const baseColumns: TableColumn<any>[] = [
+    {
+      accessorKey: 'name',
+      header: ({ column }) => getHeader(column, 'Name'),
+      cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
+    },
+    {
+      accessorKey: 'teams',
+      header: ({ column }) => getHeader(column, 'Teams'),
+      cell: ({ row }) => h('div', { class: 'flex flex-wrap gap-1' }, row.original.teams.map((team: { id: string, name: string }) =>
+        h(resolveComponent('UBadge'), {
+          key: team.id,
+          label: team.acronym || team.name,
+          size: 'sm',
+        }),
+      )),
+    },
+    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
+    { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+  ]
+
+  // Add conditional columns
+  conditionalColumns.forEach(({ key, label, shouldShow }) => {
+    if (shouldShow.value) {
+      baseColumns.push({
+        accessorKey: key,
+        header: ({ column }) => getHeader(column, label),
+      })
+    }
+  })
+
+  return baseColumns
+})
+
+const sorting = ref([
+  {
+    id: 'goals',
+    desc: true,
+  },
+])
+
+const q = ref('')
+
+const filteredRows = computed(() => {
+  if (!q.value) {
+    return lineup.value || []
+  }
+
+  return lineup.value?.filter((player) => {
+    return Object.values(player).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase())
+    })
+  }) || []
+})
+
+function getHeader(column: Column<any>, label: string) {
+  const isSorted = column.getIsSorted()
+
+  return h(
+    UDropdownMenu,
+    {
+      'content': {
+        align: 'start',
+      },
+      'aria-label': 'Actions dropdown',
+      'items': [
+        {
+          label: 'Asc',
+          type: 'checkbox',
+          icon: 'i-lucide-arrow-up-narrow-wide',
+          checked: isSorted === 'asc',
+          onSelect: () => {
+            if (isSorted === 'asc') {
+              column.clearSorting()
+            }
+            else {
+              column.toggleSorting(false)
+            }
+          },
+        },
+        {
+          label: 'Desc',
+          icon: 'i-lucide-arrow-down-wide-narrow',
+          type: 'checkbox',
+          checked: isSorted === 'desc',
+          onSelect: () => {
+            if (isSorted === 'desc') {
+              column.clearSorting()
+            }
+            else {
+              column.toggleSorting(true)
+            }
+          },
+        },
+      ],
+    },
+    () =>
+      h(UButton, {
+        'color': 'neutral',
+        'variant': 'ghost',
+        label,
+        'icon': isSorted
+          ? isSorted === 'asc'
+            ? 'i-lucide-arrow-up-narrow-wide'
+            : 'i-lucide-arrow-down-wide-narrow'
+          : 'i-lucide-arrow-up-down',
+        'class': '-mx-2.5 data-[state=open]:bg-(--ui-bg-elevated)',
+        'aria-label': `Sort by ${isSorted === 'asc' ? 'descending' : 'ascending'}`,
+      }),
+  )
+}
 </script>
 
 <template>
@@ -27,99 +162,8 @@ useSeoMeta({
     <UPage>
       <UPageHeader headline="Club Lineup" :title="`${club?.name} - Players`" />
       <UPageBody>
-        <div v-if="pending" class="flex justify-center">
-          <UIcon name="i-lucide-loader-2" class="animate-spin" />
-          Loading lineup...
-        </div>
-
-        <div v-else-if="lineup && lineup.length > 0" class="space-y-6">
-          <div class="grid gap-4">
-            <div v-for="player in lineup" :key="`${player.firstname}-${player.lastname}-${player.number}`"
-              class="border rounded-lg p-4 bg-white shadow-sm">
-              <div class="flex justify-between items-start">
-                <div class="flex-1">
-                  <h3 class="font-semibold text-lg">
-                    {{ player.firstname }} {{ player.lastname }}
-                  </h3>
-                  <div class="text-sm text-gray-600 mt-1">
-                    <span class="inline-block mr-4">
-                      <strong>Position:</strong> {{ player.position }}
-                    </span>
-                    <span class="inline-block mr-4">
-                      <strong>Number:</strong> {{ player.number }}
-                    </span>
-                    <span class="inline-block">
-                      <strong>Games:</strong> {{ player.gamesPlayed }}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="text-right">
-                  <div class="text-2xl font-bold text-blue-600">
-                    {{ player.goals }}
-                  </div>
-                  <div class="text-xs text-gray-500">
-                    Goals
-                  </div>
-                </div>
-              </div>
-
-              <!-- Detailed Stats -->
-              <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                <div class="bg-gray-50 p-2 rounded">
-                  <div class="font-medium">
-                    {{ player.penaltyGoals }}
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    Penalty Goals
-                  </div>
-                </div>
-                <div class="bg-yellow-50 p-2 rounded">
-                  <div class="font-medium">
-                    {{ player.yellowCards }}
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    Yellow Cards
-                  </div>
-                </div>
-                <div class="bg-red-50 p-2 rounded">
-                  <div class="font-medium">
-                    {{ player.redCards }}
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    Red Cards
-                  </div>
-                </div>
-                <div class="bg-blue-50 p-2 rounded">
-                  <div class="font-medium">
-                    {{ player.blueCards }}
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    Blue Cards
-                  </div>
-                </div>
-              </div>
-
-              <!-- Teams -->
-              <div v-if="player.teams && player.teams.length > 0" class="mt-3">
-                <div class="text-sm font-medium text-gray-700 mb-2">
-                  Teams:
-                </div>
-                <div class="flex flex-wrap gap-2">
-                  <span v-for="team in player.teams" :key="team.id"
-                    class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                    {{ team.name }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="text-center py-8 text-gray-500">
-          No lineup data available for this club.
-        </div>
+        <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="pending" class="flex-1"
+          sticky />
       </UPageBody>
     </UPage>
   </div>
