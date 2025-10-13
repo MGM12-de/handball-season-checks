@@ -57,6 +57,7 @@ export default defineCachedEventHandler(async (event) => {
           existingPlayer.teams.push({
             id: team.id,
             name: team.name,
+            // ageGroup: team.defaultTournament.ageGroup,
           })
         }
       }
@@ -67,6 +68,7 @@ export default defineCachedEventHandler(async (event) => {
           teams: [{
             id: team.id,
             name: team.name,
+
           }],
         })
       }
@@ -78,7 +80,7 @@ export default defineCachedEventHandler(async (event) => {
 
   return lineups
 }, {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
+  maxAge: 60 * 60, // 1 hour
   name: 'club-lineup',
   swr: true,
   getKey: event => event.path,
