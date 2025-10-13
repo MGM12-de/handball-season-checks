@@ -16,8 +16,8 @@ const links = ref([
     label: t('visitOriginalSite'),
     to: 'https://handball.net',
     trailingIcon: 'i-lucide-arrow-right',
-    variant: 'subtle',
-    color: 'neutral',
+    variant: 'subtle' as const,
+    color: 'neutral' as const,
     target: '_blank',
   },
 ])
