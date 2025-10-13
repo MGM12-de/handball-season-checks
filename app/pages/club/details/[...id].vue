@@ -33,6 +33,7 @@ useSeoMeta({
       <UPageBody>
         <ClubHeader :club="club" />
         <br> <br>
+        <UButton label="Lineup" icon="i-lucide-users" @click="navigateTo(`/club/details/${club.id}/lineup`)" />
 
         <TeamTable :club-id="club.id" />
       </UPageBody>
