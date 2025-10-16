@@ -28,7 +28,7 @@ const links = [
     <template #right>
       <UColorModeButton />
 
-      <ULocaleSelect v-model="locale" :locales="[en, de]" class="w-48" />
+      <ULocaleSelect v-model="locale" :locales="[en, de]" class="w-48" hidden />
 
       <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
         color="neutral" variant="ghost" />
