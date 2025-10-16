@@ -91,33 +91,39 @@ const columns = computed<TableColumn<any>[]>(() => {
         <USkeleton v-for="i in 3" :key="i" class="h-24 w-full" />
       </div>
       <UCard v-for="game in games" v-else :key="game.id" class="p-4">
-        <div class="space-y-2">
+        <template #header>
           <div class="flex justify-between items-start">
-            <div class="font-medium">
-              {{ game.homeTeam?.name }} vs {{ game.awayTeam?.name }}
-            </div>
+            {{ game.homeTeam?.name }} vs {{ game.awayTeam?.name }}
             <div v-if="game.result" class="text-sm font-medium text-green-600">
               {{ game.result }}
             </div>
           </div>
+        </template>
+
+        <div class="space-y-2">
           <div class="text-sm text-gray-500">
             {{ game.startsAt }}
           </div>
           <div v-if="game.field?.name" class="text-sm text-gray-500">
             📍 {{ game.field.name }}
           </div>
+        </div>
+
+        <template #footer>
           <div v-if="game.remarks" class="text-sm text-gray-600">
             {{ game.remarks }}
           </div>
-          <div v-if="game.referee" class="text-sm text-gray-600">
-            <UIcon name="i-heroicons-user" /> {{ game.referee }}
+          <div class="grid grid-cols-2 gap-4 items-center">
+            <div v-if="game.referee" class="text-sm text-gray-600">
+              <UIcon name="i-heroicons-user" /> {{ game.referee }}
+            </div>
+            <div v-if="game.pdfUrl" class="pt-2 justify-self-end">
+              <UButton :to="game.pdfUrl" target="_blank" size="xs" variant="outline" icon="i-heroicons-document-text">
+                View PDF
+              </UButton>
+            </div>
           </div>
-          <div v-if="game.pdfUrl" class="pt-2">
-            <UButton :to="game.pdfUrl" target="_blank" size="xs" variant="outline" icon="i-heroicons-document-text">
-              View PDF
-            </UButton>
-          </div>
-        </div>
+        </template>
       </UCard>
     </div>
 
