@@ -111,11 +111,11 @@ const columns = computed<TableColumn<any>[]>(() => {
 
         <template #footer>
           <div v-if="game.remarks" class="text-sm text-gray-600">
-            {{ game.remarks }}
+            <UIcon name="i-heroicons-document" /> {{ game.remarks }}
           </div>
           <div class="grid grid-cols-2 gap-4 items-center">
             <div v-if="game.referee" class="text-sm text-gray-600">
-              <UIcon name="i-heroicons-user" /> {{ game.referee }}
+              <UIcon name="i-heroicons-users" /> {{ game.referee }}
             </div>
             <div v-if="game.pdfUrl" class="pt-2 justify-self-end">
               <UButton :to="game.pdfUrl" target="_blank" size="xs" variant="outline" icon="i-heroicons-document-text">
