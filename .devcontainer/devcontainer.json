@@ -15,7 +15,8 @@
       "extensions": [
         "Nuxtr.nuxt-vscode-extentions",
         "vivaxy.vscode-conventional-commits",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "GitHub.copilot"
       ]
     }
   }
