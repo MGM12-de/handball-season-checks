@@ -79,8 +79,10 @@ function onRowSelected(row: TableRow<Club>) {
       </UButton>
     </UForm>
 
-    <UTable v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
-      @select="onRowSelected" />
+    <UTable
+      v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
+      @select="onRowSelected"
+    />
   </div>
 </template>
 
