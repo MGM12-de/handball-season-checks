@@ -3,6 +3,7 @@ import type { TableColumn } from '@nuxt/ui'
 import type { Column } from '@tanstack/vue-table'
 
 const route = useRoute()
+const { t } = useI18n()
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -49,11 +50,23 @@ const columns = computed<TableColumn<any>[]>(() => {
       accessorKey: 'name',
       header: ({ column }) => getHeader(column, 'Name'),
       cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
+      footer: ({ column }) => {
+        const total = column
+          .getFacetedRowModel()
+          .rows
+          .length
+
+        return h('div', { class: 'text-centered font-medium' }, `${total} ${t('players')}`)
+      },
     },
     {
       accessorKey: 'teams',
       header: ({ column }) => getHeader(column, 'Teams'),
-      cell: ({ row }) => h('div', { class: 'flex flex-wrap gap-1' }, row.original.teams.map((team: { id: string, name: string }) =>
+      cell: ({ row }) => h('div', { class: 'flex flex-wrap gap-1' }, row.original.teams.map((team: {
+        id: string
+        name: string
+        acronym: string
+      }) =>
         h(resolveComponent('UBadge'), {
           key: team.id,
           label: team.acronym || team.name,
@@ -62,7 +75,22 @@ const columns = computed<TableColumn<any>[]>(() => {
       )),
     },
     { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
-    { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+    {
+      accessorKey: 'goals',
+      header: ({ column }) => getHeader(column, 'Goals'),
+      footer: ({ column }) => {
+        const total = column
+          .getFacetedRowModel()
+          .rows
+          .reduce(
+            (acc: number, row: TableRow<any>) => acc + Number.parseFloat(row.getValue('goals')),
+            0,
+          )
+
+        return h('div', { class: 'text-centered font-medium' }, `${total}`)
+      },
+    },
+
   ]
 
   // Add conditional columns
@@ -71,6 +99,17 @@ const columns = computed<TableColumn<any>[]>(() => {
       baseColumns.push({
         accessorKey: key,
         header: ({ column }) => getHeader(column, label),
+        footer: ({ column }) => {
+          const total = column
+            .getFacetedRowModel()
+            .rows
+            .reduce(
+              (acc: number, row: TableRow<any>) => acc + Number.parseFloat(row.getValue(key)),
+              0,
+            )
+
+          return h('div', { class: 'text-centered font-medium' }, `${total}`)
+        },
       })
     }
   })
@@ -160,7 +199,7 @@ function getHeader(column: Column<any>, label: string) {
 <template>
   <div>
     <UPage>
-      <UPageHeader headline="Club Lineup" :title="`${club?.name} - Players`" />
+      <UPageHeader headline="Club Lineup" :title="`${club?.name} - ${t('players')}`" />
       <UPageBody>
         <div class="flex flex-col flex-1 w-full">
           <div class="flex px-4 py-3.5 border-b border-accented">
