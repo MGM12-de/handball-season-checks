@@ -62,7 +62,7 @@ async function onSearch() {
   loading.value = false
 }
 
-function onRowSelected(row: TableRow<Club>) {
+function onRowSelected(e: Event, row: TableRow<Club>) {
   const clubId = row.getValue('id')
   navigateTo(`/club/details/${clubId}`)
 }
@@ -79,10 +79,8 @@ function onRowSelected(row: TableRow<Club>) {
       </UButton>
     </UForm>
 
-    <UTable
-      v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
-      @select="onRowSelected"
-    />
+    <UTable v-model:column-visibility="columnVisibility" :data="clubs" :columns="columns" :loading="loading"
+      @select="onRowSelected" />
   </div>
 </template>
 
