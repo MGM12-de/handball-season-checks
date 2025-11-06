@@ -74,10 +74,10 @@ const columns = computed<TableColumn<any>[]>(() => {
         }),
       )),
     },
-    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
+    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, t('gamesPlayed')) },
     {
       accessorKey: 'goals',
-      header: ({ column }) => getHeader(column, 'Goals'),
+      header: ({ column }) => getHeader(column, t('goals')),
       footer: ({ column }) => {
         const total = column
           .getFacetedRowModel()
