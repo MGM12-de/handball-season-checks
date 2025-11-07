@@ -38,17 +38,17 @@ function shouldShowColumn(fieldName: string) {
 
 // Define conditional columns with their visibility logic
 const conditionalColumns = [
-  { key: 'yellowCards', label: 'Yellow Cards', shouldShow: shouldShowColumn('yellowCards') },
-  { key: 'penalties', label: 'Penalties', shouldShow: shouldShowColumn('penalties') },
-  { key: 'redCards', label: 'Red Cards', shouldShow: shouldShowColumn('redCards') },
-  { key: 'blueCards', label: 'Blue Cards', shouldShow: shouldShowColumn('blueCards') },
+  { key: 'yellowCards', label: t('yellowCards'), shouldShow: shouldShowColumn('yellowCards') },
+  { key: 'penalties', label: t('penalties'), shouldShow: shouldShowColumn('penalties') },
+  { key: 'redCards', label: t('redCards'), shouldShow: shouldShowColumn('redCards') },
+  { key: 'blueCards', label: t('blueCards'), shouldShow: shouldShowColumn('blueCards') },
 ]
 
 const columns = computed<TableColumn<any>[]>(() => {
   const baseColumns: TableColumn<any>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => getHeader(column, 'Name'),
+      header: ({ column }) => getHeader(column, t('name')),
       cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
       footer: ({ column }) => {
         const total = column
@@ -61,7 +61,7 @@ const columns = computed<TableColumn<any>[]>(() => {
     },
     {
       accessorKey: 'teams',
-      header: ({ column }) => getHeader(column, 'Teams'),
+      header: ({ column }) => getHeader(column, t('teams')),
       cell: ({ row }) => h('div', { class: 'flex flex-wrap gap-1' }, row.original.teams.map((team: {
         id: string
         name: string
@@ -199,14 +199,14 @@ function getHeader(column: Column<any>, label: string) {
 <template>
   <div>
     <UPage>
-      <UPageHeader headline="Club Lineup" :title="`${club?.name} - ${t('players')}`" />
+      <UPageHeader :headline="t('clubLineup')" :title="`${club?.name} - ${t('players')}`" />
       <UPageBody>
         <div class="flex flex-col flex-1 w-full">
           <div class="flex px-4 py-3.5 border-b border-accented">
             <UInput v-model="q" class="max-w-sm" placeholder="Spieler suchen..." />
           </div>
-          <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="pending" class="flex-1 max-h-[624px]"
-            sticky />
+          <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="pending"
+            class="flex-1 max-h-[624px]" sticky />
         </div>
       </UPageBody>
     </UPage>

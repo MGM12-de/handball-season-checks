@@ -8,23 +8,24 @@ const UAvatar = resolveComponent('UAvatar')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const route = useRoute()
+const { t } = useI18n()
 
 useSeoMeta({
-  title: `Tournament`,
+  title: t('tournament'),
   description: '',
 })
 
 const items = [{
   slot: 'standing',
-  header: 'Standing',
+  header: t('standing'),
   icon: 'i-mdi-trophy',
 }, {
   slot: 'stats',
-  header: 'Statistics',
+  header: t('stats'),
   icon: 'i-mdi-chart-bar',
 }, {
   slot: 'lineup',
-  header: 'Lineup',
+  header: t('lineup'),
   icon: 'i-mdi-account-group',
 }]
 
@@ -35,7 +36,7 @@ const { data: tournament } = await useAsyncData(
   }),
 )
 
-const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, {
+const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: t('rank') }, {
   accessorKey: 'team.logo',
   header: '',
   cell: ({ row }) => {
@@ -48,7 +49,7 @@ const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, {
       size: 'xl',
     })
   },
-}, { accessorKey: 'team.name', header: 'Team' }, { accessorKey: 'points', header: 'Points' }, { accessorKey: 'games', header: 'Games' }, { accessorKey: 'wins', header: 'Wins' }, { accessorKey: 'draws', header: 'Draws' }, { accessorKey: 'losses', header: 'Losses' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'goalsAgainst', header: 'Goals Against' }, { accessorKey: 'goalDifference', header: 'Goal Difference' }]
+}, { accessorKey: 'team.name', header: t('team') }, { accessorKey: 'points', header: t('points') }, { accessorKey: 'games', header: t('games') }, { accessorKey: 'wins', header: t('wins') }, { accessorKey: 'draws', header: t('draws') }, { accessorKey: 'losses', header: t('losses') }, { accessorKey: 'goals', header: t('goals') }, { accessorKey: 'goalsAgainst', header: t('goalsAgainst') }, { accessorKey: 'goalDifference', header: t('goalDifference') }]
 
 const { data: tournamentTable, status: tournamentTableStatus } = await useAsyncData(
   `tournament/${route.params.id}/table`,
@@ -60,17 +61,17 @@ const { data: tournamentTable, status: tournamentTableStatus } = await useAsyncD
 const lineupCols: TableColumn<any>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => getHeader(column, 'Name'),
+    header: ({ column }) => getHeader(column, t('name')),
     cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
   },
-  { accessorKey: 'team.name', header: ({ column }) => getHeader(column, 'Team') },
-  { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
-  { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+  { accessorKey: 'team.name', header: ({ column }) => getHeader(column, t('team')) },
+  { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, t('gamesPlayed')) },
+  { accessorKey: 'goals', header: ({ column }) => getHeader(column, t('goals')) },
   // { accessorKey: 'penaltyGoals', header: 'Penalty goals' }, { accessorKey: 'penaltyMissed', header: 'Penalty missed' },
-  { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, 'Yellow Cards') },
-  { accessorKey: 'penalties', header: ({ column }) => getHeader(column, 'Penalties') },
-  { accessorKey: 'redCards', header: ({ column }) => getHeader(column, 'Red Cards') },
-  { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, 'Blue Cards') },
+  { accessorKey: 'yellowCards', header: ({ column }) => getHeader(column, t('yellowCards')) },
+  { accessorKey: 'penalties', header: ({ column }) => getHeader(column, t('penalties')) },
+  { accessorKey: 'redCards', header: ({ column }) => getHeader(column, t('redCards')) },
+  { accessorKey: 'blueCards', header: ({ column }) => getHeader(column, t('blueCards')) },
 ]
 
 const { data: tournamentLineup, status: tournamentLineupStatus } = await useAsyncData(

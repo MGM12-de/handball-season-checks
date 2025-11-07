@@ -14,10 +14,10 @@ const loading = ref(false)
 
 const columns: TableColumn<any>[] = [{
   accessorKey: 'id',
-  header: 'ID',
+  header: t('id'),
 }, {
   accessorKey: 'logo',
-  header: 'Logo',
+  header: t('logo'),
   cell: ({ row }) => {
     const logo = row.getValue('logo')
     const acronym = row.getValue('acronym')
@@ -26,13 +26,13 @@ const columns: TableColumn<any>[] = [{
   },
 }, {
   accessorKey: 'name',
-  header: 'Name',
+  header: t('name'),
 }, {
   accessorKey: 'acronym',
-  header: 'Acronym',
+  header: t('acronym'),
 }, {
   accessorKey: 'organization',
-  header: 'Organization',
+  header: t('organization'),
   cell: ({ row }) => {
     const organization = row.getValue('organization')
     if (organization && typeof organization === 'object' && 'name' in organization && 'logo' in organization) {
@@ -55,7 +55,7 @@ async function onSearch() {
   loading.value = false
 }
 
-function onRowSelected(row: TableRow<any>) {
+function onRowSelected(e: Event, row: TableRow<any>) {
   const tournamentId = row.getValue('id')
   navigateTo(`/tournament/${tournamentId}`)
 }

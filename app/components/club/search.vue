@@ -28,7 +28,7 @@ const columns: TableColumn<Club>[] = [{
   header: 'ID',
 }, {
   accessorKey: 'logo',
-  header: 'Logo',
+  header: t('logo'),
   cell: ({ row }) => {
     const alt = row.getValue('acronym') || ''
     const logo = row.getValue('logo') || ''
@@ -39,10 +39,10 @@ const columns: TableColumn<Club>[] = [{
   header: `${t('name')}`,
 }, {
   accessorKey: 'acronym',
-  header: 'Acronym',
+  header: t('acronym'),
 }, {
   accessorKey: 'organization',
-  header: 'Organization',
+  header: t('organization'),
   cell: ({ row }) => {
     const org = row.getValue('organization') as Club['organization'] || { name: '', logo: '' }
     return h(UAvatar, { src: org.logo, alt: org.name })

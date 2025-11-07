@@ -11,6 +11,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
+
 const { games, gamesPending } = props
 
 // Helper function to check if a column should be shown
@@ -29,7 +32,7 @@ function shouldShowColumn(fieldName: string) {
 
 // Define conditional columns with their visibility logic
 const conditionalColumns = [
-  { key: 'remarks', label: 'Remarks', shouldShow: shouldShowColumn('remarks') },
+  { key: 'remarks', label: t('remarks'), shouldShow: shouldShowColumn('remarks') },
   {
     key: 'pdfUrl',
     label: 'PDF',
@@ -55,11 +58,11 @@ const conditionalColumns = [
 
 const columns = computed<TableColumn<any>[]>(() => {
   const baseColumns: TableColumn<any>[] = [
-    { accessorKey: 'startsAt', header: 'Date' },
-    { accessorKey: 'field.name', header: 'Location' },
-    { accessorKey: 'homeTeam.name', header: 'Home Team' },
-    { accessorKey: 'awayTeam.name', header: 'Away Team' },
-    { accessorKey: 'result', header: 'Result' },
+    { accessorKey: 'startsAt', header: t('date') },
+    { accessorKey: 'field.name', header: t('location') },
+    { accessorKey: 'homeTeam.name', header: t('homeTeam') },
+    { accessorKey: 'awayTeam.name', header: t('awayTeam') },
+    { accessorKey: 'result', header: t('result') },
   ]
 
   // Add conditional columns

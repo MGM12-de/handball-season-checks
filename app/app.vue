@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const lang = computed(() => locales[locale.value].code)
 const dir = computed(() => locales[locale.value].dir)
 
 const colorMode = useColorMode()
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
-const title = 'Handball checks'
-const description = 'An application with extra features for a handball season.'
+const title = computed(() => t('siteTitle'))
+const description = computed(() => t('siteDescription'))
 
 useHead({
   title,
@@ -29,7 +29,7 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s - Handball checks',
+  titleTemplate: `%s - ${title.value}`,
   description,
   ogDescription: description,
   twitterCard: 'app',

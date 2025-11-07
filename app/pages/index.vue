@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const { t } = useI18n()
 
-const links = ref([
+const links = computed(() => [
   {
     label: t('searchClub'),
     to: '/club',

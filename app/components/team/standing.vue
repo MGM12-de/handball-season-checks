@@ -8,9 +8,10 @@ const props = defineProps({
   },
 })
 const standing = ref()
+const { t } = useI18n()
 const { teamId } = props
 
-const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: 'Rank' }, { accessorKey: 'team.name', header: 'Team' }, { accessorKey: 'points', header: 'Points' }, { accessorKey: 'games', header: 'Games' }, { accessorKey: 'wins', header: 'Wins' }, { accessorKey: 'draws', header: 'Draws' }, { accessorKey: 'losses', header: 'Losses' }, { accessorKey: 'goals', header: 'Goals' }, { accessorKey: 'goalsAgainst', header: 'Goals Against' }, { accessorKey: 'goalDifference', header: 'Goal Difference' }]
+const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: t('rank') }, { accessorKey: 'team.name', header: t('team') }, { accessorKey: 'points', header: t('points') }, { accessorKey: 'games', header: t('games') }, { accessorKey: 'wins', header: t('wins') }, { accessorKey: 'draws', header: t('draws') }, { accessorKey: 'losses', header: t('losses') }, { accessorKey: 'goals', header: t('goals') }, { accessorKey: 'goalsAgainst', header: t('goalsAgainst') }, { accessorKey: 'goalDifference', header: t('goalDifference') }]
 
 const { data, status } = await useAsyncData(
   `team/${teamId}/standing`,

@@ -1,16 +1,14 @@
+<script lang="ts" setup>
+const { t } = useI18n()
+</script>
+
 <template>
-  <UPage >
-    <UPageHeader headline="Tournaments" title="Tournaments" description="A website to check the current season" />
+  <UPage>
+    <UPageHeader :headline="t('tournament')" :title="t('tournaments')" :description="t('siteDescription')" />
     <UPageBody>
       <TournamentSearch />
     </UPageBody>
-  </UPage>  
+  </UPage>
 </template>
 
-<script lang="ts" setup>
-
-</script>
-
-<style>
-
-</style>
+<style></style>

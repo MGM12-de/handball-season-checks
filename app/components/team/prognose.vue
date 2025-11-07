@@ -13,6 +13,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const state = reactive({
   rankIfWinning: undefined,
@@ -32,11 +33,11 @@ const state = reactive({
 
 const items = [{
   slot: 'home',
-  label: 'Heim',
+  label: t('home'),
   icon: 'i-mdi-home',
 }, {
   slot: 'away',
-  label: 'Auswärts',
+  label: t('away'),
   icon: 'i-mdi-bus',
 }]
 
@@ -131,11 +132,11 @@ games.forEach((element) => {
   <div>
     <UContainer>
       <UForm :state="state" class="space-y-4">
-        <UFormField label="Durchschnittlich geworfene Tore">
+        <UFormField :label="t('averageGoalsShot')">
           <UInput v-model="state.averageGoalsShot" disabled />
         </UFormField>
 
-        <UFormField label="Durchschnittlich bekommene Tore">
+        <UFormField :label="t('averageGoalsGot')">
           <UInput v-model="state.averageGoalsGot" disabled />
         </UFormField>
         <br>
@@ -150,15 +151,15 @@ games.forEach((element) => {
             </div>
           </template>
           <template #home>
-            <UFormField label="Höchster Heimsieg">
+            <UFormField :label="t('highestHomeWin')">
               <UInput v-model="state.highestHomeWin" disabled />
             </UFormField>
 
-            <UFormField label="Höchste Heimniederlage">
+            <UFormField :label="t('highestHomeLoose')">
               <UInput v-model="state.highestHomeLoose" disabled />
             </UFormField>
 
-            <UFormField label="Heimquote">
+            <UFormField :label="t('homeQuota')">
               <UInput v-model="state.homeQuota" disabled>
                 <template #trailing>
                   <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
@@ -166,24 +167,24 @@ games.forEach((element) => {
               </UInput>
             </UFormField>
 
-            <UFormField label="Durchschnittlich Daheim geworfene Tore">
+            <UFormField :label="t('averageGoalsShot')">
               <UInput v-model="state.homeAverageGoalsShot" disabled />
             </UFormField>
 
-            <UFormField label="Durchschnittlich Daheim bekommene Tore">
+            <UFormField :label="t('averageGoalsGot')">
               <UInput v-model="state.homeAverageGoalsGot" disabled />
             </UFormField>
           </template>
           <template #away>
-            <UFormField label="Höchster Auswärtssieg">
+            <UFormField :label="t('highestAwayWin')">
               <UInput v-model="state.highestAwayWin" disabled />
             </UFormField>
 
-            <UFormField label="Höchste Auswärtsniederlage">
+            <UFormField :label="t('highestAwayLoose')">
               <UInput v-model="state.highestAwayLoose" disabled />
             </UFormField>
 
-            <UFormField label="Auswärtsquote">
+            <UFormField :label="t('awayQuota')">
               <UInput v-model="state.awayQuota" disabled>
                 <template #trailing>
                   <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
@@ -191,11 +192,11 @@ games.forEach((element) => {
               </UInput>
             </UFormField>
 
-            <UFormField label="Durchschnittlich Auswärts geworfene Tore">
+            <UFormField :label="t('averageGoalsShot')">
               <UInput v-model="state.awayAverageGoalsShot" disabled />
             </UFormField>
 
-            <UFormField label="Durchschnittlich Auswärts bekommene Tore">
+            <UFormField :label="t('averageGoalsGot')">
               <UInput v-model="state.awayAverageGoalsGot" disabled />
             </UFormField>
           </template>

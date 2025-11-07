@@ -12,6 +12,8 @@ const club = ref({
   },
 })
 
+const { t } = useI18n()
+
 const { data } = await useAsyncData(
   `club/${route.params.id}`,
   () => $fetch('/api/dhb/club', {
@@ -29,11 +31,11 @@ useSeoMeta({
 <template>
   <div>
     <UPage>
-      <UPageHeader headline="Club details" :title="club.name" />
+      <UPageHeader :headline="t('clubDetails')" :title="club.name" />
       <UPageBody>
         <ClubHeader :club="club" />
         <br> <br>
-        <UButton label="Lineup" icon="i-lucide-users" @click="navigateTo(`/club/details/${club.id}/lineup`)" />
+        <UButton :label="t('lineup')" icon="i-lucide-users" @click="navigateTo(`/club/details/${club.id}/lineup`)" />
 
         <TeamTable :club-id="club.id" />
       </UPageBody>

@@ -1,22 +1,23 @@
 <script lang="ts" setup>
 const route = useRoute()
 const team = ref()
+const { t } = useI18n()
 
 const items = [{
   slot: 'standing',
-  label: 'Standing',
+  label: t('standing'),
   icon: 'i-mdi-trophy',
 }, {
   slot: 'games',
-  label: 'Games',
+  label: t('games'),
   icon: 'i-mdi-controller',
 }, {
   slot: 'stats',
-  label: 'Statistics',
+  label: t('stats'),
   icon: 'i-mdi-chart-bar',
 }, {
   slot: 'lineup',
-  label: 'Lineup',
+  label: t('lineup'),
   icon: 'i-mdi-account-group',
 }]
 

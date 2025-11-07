@@ -9,19 +9,20 @@ const props = defineProps({
   },
 })
 const { clubId } = props
+const { t } = useI18n()
 
 const columns: TableColumn<Team>[] = [{
   accessorKey: 'id',
-  header: 'ID',
+  header: t('id'),
 }, {
   accessorKey: 'name',
-  header: 'Name',
+  header: t('name'),
 }, {
   accessorKey: 'defaultTournament.name',
-  header: 'Liga',
+  header: t('league'),
 }, {
   accessorKey: 'defaultTournament.acronym',
-  header: 'Acronym',
+  header: t('acronym'),
 }]
 
 const columnVisibility = ref({
@@ -35,7 +36,7 @@ const { data: teams, pending: teamsPending } = await useAsyncData(
   }),
 ) as unknown as { data: Team[], pending: boolean, error: any, refresh: () => object }
 
-function onRowSelected(row: TableRow<Team>) {
+function onRowSelected(e: Event, row: TableRow<Team>) {
   const teamId = row.getValue('id')
   navigateTo(`/team/details/${teamId}`)
 }

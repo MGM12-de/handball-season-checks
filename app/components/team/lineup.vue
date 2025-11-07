@@ -8,6 +8,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -32,21 +33,21 @@ function shouldShowColumn(fieldName: string) {
 
 // Define conditional columns with their visibility logic
 const conditionalColumns = [
-  { key: 'yellowCards', label: 'Yellow Cards', shouldShow: shouldShowColumn('yellowCards') },
-  { key: 'penalties', label: 'Penalties', shouldShow: shouldShowColumn('penalties') },
-  { key: 'redCards', label: 'Red Cards', shouldShow: shouldShowColumn('redCards') },
-  { key: 'blueCards', label: 'Blue Cards', shouldShow: shouldShowColumn('blueCards') },
+  { key: 'yellowCards', label: t('yellowCards'), shouldShow: shouldShowColumn('yellowCards') },
+  { key: 'penalties', label: t('penalties'), shouldShow: shouldShowColumn('penalties') },
+  { key: 'redCards', label: t('redCards'), shouldShow: shouldShowColumn('redCards') },
+  { key: 'blueCards', label: t('blueCards'), shouldShow: shouldShowColumn('blueCards') },
 ]
 
 const columns = computed<TableColumn<any>[]>(() => {
   const baseColumns: TableColumn<any>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => getHeader(column, 'Name'),
+      header: ({ column }) => getHeader(column, t('name')),
       cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
     },
-    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, 'Games played') },
-    { accessorKey: 'goals', header: ({ column }) => getHeader(column, 'Goals') },
+    { accessorKey: 'gamesPlayed', header: ({ column }) => getHeader(column, t('gamesPlayed')) },
+    { accessorKey: 'goals', header: ({ column }) => getHeader(column, t('goals')) },
   ]
 
   // Add conditional columns

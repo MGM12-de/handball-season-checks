@@ -14,7 +14,7 @@ const links = [{
     <UNavigationMenu :items="links" variant="link" />
 
     <template #right>
-      <UButton icon="i-simple-icons-github" color="neutral" variant="ghost" to="https://github.com/MGM12-de"
+      <UButton icon="i-simple-icons-github" color="neutral" variant="ghost" to="https://github.com/MGM12-dev"
         target="_blank" />
     </template>
   </UFooter>
