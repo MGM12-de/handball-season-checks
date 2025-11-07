@@ -25,6 +25,7 @@ interface Props {
   showClub?: boolean
   showSearch?: boolean
   initialSorting?: Array<{ id: string, desc: boolean }>
+  enableMultiSort?: boolean
   additionalColumns?: Array<{ key: string, label: string, shouldShow?: () => boolean }>
 }
 
@@ -33,7 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   showTeams: false,
   showClub: false,
   showSearch: true,
-  initialSorting: () => [{ id: 'goals', desc: true }],
+  enableMultiSort: true,
+  initialSorting: () => [{ id: 'goals', desc: true }, { id: 'goalsPerGame', desc: true }],
 })
 
 const { t } = useI18n()
@@ -243,6 +245,6 @@ function getHeader(column: Column<any>, label: string) {
     </div>
 
     <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="loading"
-      class="flex-1 max-h-[624px]" sticky />
+      :enable-multi-sort="props.enableMultiSort" class="flex-1 max-h-[624px]" sticky />
   </div>
 </template>
