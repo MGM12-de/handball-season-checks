@@ -85,7 +85,7 @@ useAsyncData(
           :label="state.contact.fax" :to="state.contact.fax" />
       </UFormField>
       <UFormField v-if="state.address" :label="t('address')" name="address">
-        <UTextarea v-model="state.address" disabled />
+        <UTextarea v-model="state.address" disabled autoresize />
       </UFormField>
       <UFormField v-if="state.website" :label="t('website')" name="website">
         <UButton icon="i-heroicons-globe-alt" color="primary" variant="link" :label="state.website"
