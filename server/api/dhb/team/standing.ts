@@ -1,4 +1,4 @@
-import { getTeamUrl } from '../../../../server/utils/dhbUtils'
+import { getTeamUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -26,14 +26,26 @@ export default defineCachedEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
+
+  const normalizeTeamLogo = (team) => {
+    return {
+      ...team,
+      logo: normalizeDHBUrl(team.logo),
+    }
+  }
+
   const teamId = query.id as string
   const teamApi = await $fetch(`${getTeamUrl(teamId)}/table`)
   const standings = teamApi.data.rows
 
-  const currentTeam = standings.find(obj => obj.team.id === query.id)
+  const normalizedStandings = standings.map(standing => ({
+    ...standing,
+    team: normalizeTeamLogo(standing.team),
+  }))
+  const currentTeam = normalizedStandings.find(obj => obj.team.id === query.id)
   currentTeam.class = 'bg-primary-500 animate-pulse'
 
-  return standings
+  return normalizedStandings
 }, {
   maxAge: 60 * 60, // 1 hour
   name: 'team-standing',
