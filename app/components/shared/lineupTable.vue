@@ -8,6 +8,7 @@ interface Player {
   lastname: string
   gamesPlayed?: number
   goals?: number
+  goalsPerGame?: number
   yellowCards?: number
   penalties?: number
   redCards?: number
@@ -126,6 +127,20 @@ const columns = computed<TableColumn<any>[]>(() => {
           .rows
           .reduce((acc: number, row: any) => acc + Number.parseFloat(row.getValue('goals') || 0), 0)
         return h('div', { class: 'text-center font-medium' }, `${total}`)
+      },
+    },
+    {
+      accessorKey: 'goalsPerGame',
+      header: ({ column }) => getHeader(column, t('goalsPerGame')),
+      cell: ({ row }) => {
+        const goals = Number.parseFloat(row.getValue('goals'))
+        const gamesPlayed = Number.parseFloat(row.getValue('gamesPlayed'))
+        let goalsPerGame: string = '0'
+
+        if (goals && gamesPlayed)
+          goalsPerGame = (goals / gamesPlayed).toFixed(2)
+
+        return h('div', { class: 'text-center font-medium' }, goalsPerGame)
       },
     },
   )
