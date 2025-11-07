@@ -20,6 +20,7 @@ const items = [{
   slot: 'stats',
   header: t('stats'),
   icon: 'i-mdi-chart-bar',
+  disabled: true,
 }, {
   slot: 'lineup',
   header: t('lineup'),
@@ -75,7 +76,7 @@ const { data: tournamentLineup, status: tournamentLineupStatus } = await useAsyn
           <div>Stats</div>
         </template>
         <template #lineup>
-          <LineupTable :data="tournamentLineup || []" :loading="tournamentLineupStatus === 'pending'"
+          <SharedLineupTable :data="tournamentLineup || []" :loading="tournamentLineupStatus === 'pending'"
             :show-club="true" />
         </template>
       </UTabs>

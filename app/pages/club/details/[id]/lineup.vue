@@ -14,7 +14,7 @@ const { data: clubLineup, status: clubLineupState } = await useAsyncData(
   <div>
     <h1>{{ $t('clubLineup') }}</h1>
 
-    <LineupTable :data="clubLineup || []" :loading="clubLineupState === 'pending'" :show-teams="true"
+    <SharedLineupTable :data="clubLineup || []" :loading="clubLineupState === 'pending'" :show-teams="true"
       :show-search="true" />
   </div>
 </template>

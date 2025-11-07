@@ -17,5 +17,5 @@ const { data: teamLineup, status: teamLineupState } = await useAsyncData(
 </script>
 
 <template>
-  <LineupTable :data="teamLineup || []" :loading="teamLineupState === 'pending'" :show-teams="false" />
+  <SharedLineupTable :data="teamLineup || []" :loading="teamLineupState === 'pending'" :show-teams="false" />
 </template>
