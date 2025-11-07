@@ -5,7 +5,6 @@ export const i18n: ModuleOptions = {
     defaultLocale: 'en',
     baseUrl: 'https://handball-checks.mgm12.dev',
     locales: [{ code: 'en', name: 'English', language: 'en-US', file: 'en-US.json' }, { code: 'de', name: 'Deutsch', language: 'de-DE', file: 'de-DE.json' }],
-    lazy: true,
     langDir: './locales',
     detectBrowserLanguage: {
         useCookie: true,
