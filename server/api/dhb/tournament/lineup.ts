@@ -1,4 +1,4 @@
-import { getTournamentUrl } from '../../../../server/utils/dhbUtils'
+import { getTournamentUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 import team from '../team'
 
 defineRouteMeta({
@@ -46,6 +46,14 @@ export default defineCachedEventHandler(async (event) => {
       return results
     }
 
+    // Helper function to normalize team logo
+    const normalizeTeamLogo = (team) => {
+      return {
+        ...team,
+        logo: normalizeDHBUrl(team.logo),
+      }
+    }
+
     // Process team lineups in batches of 3-5
     const batchSize = 3
     const resolvedLineups = await processInBatches(
@@ -57,7 +65,7 @@ export default defineCachedEventHandler(async (event) => {
         })
         return teamLineup.map(player => ({
           ...player,
-          team: row.team,
+          team: normalizeTeamLogo(row.team),
         }))
       },
     )
