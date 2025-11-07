@@ -152,11 +152,11 @@ games.forEach((element) => {
           </template>
           <template #home>
             <UFormField :label="t('highestHomeWin')">
-              <UInput v-model="state.highestHomeWin" disabled />
+              <UInput v-model="state.highestHomeWin" disabled class="w-full" />
             </UFormField>
 
             <UFormField :label="t('highestHomeLoose')">
-              <UInput v-model="state.highestHomeLoose" disabled />
+              <UInput v-model="state.highestHomeLoose" disabled class="w-full" />
             </UFormField>
 
             <UFormField :label="t('homeQuota')">
@@ -177,11 +177,11 @@ games.forEach((element) => {
           </template>
           <template #away>
             <UFormField :label="t('highestAwayWin')">
-              <UInput v-model="state.highestAwayWin" disabled />
+              <UInput v-model="state.highestAwayWin" disabled class="w-full" />
             </UFormField>
 
             <UFormField :label="t('highestAwayLoose')">
-              <UInput v-model="state.highestAwayLoose" disabled />
+              <UInput v-model="state.highestAwayLoose" disabled class="w-full" />
             </UFormField>
 
             <UFormField :label="t('awayQuota')">
