@@ -1,4 +1,5 @@
 import type { Game, Lineup } from '~~/types'
+import { getPlayerKey, mergePlayerStats } from '../../../utils/dhbPlayerUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -17,48 +18,12 @@ defineRouteMeta({
   },
 })
 
-// Helper function to create a unique player key
-function getPlayerKey(player: any): string {
-  return `${player.firstname?.toLowerCase()}_${player.lastname?.toLowerCase()}`
-}
-
-// Helper function to merge player stats
-function mergePlayerStats(playerMap: Map<string, Lineup>, player: any): void {
-  const playerKey = getPlayerKey(player)
-  const existingPlayer = playerMap.get(playerKey)
-
-  if (existingPlayer) {
-    existingPlayer.gamesPlayed += 1
-    existingPlayer.goals += player.goals || 0
-    existingPlayer.penaltyGoals += player.penaltyGoals || 0
-    existingPlayer.penaltyMissed += player.penaltyMissed || 0
-    existingPlayer.penalties += player.penalties || 0
-    existingPlayer.yellowCards += player.yellowCards || 0
-    existingPlayer.redCards += player.redCards || 0
-    existingPlayer.blueCards += player.blueCards || 0
-  }
-  else {
-    playerMap.set(playerKey, {
-      ...player,
-      gamesPlayed: 1,
-      goals: player.goals || 0,
-      penaltyGoals: player.penaltyGoals || 0,
-      penaltyMissed: player.penaltyMissed || 0,
-      penalties: player.penalties || 0,
-      yellowCards: player.yellowCards || 0,
-      redCards: player.redCards || 0,
-      blueCards: player.blueCards || 0,
-    })
-  }
-}
-
-// Helper function to process lineups in batches
 async function processLineupsInBatches(
   games: Game[],
   teamId: string,
   batchSize: number = 3,
 ): Promise<Map<string, Lineup>> {
-  const playerMap = new Map<string, Lineup>()
+  const teamPlayersMap = new Map<string, Lineup>()
 
   for (let i = 0; i < games.length; i += batchSize) {
     const batch = games.slice(i, i + batchSize)
@@ -82,7 +47,7 @@ async function processLineupsInBatches(
       const isHomeTeam = game.homeTeam.id === teamId
       const teamPlayers = isHomeTeam ? lineup.home : lineup.away
 
-      teamPlayers?.forEach(player => mergePlayerStats(playerMap, player))
+      teamPlayers?.forEach(player => mergePlayerStats(teamPlayersMap, player))
     })
 
     // Add small delay between batches to prevent overwhelming the API
@@ -91,7 +56,7 @@ async function processLineupsInBatches(
     }
   }
 
-  return playerMap
+  return teamPlayersMap
 }
 
 export default defineCachedEventHandler(async (event) => {
@@ -117,10 +82,10 @@ export default defineCachedEventHandler(async (event) => {
     }
 
     // Process lineups in batches with error handling
-    const playerMap = await processLineupsInBatches(teamGames, teamId)
+    const teamPlayersMap = await processLineupsInBatches(teamGames, teamId)
 
     // Convert Map to Array and sort by goals (descending)
-    const teamLineup = Array.from(playerMap.values()).sort((a, b) => b.goals - a.goals)
+    const teamLineup = Array.from(teamPlayersMap.values()).sort((a, b) => b.goals - a.goals)
 
     return teamLineup
   }

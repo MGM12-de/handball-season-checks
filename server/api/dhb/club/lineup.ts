@@ -1,8 +1,6 @@
-/**
- * Fetches the lineup of a club.
- */
-
 import type { Player, Team } from '~~/types'
+import { getClubUrl } from '../../../../server/utils/dhbUtils'
+import { getPlayerKey, mergePlayerStats } from '../../../utils/dhbPlayerUtils'
 
 // Extended player interface with teams array
 interface ClubPlayer extends Player {
@@ -12,11 +10,6 @@ interface ClubPlayer extends Player {
     acronym?: string
     ageGroup?: string
   }>
-}
-
-// Helper function to create a unique player key
-function getPlayerKey(player: Player): string {
-  return `${player.firstname?.toLowerCase()}_${player.lastname?.toLowerCase()}`
 }
 
 export default defineCachedEventHandler(async (event) => {
@@ -29,7 +22,7 @@ export default defineCachedEventHandler(async (event) => {
     })
   }
 
-  const playerMap = new Map<string, ClubPlayer>()
+  const clubPlayersMap = new Map<string, ClubPlayer>()
   const clubId = query.id as string
   const clubTeams: { data: Team[] } = await $fetch(`${getClubUrl(clubId)}/teams`)
 
@@ -40,18 +33,11 @@ export default defineCachedEventHandler(async (event) => {
 
     for (const player of teamLineup) {
       const playerKey = getPlayerKey(player)
-      const existingPlayer = playerMap.get(playerKey)
+      const existingPlayer = clubPlayersMap.get(playerKey)
 
       if (existingPlayer) {
         // Player exists - merge stats and add team to teams array
-        existingPlayer.goals += player.goals || 0
-        existingPlayer.penaltyGoals += player.penaltyGoals || 0
-        existingPlayer.penaltyMissed += player.penaltyMissed || 0
-        existingPlayer.penalties += player.penalties || 0
-        existingPlayer.yellowCards += player.yellowCards || 0
-        existingPlayer.redCards += player.redCards || 0
-        existingPlayer.blueCards += player.blueCards || 0
-        existingPlayer.gamesPlayed += player.gamesPlayed || 0
+        mergePlayerStats(clubPlayersMap, player)
 
         // Add team to teams array if not already present
         const teamExists = existingPlayer.teams.some(t => t.id === team.id)
@@ -66,7 +52,7 @@ export default defineCachedEventHandler(async (event) => {
       }
       else {
         // New player - add with teams as array
-        playerMap.set(playerKey, {
+        clubPlayersMap.set(playerKey, {
           ...player,
           teams: [{
             id: team.id,
@@ -80,7 +66,7 @@ export default defineCachedEventHandler(async (event) => {
   }
 
   // Convert Map to Array and sort by goals (descending)
-  const lineups = Array.from(playerMap.values()).sort((a, b) => b.goals - a.goals)
+  const lineups = Array.from(clubPlayersMap.values()).sort((a, b) => b.goals - a.goals)
 
   return lineups
 }, {
