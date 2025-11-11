@@ -66,5 +66,8 @@
   "tournament": "Liga",
   "tournaments": "Ligen",
   "club": "Verein",
-  "goalsPerGame": "Tore pro Spiel"
+  "goalsPerGame": "Tore pro Spiel",
+  "filter": "Filtern ...",
+  "ascending": "Aufsteigend",
+  "descending": "Absteigend"
 }

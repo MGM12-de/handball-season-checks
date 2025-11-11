@@ -192,7 +192,7 @@ function getHeader(column: Column<any>, label: string) {
       'aria-label': 'Actions dropdown',
       'items': [
         {
-          label: 'Asc',
+          label: t('ascending'),
           type: 'checkbox',
           icon: 'i-lucide-arrow-up-narrow-wide',
           checked: isSorted === 'asc',
@@ -206,7 +206,7 @@ function getHeader(column: Column<any>, label: string) {
           },
         },
         {
-          label: 'Desc',
+          label: t('descending'),
           icon: 'i-lucide-arrow-down-wide-narrow',
           type: 'checkbox',
           checked: isSorted === 'desc',
@@ -241,7 +241,7 @@ function getHeader(column: Column<any>, label: string) {
 <template>
   <div>
     <div v-if="showSearch" class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="q" placeholder="Filter ..." />
+      <UInput v-model="q" :placeholder="t('filter')" />
     </div>
 
     <UTable v-model:sorting="sorting" :data="filteredRows" :columns="columns" :loading="loading"

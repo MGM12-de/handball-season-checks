@@ -66,5 +66,8 @@
   "tournament": "Tournament",
   "tournaments": "Tournaments",
   "club": "Club",
-  "goalsPerGame": "Goals Per Game"
+  "goalsPerGame": "Goals Per Game",
+  "filter": "Filter ...",
+  "ascending": "Asc",
+  "descending": "Desc"
 }
