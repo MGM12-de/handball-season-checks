@@ -1,78 +1,74 @@
 # Handball Season Checks
 
-A compact web app for viewing and analyzing handball season data (DHB).
-It provides a small dashboard to search, view, and explore teams, matches, lineups, and tables.
+![pnpm](https://img.shields.io/badge/pnpm-10.28.2-002b36?logo=pnpm)
+![vitest](https://img.shields.io/badge/tests-vitest-8b5cf6?logo=vitest)
+![license](https://img.shields.io/badge/license-MIT-brightgreen)
 
-<img src="./public/favicon.svg" alt="Logo" width="160"/>
+A compact web app for viewing and analyzing handball season data (DHB). The app provides
+a dashboard to search, view and explore teams, matches, lineups and standings.
 
-Short description:
-- Displays lineups, standings, schedules, and team details.
-- Uses server APIs under `server/api/dhb/*` to fetch and prepare data.
+<p align="center"><img src="./public/favicon.svg" alt="Logo" width="140"/></p>
 
-Key features:
-- Search for clubs and teams
-- View lineups (`lineup`), matches (`games`), standings (`standing`, `table`)
-- Bilingual UI (German / English)
+## Table of contents
+- [Features](#features)
+- [Quick start](#quick-start)
+- [Development](#development)
+- [Project structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-Tech stack:
-- Nuxt 3 / Vue 3
-- TypeScript
-- pnpm
-- Vitest for tests
+## Features
+- Search clubs and teams
+- View lineups (`lineup`), matches (`games`) and standings (`standing`, `table`)
+- Responsive Nuxt 3 UI with i18n (German / English)
 
-Prerequisites
-- Node.js 18+ recommended
-- pnpm installed
-
-Installation
-1. Clone the repository
+## Quick start
+Clone the repo and install dependencies:
 
 ```bash
 git clone <repo-url>
 cd handball-season-checks
-```
-2. Install dependencies
-
-```bash
 pnpm install
 ```
 
-Development
-- Start dev server:
+Start the dev server:
 
 ```bash
 pnpm dev
 ```
 
-- UI tests / Storybook (if available):
-
-```bash
-pnpm test:ui
-```
-
-Tests
-- Run unit and component tests with Vitest:
+Run tests (Vitest):
 
 ```bash
 pnpm test
 ```
 
-Project structure (excerpt)
-- `app/` – Nuxt application, pages and components
-- `server/api/` – Server endpoints for DHB data
-- `tests/` – Test files
-- `types/` – TypeScript type definitions
+UI test runner:
 
-Contributing
-Contributions are welcome. Suggestions:
-- Open issues for bugs or feature requests
-- Create small, focused pull requests
+```bash
+pnpm test:ui
+```
 
-Before creating a PR:
-- Fork the repo, create a branch, commit changes, open a PR
+## Development
+- Build: `pnpm build`
+- Preview production build: `pnpm preview`
+- Lint: `pnpm lint` / `pnpm lint:fix`
 
-License
-This project is licensed as described in the `LICENSE` file.
+## Project structure
+- `app/` — Nuxt application (pages & components)
+- `server/api/` — Server endpoints and DHB data adapters
+- `tests/` — Unit and component tests
+- `types/` — TypeScript type definitions
 
----
-If you want further adjustments or a different tone, tell me what to change.
+## Contributing
+Contributions are welcome. Please open issues for bugs or feature requests and
+create small, focused pull requests.
+
+Before opening a PR:
+
+1. Fork the repository
+2. Create a topic branch
+3. Commit changes and open a PR
+
+## License
+See the `LICENSE` file for licensing details.
