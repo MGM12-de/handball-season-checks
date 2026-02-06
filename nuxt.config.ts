@@ -20,7 +20,7 @@ if (!isTest) {
 }
 
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: '2026-02-06',
   devtools: { enabled: true },
   extends: [],
   modules: modulesList,
@@ -38,6 +38,11 @@ export default defineNuxtConfig({
     cache: true,
   },
   nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
     experimental: {
       openAPI: true,
     },
