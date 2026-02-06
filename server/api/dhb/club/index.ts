@@ -47,12 +47,6 @@ export default defineCachedEventHandler(async (event) => {
   // https://www.handball.net/a/spoconst query = await getValidatedQuery(event, (data) => querySchema.parse(data))
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
-  if (!query.id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No id received',
-    })
-  }
   try {
     const clubId = query.id as string
     const club = await $fetch(getClubUrl(clubId))
