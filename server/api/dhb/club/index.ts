@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
@@ -14,6 +15,10 @@ defineRouteMeta({
       },
     ],
   },
+})
+
+const querySchema = z.object({
+  id: z.string().min(1, 'Club ID is required'),
 })
 
 /**
@@ -39,8 +44,8 @@ defineRouteMeta({
  *         description: The club data
  */
 export default defineCachedEventHandler(async (event) => {
-  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36
-  const query = getQuery(event)
+  // https://www.handball.net/a/spoconst query = await getValidatedQuery(event, (data) => querySchema.parse(data))
+  const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
   if (!query.id) {
     throw createError({
@@ -52,12 +57,11 @@ export default defineCachedEventHandler(async (event) => {
     const clubId = query.id as string
     const club = await $fetch(getClubUrl(clubId))
 
-    if (club.data.logo) {
-      club.data.logo = normalizeDHBUrl(club.data.logo)
-    }
-
-    if (club.data.organization.logo) {
-      club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo)
+    if (club?.data) {
+      if (club.data.logo)
+        club.data.logo = normalizeDHBUrl(club.data.logo)
+      if (club.data.organization?.logo)
+        club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo)
     }
 
     return club.data
@@ -67,6 +71,7 @@ export default defineCachedEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: `Error fetching club data. (${error})`,
+      data: error,
     })
   }
 }, {
