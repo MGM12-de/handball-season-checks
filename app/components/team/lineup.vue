@@ -1,21 +1,32 @@
 <script lang="ts" setup>
-const props = defineProps({
-  teamId: {
-    type: String,
-    required: true,
-  },
-})
+interface Props {
+  teamId: string
+}
 
-const { teamId } = props
+const props = defineProps<Props>()
 
-const { data: teamLineup, status: teamLineupState } = await useAsyncData(
-  `team/${teamId}/lineup`,
+const { data: teamLineup, status, error } = await useAsyncData(
+  `team/${props.teamId}/lineup`,
   () => $fetch('/api/dhb/team/lineup', {
-    query: { id: teamId },
+    query: { id: props.teamId },
   }),
+  {
+    // Verhindert, dass der Server bei einem Fehler crasht, erlaubt Error-Handling im UI
+    lazy: false,
+  },
 )
 </script>
 
 <template>
-  <SharedLineupTable :data="teamLineup || []" :loading="teamLineupState === 'pending'" :show-teams="false" />
+  <div class="w-full">
+    <UAlert v-if="error" icon="i-lucide-alert-circle" color="error" variant="subtle" title="Error loading lineup"
+      :description="error.message" />
+
+    <div v-else-if="status === 'pending'" class="space-y-2">
+      <USkeleton class="h-12 w-full" />
+      <USkeleton class="h-12 w-full" />
+    </div>
+
+    <SharedLineupTable v-else :data="teamLineup || []" :loading="status === 'pending'" :show-teams="false" />
+  </div>
 </template>
