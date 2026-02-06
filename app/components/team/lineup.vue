@@ -11,7 +11,6 @@ const { data: teamLineup, status, error } = await useAsyncData(
     query: { id: props.teamId },
   }),
   {
-    // Verhindert, dass der Server bei einem Fehler crasht, erlaubt Error-Handling im UI
     lazy: false,
   },
 )

@@ -26,8 +26,8 @@ const links = computed(() => [
 <template>
   <UPage>
     <UPageHero :headline="t('handball')" :title="t('siteTitle')" :description="t('siteDescription')" :links="links"
-      orientation="horizontal">
-      <AppLogo class="rounded-lg shadow-2xl ring ring-(--ui-border)" />
+      orientation="horizontal" class="py-8 sm:py-16">
+      <AppLogo class="rounded-lg shadow-2xl ring ring-(--ui-border) w-full max-w-xs mx-auto sm:max-w-none" />
     </UPageHero>
   </UPage>
 </template>
