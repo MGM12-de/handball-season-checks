@@ -1,5 +1,6 @@
+import type { H3Event } from 'h3'
 import type { Game, Lineup } from '~~/types'
-import { getPlayerKey, mergePlayerStats } from '../../../utils/dhbPlayerUtils'
+import { mergePlayerStats } from '../../../utils/dhbPlayerUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -99,5 +100,5 @@ export default defineCachedEventHandler(async (event) => {
   maxAge: 60 * 60, // 1 hour
   name: 'team-lineup',
   swr: true,
-  getKey: event => event.path,
+  getKey: (event: H3Event) => event.path,
 })
