@@ -25,9 +25,6 @@ export default defineNuxtConfig({
   extends: [],
   modules: modulesList,
   css: ['~/assets/css/main.css'],
-  future: {
-    compatibilityVersion: 4,
-  },
   app: {
     head: {
       charset: 'utf-8',
