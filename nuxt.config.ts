@@ -33,6 +33,9 @@ export default defineNuxtConfig({
   imports: {
     autoImport: true,
   },
+  routeRules: {
+    '/': { prerender: true },
+  },
   hub: {
     cache: {
       driver: 'cloudflare-kv-binding',
