@@ -38,6 +38,7 @@ export default defineNuxtConfig({
       driver: 'cloudflare-kv-binding',
       namespaceId: '622b3d207e21450db456b09ce3cf34c0',
     },
+    db: 'postgresql',
   },
   nitro: {
     preset: 'cloudflare_module',

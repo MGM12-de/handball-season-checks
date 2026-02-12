@@ -17,6 +17,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.3.15",
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/lucide": "^1.2.90",
     "@iconify-json/mdi": "^1.2.3",
@@ -30,8 +31,11 @@
     "@nuxtjs/i18n": "^10.2.3",
     "@vite-pwa/nuxt": "1.1.1",
     "better-sqlite3": "^12.6.2",
+    "drizzle-kit": "^0.31.9",
+    "drizzle-orm": "^0.45.1",
     "h3-zod": "^0.5.3",
     "nuxt": "^4.3.0",
+    "postgres": "^3.4.8",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.28",
     "vue-router": "^5.0.2",
