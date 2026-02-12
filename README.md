@@ -10,6 +10,7 @@ a dashboard to search, view and explore teams, matches, lineups and standings.
 <p align="center"><img src="./public/favicon.svg" alt="Logo" width="140"/></p>
 
 ## Table of contents
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Quick start](#quick-start)
 - [Development](#development)
@@ -21,6 +22,10 @@ a dashboard to search, view and explore teams, matches, lineups and standings.
 - Search clubs and teams
 - View lineups (`lineup`), matches (`games`) and standings (`standing`, `table`)
 - Responsive Nuxt 3 UI with i18n (German / English)
+
+## Screenshots
+
+<p align="center"><img src="./public/screenshots/desktop_standing.png" alt="Desktop screenshot" width="80%"/></p>
 
 ## Quick start
 Clone the repo and install dependencies:

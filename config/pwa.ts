@@ -14,6 +14,15 @@ export const pwa: ModuleOptions = {
         categories: ['games', 'sports', 'handball'],
         id: '/',
         orientation: 'portrait',
+        screenshots: [
+            {
+                src: '../public/screenshots/desktop_standing.png',
+                type: 'image/png',
+                sizes: '2417x1240',
+                form_factor: 'wide',
+                label: 'Table view of the current season standings',
+            },
+        ],
     },
     pwaAssets: {
         image: '../public/favicon.svg',
