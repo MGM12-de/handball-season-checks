@@ -10,7 +10,6 @@ const modulesList = [
   '@nuxt/ui',
   '@nuxtjs/i18n',
   '@nuxt/image',
-  '@scalar/nuxt',
   '@nuxt/eslint',
   '@nuxthub/core',
 ]
@@ -42,9 +41,6 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
-    },
-    experimental: {
-      openAPI: true,
     },
   },
   i18n,
