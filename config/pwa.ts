@@ -10,17 +10,19 @@ export const pwa: ModuleOptions = {
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
+        scope: '/',
         categories: ['games', 'sports', 'handball'],
         id: '/',
         orientation: 'portrait',
     },
     pwaAssets: {
         image: '../public/favicon.svg',
+        config: true,
     },
     workbox: {
         navigateFallback: '/',
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-        globIgnores: ['**/_payload.json'],
+        globIgnores: ['**/_payload.json', 'sw.js', 'manifest.webmanifest'],
         maximumFileSizeToCacheInBytes: 3000000,
         runtimeCaching: [
             {
@@ -35,12 +37,14 @@ export const pwa: ModuleOptions = {
                     cacheableResponse: {
                         statuses: [0, 200],
                     },
+                    networkTimeoutSeconds: 3,
                 },
             },
         ],
     },
     client: {
         installPrompt: true,
+        periodicSyncForUpdates: 3600,
     },
     devOptions: {
         enabled: true,
