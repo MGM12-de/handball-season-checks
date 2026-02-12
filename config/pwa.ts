@@ -17,7 +17,6 @@ export const pwa: ModuleOptions = {
     },
     pwaAssets: {
         image: '../public/favicon.svg',
-        config: true,
     },
     workbox: {
         navigateFallback: '/',
