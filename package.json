@@ -28,7 +28,6 @@
     "@nuxt/ui": "^4.4.0",
     "@nuxthub/core": "^0.10.6",
     "@nuxtjs/i18n": "^10.2.3",
-    "@scalar/nuxt": "^0.5.74",
     "@vite-pwa/nuxt": "1.1.1",
     "better-sqlite3": "^12.6.2",
     "h3-zod": "^0.5.3",
