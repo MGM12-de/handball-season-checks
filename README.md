@@ -1,8 +1,8 @@
 # Handball Season Checks
 
-![pnpm](https://img.shields.io/badge/pnpm-10.28.2-002b36?logo=pnpm)
-![vitest](https://img.shields.io/badge/tests-vitest-8b5cf6?logo=vitest)
-![license](https://img.shields.io/badge/license-MIT-brightgreen)
+![pnpm](https://img.shields.io/badge/pnpm-10.28.2-002b36?logo=pnpm&style=for-the-badge)
+![vitest](https://img.shields.io/badge/tests-vitest-8b5cf6?logo=vitest&style=for-the-badge)
+![license](https://img.shields.io/badge/license-MIT-brightgreen?style=for-the-badge)
 
 A compact web app for viewing and analyzing handball season data (DHB). The app provides
 a dashboard to search, view and explore teams, matches, lineups and standings.
