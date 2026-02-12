@@ -22,6 +22,22 @@ export const pwa: ModuleOptions = {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         globIgnores: ['**/_payload.json'],
         maximumFileSizeToCacheInBytes: 3000000,
+        runtimeCaching: [
+            {
+                urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'api-cache',
+                    expiration: {
+                        maxEntries: 50,
+                        maxAgeSeconds: 60 * 5, // Cache for only 5 minutes
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                    },
+                },
+            },
+        ],
     },
     client: {
         installPrompt: true,
