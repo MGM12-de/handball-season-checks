@@ -27,9 +27,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build & Deploy to NuxtHub
-        uses: nuxt-hub/action@v2
-        with:
-          project-key: handball-season-tmj7
+      - name: Build
+        run: pnpm build
         env:
-          NUXT_UI_PRO_LICENSE: ${{ secrets.NUXT_UI_PRO_LICENSE }}
+          CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/master' && '' || 'preview' }}
+
+      - name: Deploy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
