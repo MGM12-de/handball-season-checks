@@ -34,7 +34,10 @@ export default defineNuxtConfig({
     autoImport: true,
   },
   hub: {
-    cache: true,
+    cache: {
+      driver: 'cloudflare-kv-binding',
+      namespaceId: '622b3d207e21450db456b09ce3cf34c0',
+    },
   },
   nitro: {
     preset: 'cloudflare_module',
