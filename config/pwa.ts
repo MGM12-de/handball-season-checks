@@ -29,6 +29,7 @@ export const pwa: ModuleOptions = {
     },
     workbox: {
         navigateFallback: '/',
+        navigateFallbackDenylist: [/^\/+(?!$)/],
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         globIgnores: ['**/_payload.json', 'sw.js', 'manifest.webmanifest'],
         maximumFileSizeToCacheInBytes: 3000000,
