@@ -1,4 +1,4 @@
-import { i18n, pwa } from './config/config'
+import { hub, i18n, pwa } from './config/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test'
@@ -36,19 +36,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
   },
-  hub: {
-    cache: {
-      driver: 'cloudflare-kv-binding',
-      namespaceId: '622b3d207e21450db456b09ce3cf34c0',
-    },
-    db: {
-      dialect: 'sqlite',
-      driver: 'd1',
-      connection: {
-        databaseId: '29f5103a-ddac-4821-b783-060504afe479',
-      },
-    },
-  },
+  hub,
   nitro: {
     preset: 'cloudflare_module',
     cloudflare: {
