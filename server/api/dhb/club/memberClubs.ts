@@ -1,4 +1,4 @@
-import { getClubUrl } from '../../../../server/utils/dhbUtils'
+import { getClubUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -34,7 +34,7 @@ export default defineCachedEventHandler(async (event) => {
 
   clubInfo.data.forEach((club: any) => {
     if (club.logo) {
-      club.logo = normalizeDHBUrl(club.logo)
+      club.logo = normalizeImageUrl(club.logo)
     }
   })
 

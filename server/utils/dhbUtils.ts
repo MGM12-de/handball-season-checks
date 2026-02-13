@@ -14,11 +14,11 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(h
 }
 
 /**
- * Normalize DHB Url.
- * @param url current DHB Url
- * @returns Correct DHB Url
+ * Normalize Image Url.
+ * @param url current Image Url
+ * @returns Correct Image Url
  */
-export function normalizeDHBUrl(url: string) {
+export function normalizeImageUrl(url: string) {
   return url.replace(/handball-net:(.*)$/, 'https://handball.net/$1')
     .replace(/^\//, 'https://handball.net/')
 }
