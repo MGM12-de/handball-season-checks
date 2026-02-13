@@ -73,6 +73,6 @@ export default cachedEventHandler(async (event) => {
 }, {
   maxAge:  60 * 60 * 24 * 7, // 1 week
   name: 'search-club',
-  swr: true,
+  swr: false,
   getKey: event => getQuery(event).clubName,
 })
