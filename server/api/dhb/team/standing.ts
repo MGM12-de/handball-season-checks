@@ -1,4 +1,4 @@
-import { getTeamUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
+import { getTeamUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -30,7 +30,7 @@ export default defineCachedEventHandler(async (event) => {
   const normalizeTeamLogo = (team) => {
     return {
       ...team,
-      logo: normalizeDHBUrl(team.logo),
+      logo: normalizeImageUrl(team.logo),
     }
   }
 

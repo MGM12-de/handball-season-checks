@@ -1,4 +1,4 @@
-import { getTournamentUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
+import { getTournamentUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -32,7 +32,7 @@ export default defineCachedEventHandler(async (event) => {
 
     tournamentTable.data.rows.forEach((row) => {
       if (row.team.logo) {
-        row.team.logo = normalizeDHBUrl(row.team.logo)
+        row.team.logo = normalizeImageUrl(row.team.logo)
       }
     })
 

@@ -1,4 +1,4 @@
-import { getClubsUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
+import { getClubsUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -61,11 +61,11 @@ export default defineEventHandler(async (event) => {
 
   tournaments.data.forEach((tournament) => {
     if (tournament.logo) {
-      tournament.logo = normalizeDHBUrl(tournament.logo)
+      tournament.logo = normalizeImageUrl(tournament.logo)
     }
 
     if (tournament.organization.logo) {
-      tournament.organization.logo = normalizeDHBUrl(tournament.organization.logo)
+      tournament.organization.logo = normalizeImageUrl(tournament.organization.logo)
     }
   })
   return tournaments.data

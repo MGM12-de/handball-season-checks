@@ -1,4 +1,4 @@
-import { getTournamentUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
+import { getTournamentUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 import team from '../team'
 
 defineRouteMeta({
@@ -50,7 +50,7 @@ export default defineCachedEventHandler(async (event) => {
     const normalizeTeamLogo = (team) => {
       return {
         ...team,
-        logo: normalizeDHBUrl(team.logo),
+        logo: normalizeImageUrl(team.logo),
       }
     }
 

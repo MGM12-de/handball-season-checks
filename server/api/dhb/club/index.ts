@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getClubUrl, normalizeDHBUrl } from '../../../../server/utils/dhbUtils'
+import { getClubUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -52,9 +52,9 @@ export default defineCachedEventHandler(async (event) => {
 
     if (club?.data) {
       if (club.data.logo)
-        club.data.logo = normalizeDHBUrl(club.data.logo)
+        club.data.logo = normalizeImageUrl(club.data.logo)
       if (club.data.organization?.logo)
-        club.data.organization.logo = normalizeDHBUrl(club.data.organization.logo)
+        club.data.organization.logo = normalizeImageUrl(club.data.organization.logo)
     }
 
     return club.data
