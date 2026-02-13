@@ -36,6 +36,6 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   maxAge: 60 * 60 * 24 * 7, // 1 week
   name: 'club-info',
-  swr: true,
+  swr: false,
   getKey: event => event.path,
 })

@@ -49,6 +49,6 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   maxAge: 60 * 60, // 1 hour
   name: 'team-standing',
-  swr: true,
+  swr: false,
   getKey: event => event.path,
 })
