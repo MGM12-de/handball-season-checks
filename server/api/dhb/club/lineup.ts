@@ -26,11 +26,19 @@ export default defineCachedEventHandler(async (event) => {
   const clubId = query.id as string
   const clubTeams: { data: Team[] } = await $fetch(`${getClubUrl(clubId)}/teams`)
 
-  for (const team of clubTeams.data) {
-    const teamLineup: Player[] = await $fetch(`/api/dhb/team/lineup`, {
+  // Create an array of promises for fetching team lineups
+  const lineupPromises = clubTeams.data.map(team =>
+    $fetch<Player[]>(`/api/dhb/team/lineup`, {
       query: { id: team.id },
-    })
+    }),
+  )
 
+  // Wait for all lineup fetches to complete
+  const teamLineups = await Promise.all(lineupPromises)
+
+  // Process the lineups
+  clubTeams.data.forEach((team, index) => {
+    const teamLineup = teamLineups[index]
     for (const player of teamLineup) {
       const playerKey = getPlayerKey(player)
       const existingPlayer = clubPlayersMap.get(playerKey)
@@ -63,7 +71,7 @@ export default defineCachedEventHandler(async (event) => {
         })
       }
     }
-  }
+  })
 
   // Convert Map to Array and sort by goals (descending)
   const lineups = Array.from(clubPlayersMap.values()).sort((a, b) => b.goals - a.goals)
