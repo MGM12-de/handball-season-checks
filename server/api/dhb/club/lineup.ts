@@ -26,15 +26,24 @@ export default defineEventHandler(async (event) => {
   const clubId = query.id as string
   const clubTeams: { data: Team[] } = await $fetch(`${getClubUrl(clubId)}/teams`)
 
-  // Create an array of promises for fetching team lineups
-  const lineupPromises = clubTeams.data.map(team =>
-    $fetch<Player[]>(`/api/dhb/team/lineup`, {
-      query: { id: team.id },
-    }),
-  )
+  const teamLineups: Player[][] = []
 
   // Wait for all lineup fetches to complete
-  const teamLineups = await Promise.all(lineupPromises)
+  for (const team of clubTeams.data) {
+    try {
+      const lineup = await $fetch<Player[]>(`/api/dhb/team/lineup`, {
+        query: { id: team.id },
+      })
+      teamLineups.push(lineup || [])
+
+      // Kurze Pause zwischen den Teams (z.B. 250ms)
+      await new Promise(resolve => setTimeout(resolve, 250))
+    }
+    catch (error) {
+      console.warn(`Failed to fetch lineup for team ${team.id}:`, error)
+      teamLineups.push([]) // Leeres Array als Fallback, damit die Indizes für die Teams stimmen
+    }
+  }
 
   // Process the lineups
   clubTeams.data.forEach((team, index) => {
