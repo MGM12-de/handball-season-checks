@@ -46,4 +46,9 @@ export default defineNuxtConfig({
   },
   i18n,
   pwa,
+  runtimeConfig: {
+    public: {
+      dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
+    },
+  },
 })

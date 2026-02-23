@@ -28,7 +28,8 @@ export function normalizeImageUrl(url: string) {
  * @returns DHB base url
  */
 export function getDHBBaseUrl() {
-  return 'https://www.handball.net/a/sportdata/1'
+  const runtimeConfig = useRuntimeConfig()
+  return runtimeConfig.public.dhbBaseUrl
 }
 
 /**
