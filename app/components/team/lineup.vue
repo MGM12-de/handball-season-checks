@@ -5,7 +5,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const { data: teamLineup, status, error } = await useAsyncData(
+const { data: teamLineup, status, error } = await useLazyAsyncData(
   `team/${props.teamId}/lineup`,
   () => $fetch('/api/dhb/team/lineup', {
     query: { id: props.teamId },
