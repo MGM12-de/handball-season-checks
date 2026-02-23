@@ -2,7 +2,7 @@
 const route = useRoute()
 const clubId = route.params.id as string
 
-const { data: clubLineup, status: clubLineupState } = await useAsyncData(
+const { data: clubLineup, status: clubLineupState } = await useLazyAsyncData(
   `club/${clubId}/lineup`,
   () => $fetch('/api/dhb/club/lineup', {
     query: { id: clubId },
