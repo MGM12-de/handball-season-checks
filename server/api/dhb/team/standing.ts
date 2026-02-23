@@ -1,4 +1,9 @@
+import { z } from 'zod'
 import { getTeamUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+
+const querySchema = z.object({
+  id: z.string().min(1, 'Team ID is required'),
+})
 
 defineRouteMeta({
   openAPI: {
@@ -18,14 +23,8 @@ defineRouteMeta({
 })
 
 export default defineCachedEventHandler(async (event) => {
-  const query = getQuery(event)
-
-  if (!query.id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No id received',
-    })
-  }
+  const query = await getValidatedQuery(event, data => querySchema.parse(data))
+  const teamId = query.id as string
 
   const normalizeTeamLogo = (team) => {
     return {
@@ -33,8 +32,6 @@ export default defineCachedEventHandler(async (event) => {
       logo: normalizeImageUrl(team.logo),
     }
   }
-
-  const teamId = query.id as string
   const teamApi = await $fetch(`${getTeamUrl(teamId)}/table`)
   const standings = teamApi.data.rows
 
@@ -43,7 +40,9 @@ export default defineCachedEventHandler(async (event) => {
     team: normalizeTeamLogo(standing.team),
   }))
   const currentTeam = normalizedStandings.find(obj => obj.team.id === query.id)
-  currentTeam.class = 'bg-primary-500 animate-pulse'
+  if (currentTeam) {
+    currentTeam.class = 'bg-primary-500 animate-pulse'
+  }
 
   return normalizedStandings
 }, {
