@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const route = useRoute()
+const clubId = route.params.id as string
 const club = ref({
   id: '',
   name: '',
@@ -15,9 +16,9 @@ const club = ref({
 const { t } = useI18n()
 
 const { data } = await useAsyncData(
-  `club/${route.params.id}`,
+  `club/${clubId}`,
   () => $fetch('/api/dhb/club', {
-    query: { id: route.params.id },
+    query: { id: clubId },
   }),
 )
 club.value = data.value
