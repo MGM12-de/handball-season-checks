@@ -6,13 +6,13 @@ const props = defineProps({
   },
 })
 const standing = ref()
-const { teamId } = props
 
 const { data, status } = await useAsyncData(
-  `team/${teamId}/standing`,
+  () => `team/${props.teamId}/standing`,
   () => $fetch('/api/dhb/team/standing', {
-    query: { id: teamId },
+    query: { id: props.teamId },
   }),
+  { watch: [() => props.teamId] },
 )
 standing.value = data.value
 </script>
