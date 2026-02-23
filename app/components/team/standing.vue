@@ -19,7 +19,7 @@ standing.value = data.value
 
 <template>
   <div>
-    <SharedStandingTable :data="standing || []" :loading="status === 'pending'" />
+    <SharedStandingTable :data="standing || []" :loading="status === 'pending'" :team-id="props.teamId" />
   </div>
 </template>
 
