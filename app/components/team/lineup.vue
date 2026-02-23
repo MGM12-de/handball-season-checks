@@ -21,11 +21,6 @@ const { data: teamLineup, status, error } = await useLazyAsyncData(
     <UAlert v-if="error" icon="i-lucide-alert-circle" color="error" variant="subtle" title="Error loading lineup"
       :description="error.message" />
 
-    <div v-else-if="status === 'pending'" class="space-y-2">
-      <USkeleton class="h-12 w-full" />
-      <USkeleton class="h-12 w-full" />
-    </div>
-
-    <SharedLineupTable v-else :data="teamLineup || []" :loading="status === 'pending'" :show-teams="false" />
+    <SharedLineupTable :data="teamLineup || []" :loading="status === 'pending'" :show-teams="false" />
   </div>
 </template>
