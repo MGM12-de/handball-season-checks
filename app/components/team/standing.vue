@@ -7,7 +7,7 @@ const props = defineProps({
 })
 const standing = ref()
 
-const { data, status } = await useAsyncData(
+const { data, status } = await useLazyAsyncData(
   () => `team/${props.teamId}/standing`,
   () => $fetch('/api/dhb/team/standing', {
     query: { id: props.teamId },
