@@ -85,6 +85,6 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   maxAge: 60 * 60 * 24, // 1 day
   name: 'tournament-lineup',
-  swr: false,
+  swr: true,
   getKey: event => `${event.path}`,
 })

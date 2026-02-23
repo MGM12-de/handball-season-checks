@@ -99,6 +99,6 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   maxAge: 60 * 60, // 1 hour
   name: 'team-lineup',
-  swr: false,
+  swr: true,
   getKey: (event: H3Event) => event.path,
 })
