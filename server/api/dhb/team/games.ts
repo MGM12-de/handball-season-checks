@@ -1,5 +1,4 @@
 import type { Game } from '../../../../types'
-import { de, el } from '@nuxt/ui/runtime/locale/index.js'
 import { getTeamUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
@@ -19,7 +18,7 @@ defineRouteMeta({
   },
 })
 
-export default cachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event)
 
@@ -89,9 +88,4 @@ export default cachedEventHandler(async (event) => {
       statusMessage: `Error fetching team game data. (${error})`,
     })
   }
-}, {
-  maxAge: 60 * 5,
-  name: 'team-games',
-  swr: true,
-  getKey: event => event.path,
 })

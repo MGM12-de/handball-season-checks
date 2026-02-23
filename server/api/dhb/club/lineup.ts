@@ -12,7 +12,7 @@ interface ClubPlayer extends Player {
   }>
 }
 
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.id) {
@@ -77,9 +77,4 @@ export default defineCachedEventHandler(async (event) => {
   const lineups = Array.from(clubPlayersMap.values()).sort((a, b) => b.goals - a.goals)
 
   return lineups
-}, {
-  maxAge: 60 * 60, // 1 hour
-  name: 'club-lineup',
-  swr: true,
-  getKey: event => event.path,
 })

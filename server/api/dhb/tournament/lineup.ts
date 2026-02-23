@@ -17,7 +17,7 @@ defineRouteMeta({
   },
 })
 
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.id) {
@@ -82,9 +82,4 @@ export default defineCachedEventHandler(async (event) => {
       statusMessage: `Error fetching tournament data. (${error})`,
     })
   }
-}, {
-  maxAge: 60 * 60 * 24, // 1 day
-  name: 'tournament-lineup',
-  swr: true,
-  getKey: event => `${event.path}`,
 })

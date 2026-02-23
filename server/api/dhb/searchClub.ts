@@ -49,7 +49,7 @@ defineRouteMeta({
  * @returns {Promise<Club[]>}
  * @throws {Error}
  */
-export default cachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   if (!query.clubName) {
@@ -70,9 +70,4 @@ export default cachedEventHandler(async (event) => {
     }
   })
   return clubs.data
-}, {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
-  name: 'search-club',
-  swr: true,
-  getKey: event => getQuery(event).clubName,
 })

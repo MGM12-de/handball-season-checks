@@ -51,4 +51,40 @@ export default defineNuxtConfig({
       dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
     },
   },
+  routeRules: {
+    // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
+    '/api/dhb/club/**': {
+      swr: 60 * 60 * 24,
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600',
+      },
+    },
+
+    // 2. Spezifische Regeln: Turniere/Ligen (z. B. 15 Minuten Cache)
+    '/api/dhb/tournament/**': {
+      swr: 60 * 15,
+      headers: {
+        'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=60',
+      },
+    },
+
+    // 3. Spezifische Regeln: Spiele und Tabellenplätze (sehr aktuell, z. B. 5 Minuten)
+    '/api/dhb/team/games': {
+      swr: 60 * 5,
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
+      },
+    },
+    '/api/dhb/team/standing': {
+      swr: 60 * 5,
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
+      },
+    },
+
+    // 4. Live-Daten: Aktuelles Spiel (kein Cache, immer live)
+    '/api/dhb/game/**': {
+      cache: false, // Explizit Caching deaktivieren
+    },
+  },
 })

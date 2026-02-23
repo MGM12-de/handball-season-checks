@@ -19,7 +19,7 @@ defineRouteMeta({
 /**
  * Get members clubs
  */
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.1187/member-clubs
   const query = getQuery(event)
 
@@ -39,9 +39,4 @@ export default defineCachedEventHandler(async (event) => {
   })
 
   return clubInfo.data
-}, {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
-  name: 'club-members-clubs',
-  swr: true,
-  getKey: event => event.path,
 })

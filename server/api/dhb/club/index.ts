@@ -43,7 +43,7 @@ const querySchema = z.object({
  *       200:
  *         description: The club data
  */
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
   try {
@@ -67,9 +67,4 @@ export default defineCachedEventHandler(async (event) => {
       data: error,
     })
   }
-}, {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
-  name: 'club',
-  swr: true,
-  getKey: event => event.path,
 })

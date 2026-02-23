@@ -22,7 +22,7 @@ defineRouteMeta({
   },
 })
 
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
   const teamId = query.id as string
 
@@ -45,9 +45,4 @@ export default defineCachedEventHandler(async (event) => {
   }
 
   return normalizedStandings
-}, {
-  maxAge: 60 * 60, // 1 hour
-  name: 'team-standing',
-  swr: true,
-  getKey: event => event.path,
 })

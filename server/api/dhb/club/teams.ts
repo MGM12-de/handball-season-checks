@@ -1,5 +1,5 @@
-import { getClubUrl } from '../../../../server/utils/dhbUtils'
 import type { Team } from '../../../../types'
+import { getClubUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
     openAPI: {
@@ -20,7 +20,7 @@ defineRouteMeta({
 /**
  * Get club info
  */
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
     // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/info
     const query = getQuery(event)
 
@@ -40,17 +40,14 @@ export default defineCachedEventHandler(async (event) => {
             name: team.name,
             acronym: team.acronym,
             logo: team.logo,
-            defaultTournament: team.defaultTournament ? {
-                id: team.defaultTournament.id,
-                name: team.defaultTournament.name,
-                acronym: team.defaultTournament.acronym,
-                logo: team.defaultTournament.logo,
-            } : undefined,
+            defaultTournament: team.defaultTournament
+                ? {
+                    id: team.defaultTournament.id,
+                    name: team.defaultTournament.name,
+                    acronym: team.defaultTournament.acronym,
+                    logo: team.defaultTournament.logo,
+                }
+                : undefined,
         } as Team
     })
-}, {
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    name: 'club-teams',
-    swr: true,
-    getKey: event => event.path,
 })
