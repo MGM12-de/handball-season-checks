@@ -22,21 +22,21 @@ const items = [{
   icon: 'i-mdi-account-group',
 }]
 
-const { data: tournament } = await useAsyncData(
+const { data: tournament } = await useLazyAsyncData(
   `tournament/${route.params.id}`,
   () => $fetch('/api/dhb/tournament', {
     query: { id: route.params.id },
   }),
 )
 
-const { data: tournamentTable, status: tournamentTableStatus } = await useAsyncData(
+const { data: tournamentTable, status: tournamentTableStatus } = await useLazyAsyncData(
   `tournament/${route.params.id}/table`,
   () => $fetch('/api/dhb/tournament/table', {
     query: { id: route.params.id },
   }),
 )
 
-const { data: tournamentLineup, status: tournamentLineupStatus } = await useAsyncData(
+const { data: tournamentLineup, status: tournamentLineupStatus } = await useLazyAsyncData(
   `tournament/${route.params.id}/lineup`,
   () => $fetch('/api/dhb/tournament/lineup', {
     query: { id: route.params.id },
