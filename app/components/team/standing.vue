@@ -5,16 +5,14 @@ const props = defineProps({
     required: true,
   },
 })
-const standing = ref()
 
-const { data, status } = await useLazyAsyncData(
-  () => `team/${props.teamId}/standing`,
+const { data: standing, status } = await useLazyAsyncData(
+  `team/${props.teamId}/standing`,
   () => $fetch('/api/dhb/team/standing', {
     query: { id: props.teamId },
   }),
   { watch: [() => props.teamId] },
 )
-standing.value = data.value
 </script>
 
 <template>
