@@ -34,14 +34,11 @@ export default defineEventHandler(async (event) => {
         const standingData: any = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
         const teams = standingData.data.rows.map((row: any) => row.team)
 
-        console.warn(`[TOURNAMENT-GAMES] Found ${teams.length} teams in tournament`)
-
         // Fetch games for each team using own API
         const gamesByTeam = await Promise.all(
             teams.map((team: any) =>
                 $fetch(`/api/dhb/team/games?id=${team.id}`)
                     .catch((err) => {
-                        console.warn(`[TOURNAMENT-GAMES] Failed to fetch games for team ${team.id}:`, err.message)
                         return []
                     }),
             ),
@@ -85,12 +82,10 @@ export default defineEventHandler(async (event) => {
         })
 
         const allGames = Array.from(gamesMap.values())
-        console.warn(`[TOURNAMENT-GAMES] Returning ${allGames.length} unique games (${allGames.filter(g => !g.result).length} pending)`)
 
         return allGames
     }
     catch (error) {
-        console.error('[TOURNAMENT-GAMES] Error:', error)
         throw createError({
             statusCode: 500,
             statusMessage: `Error fetching tournament games: ${error}`,

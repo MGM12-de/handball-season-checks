@@ -58,7 +58,6 @@ export default defineEventHandler(async (event) => {
         return prognosis
     }
     catch (error) {
-        console.error('Error calculating prognosis:', error)
         throw createError({
             statusCode: 500,
             statusMessage: `Error calculating prognosis: ${error}`,
@@ -76,8 +75,7 @@ async function fetchTournamentGames(tournamentId: string): Promise<any[]> {
         const gamesByTeam = await Promise.all(
             teams.map((team: any) =>
                 $fetch(`/api/dhb/team/games?id=${team.id}`)
-                    .catch((err) => {
-                        console.warn(`[PROGNOSIS] Failed to fetch games for team ${team.id}:`, err.message)
+                    .catch((_err) => {
                         return []
                     }),
             ),
@@ -98,12 +96,10 @@ async function fetchTournamentGames(tournamentId: string): Promise<any[]> {
         })
 
         const allGames = Array.from(gamesMap.values())
-        console.warn(`[PROGNOSIS] Tournament has ${allGames.length} unique games (${allGames.filter(g => !g.result).length} pending)`)
 
         return allGames
     }
     catch (error) {
-        console.error('[PROGNOSIS] Error fetching tournament games:', error)
         return []
     }
 }
