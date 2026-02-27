@@ -56,4 +56,9 @@ const meta: TableMeta<Team> = {
   </div>
 </template>
 
-<style></style>
+<style scoped>
+:deep(img) {
+  object-fit: contain !important;
+  object-position: center !important;
+}
+</style>
