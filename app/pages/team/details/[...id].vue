@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const route = useRoute()
+const router = useRouter()
 const team = ref()
 const { t } = useI18n()
 const requestURL = useRequestURL()
@@ -21,6 +22,49 @@ const items = [{
   label: t('lineup'),
   icon: 'i-mdi-account-group',
 }]
+
+const availableTabs = items.map(item => item.slot)
+const fallbackTab = availableTabs[0] || 'standing'
+function getRouteTab() {
+  if (Array.isArray(route.query.tab)) {
+    return route.query.tab[0]
+  }
+
+  return route.query.tab
+}
+
+const activeTab = ref(
+  typeof getRouteTab() === 'string' && availableTabs.includes(getRouteTab() as string)
+    ? (getRouteTab() as string)
+    : fallbackTab,
+)
+
+watch(activeTab, (tab) => {
+  if (!import.meta.client) {
+    return
+  }
+
+  const currentTab = getRouteTab()
+  if (currentTab === tab) {
+    return
+  }
+
+  router.replace({
+    query: {
+      ...route.query,
+      tab,
+    },
+  })
+}, { immediate: true })
+
+watch(() => route.query.tab, () => {
+  const tab = getRouteTab()
+  const nextTab = typeof tab === 'string' && availableTabs.includes(tab) ? tab : fallbackTab
+
+  if (nextTab !== activeTab.value) {
+    activeTab.value = nextTab
+  }
+})
 
 const { data } = await useAsyncData(
   `team/${route.params.id}`,
@@ -75,7 +119,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
     <UPage>
       <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
       <UPageBody>
-        <UTabs :items="items" class="w-full" variant="link">
+        <UTabs v-model="activeTab" :items="items" value-key="slot" class="w-full" variant="link">
           <template #default="{ item }">
             <div class="flex items-center gap-2 relative truncate">
               <!-- <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" /> -->

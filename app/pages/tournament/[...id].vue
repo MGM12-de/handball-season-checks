@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
 const requestURL = useRequestURL()
 
@@ -17,6 +18,49 @@ const items = [{
   header: t('lineup'),
   icon: 'i-mdi-account-group',
 }]
+
+const availableTabs = items.filter(item => !item.disabled).map(item => item.slot)
+const fallbackTab = availableTabs[0] || 'standing'
+function getRouteTab() {
+  if (Array.isArray(route.query.tab)) {
+    return route.query.tab[0]
+  }
+
+  return route.query.tab
+}
+
+const activeTab = ref(
+  typeof getRouteTab() === 'string' && availableTabs.includes(getRouteTab() as string)
+    ? (getRouteTab() as string)
+    : fallbackTab,
+)
+
+watch(activeTab, (tab) => {
+  if (!import.meta.client) {
+    return
+  }
+
+  const currentTab = getRouteTab()
+  if (currentTab === tab) {
+    return
+  }
+
+  router.replace({
+    query: {
+      ...route.query,
+      tab,
+    },
+  })
+}, { immediate: true })
+
+watch(() => route.query.tab, () => {
+  const tab = getRouteTab()
+  const nextTab = typeof tab === 'string' && availableTabs.includes(tab) ? tab : fallbackTab
+
+  if (nextTab !== activeTab.value) {
+    activeTab.value = nextTab
+  }
+})
 
 const { data: tournament } = await useLazyAsyncData(
   `tournament/${route.params.id}`,
@@ -77,7 +121,7 @@ useHead({
   <UPage>
     <UPageHeader :headline="tournament.acronym" :title="tournament.name" description="" />
     <UPageBody>
-      <UTabs :items="items" class="w-full">
+      <UTabs v-model="activeTab" :items="items" value-key="slot" class="w-full">
         <template #standing>
           <SharedStandingTable :data="tournamentTable || []" :loading="tournamentTableStatus === 'pending'" />
         </template>
