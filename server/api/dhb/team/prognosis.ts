@@ -72,13 +72,10 @@ async function fetchTournamentGames(tournamentId: string): Promise<any[]> {
         const standingData: any = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
         const teams = standingData.data.rows.map((row: any) => row.team)
 
-        // Fetch games for each team using own API via fetch() for server-to-server
-        const config = useRuntimeConfig()
-        const baseUrl = config.public.apiBase || 'http://localhost:3000'
+        // Fetch games for each team using own API via $fetch for server-to-server
         const gamesByTeam = await Promise.all(
             teams.map((team: any) =>
-                fetch(`${baseUrl}/api/dhb/team/games?id=${team.id}`)
-                    .then(res => res.json())
+                $fetch(`/api/dhb/team/games?id=${team.id}`)
                     .catch((err) => {
                         console.warn(`[PROGNOSIS] Failed to fetch games for team ${team.id}:`, err.message)
                         return []
