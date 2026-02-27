@@ -81,7 +81,7 @@ const columns = computed<TableColumn<any>[]>(() => {
   if (props.showTeams) {
     baseColumns.push({
       accessorKey: 'teams',
-      header: ({ column }) => getHeader(column, t('club')),
+      header: ({ column }) => getHeader(column, t('teams')),
       cell: ({ row }) => {
         if (!row.original.teams)
           return ''
