@@ -40,7 +40,6 @@ export default defineEventHandler(async (event) => {
       await new Promise(resolve => setTimeout(resolve, 250))
     }
     catch (error) {
-      console.warn(`Failed to fetch lineup for team ${team.id}:`, error)
       teamLineups.push([]) // Leeres Array als Fallback, damit die Indizes für die Teams stimmen
     }
   }

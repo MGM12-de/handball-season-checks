@@ -40,7 +40,6 @@ const columns: TableColumn<any>[] = [{ accessorKey: 'rank', header: t('rank') },
 const meta: TableMeta<Team> = {
   class: {
     tr: (row: Row<Team>) => {
-      console.log('row', row.original.team.id, props.teamId)
       if (row.original.team.id === props.teamId) {
         return 'bg-primary/50 animate-pulse'
       }

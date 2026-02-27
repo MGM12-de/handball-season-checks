@@ -82,7 +82,6 @@ export default defineEventHandler(async (event) => {
         return Array.from(gamesMap.values())
     }
     catch (error) {
-        console.error('Error fetching tournament games:', error)
         throw createError({
             statusCode: 500,
             statusMessage: `Error fetching tournament games: ${error}`,

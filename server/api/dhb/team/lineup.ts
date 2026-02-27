@@ -32,7 +32,6 @@ async function processLineupsInBatches(
       $fetch('/api/dhb/game/lineup', {
         query: { id: game.id },
       }).catch((error) => {
-        console.warn(`Failed to fetch lineup for game ${game.id}:`, error)
         return null
       }),
     )
