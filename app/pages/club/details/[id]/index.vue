@@ -14,6 +14,7 @@ const club = ref({
 })
 
 const { t } = useI18n()
+const requestURL = useRequestURL()
 
 const { data } = await useAsyncData(
   `club/${clubId}`,
@@ -23,9 +24,40 @@ const { data } = await useAsyncData(
 )
 club.value = data.value
 
+const seoTitle = computed(() => {
+  const clubName = club.value?.name || t('clubDetails')
+  return `${clubName} | ${t('siteTitle')}`
+})
+
+const seoDescription = computed(() => {
+  const clubName = club.value?.name
+  const organizationName = club.value?.organization?.name
+
+  if (clubName && organizationName) {
+    return `${clubName} · ${organizationName}`
+  }
+
+  return t('searchClubDescription')
+})
+
+const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
+const ogImage = computed(() => club.value?.logo || club.value?.organization?.logo || undefined)
+
 useSeoMeta({
-  title: club.value.name,
-  ogImageUrl: club.value.logo,
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: ogImage,
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: canonicalUrl }],
 })
 </script>
 

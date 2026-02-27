@@ -1,11 +1,7 @@
 <script lang="ts" setup>
 const route = useRoute()
 const { t } = useI18n()
-
-useSeoMeta({
-  title: t('tournament'),
-  description: '',
-})
+const requestURL = useRequestURL()
 
 const items = [{
   slot: 'standing',
@@ -42,6 +38,39 @@ const { data: tournamentLineup, status: tournamentLineupStatus } = await useLazy
     query: { id: route.params.id },
   }),
 )
+
+const seoTitle = computed(() => {
+  const tournamentName = tournament.value?.name || t('tournament')
+  return `${tournamentName} | ${t('siteTitle')}`
+})
+
+const seoDescription = computed(() => {
+  const acronym = tournament.value?.acronym
+  const tournamentName = tournament.value?.name
+
+  if (acronym && tournamentName) {
+    return `${acronym} · ${tournamentName}`
+  }
+
+  return t('siteDescription')
+})
+
+const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: canonicalUrl }],
+})
 </script>
 
 <template>

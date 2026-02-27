@@ -2,6 +2,7 @@
 const route = useRoute()
 const team = ref()
 const { t } = useI18n()
+const requestURL = useRequestURL()
 
 const items = [{
   slot: 'standing',
@@ -29,9 +30,36 @@ const { data } = await useAsyncData(
 )
 team.value = data.value
 
+const seoTitle = computed(() => {
+  const tournamentAcronym = team.value?.defaultTournament?.acronym
+  const teamName = team.value?.name
+
+  if (tournamentAcronym && teamName) {
+    return `${tournamentAcronym} - ${teamName} | ${t('siteTitle')}`
+  }
+
+  return `${t('team')} | ${t('siteTitle')}`
+})
+
+const seoDescription = computed(() => team.value?.defaultTournament?.name || t('siteDescription'))
+const ogImage = computed(() => team.value?.logo || team.value?.organization?.logo || undefined)
+const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
+
 useSeoMeta({
-  title: `${team.value.defaultTournament.acronym} - ${team.value.name}`,
-  description: team.value.defaultTournament.name,
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: ogImage,
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: canonicalUrl }],
 })
 
 const { data: games, pending: gamesPending } = await useAsyncData(
