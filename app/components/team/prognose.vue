@@ -229,6 +229,38 @@ const totalGames = homeStats.games + awayStats.games
 const totalGoalsShot = homeStats.goalsShot + awayStats.goalsShot
 const totalGoalsGot = homeStats.goalsGot + awayStats.goalsGot
 
+// Berechne den Spielverlauf (Form)
+const recentForm = computed(() => {
+  // Alle gespielten Spiele des Teams
+  const playedGames = (games as any[]).filter((g: any) =>
+    g.result && (g.homeTeam.id === teamId || g.awayTeam.id === teamId),
+  )
+
+  // Sortiere nach Datum (ältestes zuerst, wenn vorhanden)
+  const sortedGames = playedGames.sort((a: any, b: any) => {
+    if (a.date && b.date) {
+      return new Date(a.date).getTime() - new Date(b.date).getTime()
+    }
+    return 0
+  })
+
+  // Ermittle für jedes Spiel: Sieg, Niederlage oder Unentschieden
+  return sortedGames.map((game: any) => {
+    const isHome = game.homeTeam.id === teamId
+    const goalDiff = isHome ? game.goalDifference : -game.goalDifference
+
+    if (goalDiff > 0) {
+      return { type: 'win', color: 'success' as const, label: t('win') }
+    }
+    else if (goalDiff < 0) {
+      return { type: 'loss', color: 'error' as const, label: t('loss') }
+    }
+    else {
+      return { type: 'draw', color: 'primary' as const, label: t('draw') }
+    }
+  })
+})
+
 // Berechne den möglichen Rang
 const possibleRank = computed(() => calculatePossibleRank(standing.value, teamId, games))
 
@@ -269,6 +301,14 @@ watch(possibleRank, (newRank) => {
       <UForm :state="state" class="space-y-4">
         <UFormField v-if="state.rankIfWinning" :label="t('possibleRankIfWinning')">
           <UInput v-model="state.rankIfWinning" icon="i-mdi-trophy" disabled />
+        </UFormField>
+
+        <UFormField v-if="recentForm.length > 0" :label="t('recentForm')">
+          <div class="flex flex-wrap gap-2">
+            <UBadge v-for="(result, index) in recentForm" :key="index" :color="result.color" variant="solid" size="lg">
+              {{ result.label }}
+            </UBadge>
+          </div>
         </UFormField>
 
         <UFormField :label="t('averageGoalsShot')">
