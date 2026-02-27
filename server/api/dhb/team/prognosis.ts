@@ -41,18 +41,16 @@ export default defineEventHandler(async (event) => {
             $fetch(`/api/dhb/team/standing?id=${teamId}`),
         ]
 
-        // Optionally fetch tournament games
+        // Optionally fetch tournament games if tournamentId provided
+        let tournamentGames: any[] = []
         if (tournamentId) {
-            requestsToFetch.push(
-                $fetch(`/api/dhb/tournament/games?id=${tournamentId}`),
-            )
+            tournamentGames = await fetchTournamentGames(tournamentId)
         }
 
-        const [gamesResponse, standingResponse, tournamentGamesResponse] = await Promise.all(requestsToFetch)
+        const [gamesResponse, standingResponse] = await Promise.all(requestsToFetch)
 
         const games = gamesResponse as any[]
         const standing = standingResponse as any[]
-        const tournamentGames = (tournamentGamesResponse as any[]) || []
 
         // Calculate prognosis with optional tournament data
         const prognosis = calculatePrognosis(standing, teamId, games, tournamentGames)
@@ -67,6 +65,51 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
+
+async function fetchTournamentGames(tournamentId: string): Promise<any[]> {
+    try {
+        // Fetch tournament standing to get all teams
+        const standingData: any = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
+        const teams = standingData.data.rows.map((row: any) => row.team)
+
+        // Fetch games for each team using own API via fetch() for server-to-server
+        const config = useRuntimeConfig()
+        const baseUrl = config.public.apiBase || 'http://localhost:3000'
+        const gamesByTeam = await Promise.all(
+            teams.map((team: any) =>
+                fetch(`${baseUrl}/api/dhb/team/games?id=${team.id}`)
+                    .then(res => res.json())
+                    .catch((err) => {
+                        console.warn(`[PROGNOSIS] Failed to fetch games for team ${team.id}:`, err.message)
+                        return []
+                    }),
+            ),
+        )
+
+        // Collect all games and deduplicate by game id
+        const gamesMap = new Map<string, any>()
+
+        gamesByTeam.forEach((games: any) => {
+            if (!Array.isArray(games))
+                return
+
+            games.forEach((match: any) => {
+                if (!gamesMap.has(match.id)) {
+                    gamesMap.set(match.id, match)
+                }
+            })
+        })
+
+        const allGames = Array.from(gamesMap.values())
+        console.warn(`[PROGNOSIS] Tournament has ${allGames.length} unique games (${allGames.filter(g => !g.result).length} pending)`)
+
+        return allGames
+    }
+    catch (error) {
+        console.error('[PROGNOSIS] Error fetching tournament games:', error)
+        return []
+    }
+}
 
 function calculatePrognosis(standing: any[], teamId: string, games: any[], tournamentGames: any[] = []) {
     // Find pending games
@@ -180,11 +223,11 @@ function calculateRealisticRank(standing: any[], teamId: string, games: any[], t
     if (!standing || standing.length === 0)
         return undefined
 
-    const pendingGames = games.filter(g =>
+    const teamPendingGames = games.filter(g =>
         !g.result && (g.homeTeam?.id === teamId || g.awayTeam?.id === teamId),
     )
 
-    if (pendingGames.length === 0)
+    if (teamPendingGames.length === 0)
         return undefined
 
     const simulatedStanding = createSimulatedStanding(standing)
@@ -193,149 +236,204 @@ function calculateRealisticRank(standing: any[], teamId: string, games: any[], t
     if (!ourTeamData)
         return undefined
 
-    const avgGoalDiff = ourTeamData.wins > 0
-        ? Math.max(3, Math.round(ourTeamData.goalDifference / ourTeamData.wins))
-        : 5
+    // Use tournament games as the source for all games; fall back to team games
+    const allGames = tournamentGames.length > 0 ? tournamentGames : games
 
-    // Our team wins all games
-    const ourTeam = simulatedStanding.find(t => t.team.id === teamId)
-    if (ourTeam) {
-        ourTeam.points += pendingGames.length * 2
-        ourTeam.goalDifference += pendingGames.length * avgGoalDiff
-        ourTeam.goals += pendingGames.length * Math.round(25 + avgGoalDiff / 2)
-        ourTeam.goalsAgainst += pendingGames.length * Math.round(25 - avgGoalDiff / 2)
-    }
-
-    // Process games against us based on H2H
-    pendingGames.forEach((game) => {
-        const opponentId = game.homeTeam?.id === teamId ? game.awayTeam?.id : game.homeTeam?.id
-        const opponent = simulatedStanding.find(t => t.team.id === opponentId)
-
-        if (opponent) {
-            const h2hStats = getHeadToHeadStats(teamId, opponentId, games)
-
-            if (h2hStats) {
-                if (h2hStats.winRate > 0.5) {
-                    // We win based on H2H
-                    const goalDiff = Math.max(2, h2hStats.goalDiff)
-                    opponent.goalDifference -= goalDiff
-                    opponent.goals += Math.round(25 - goalDiff / 2)
-                    opponent.goalsAgainst += Math.round(25 + goalDiff / 2)
-                }
-                else {
-                    // Opponent wins based on H2H
-                    opponent.points += 2
-                    const goalDiff = Math.max(2, Math.abs(h2hStats.goalDiff))
-                    opponent.goalDifference += goalDiff
-                    opponent.goals += Math.round(25 + goalDiff / 2)
-                    opponent.goalsAgainst += Math.round(25 - goalDiff / 2)
-                }
-            }
-            else {
-                // No H2H, assume we win
-                opponent.goalDifference -= avgGoalDiff
-                opponent.goals += Math.round(25 - avgGoalDiff / 2)
-                opponent.goalsAgainst += Math.round(25 + avgGoalDiff / 2)
+    // Collect ALL pending games in the tournament (deduplicated by game id)
+    const allPendingGamesMap = new Map<string, any>()
+    allGames.forEach((g) => {
+        if (!g.result && g.homeTeam?.id && g.awayTeam?.id) {
+            const key = g.id || `${g.homeTeam.id}-${g.awayTeam.id}`
+            if (!allPendingGamesMap.has(key)) {
+                allPendingGamesMap.set(key, g)
             }
         }
     })
+    const allPendingGames = Array.from(allPendingGamesMap.values())
 
-    // Process other teams with home/away stats
-    simulatedStanding.forEach((team) => {
-        if (team.team.id === teamId)
+    // Track which teams have already been updated for each game to avoid double-counting
+    const processedGameKeys = new Set<string>()
+
+    // Process each pending game in the tournament exactly once
+    allPendingGames.forEach((game) => {
+        const homeId = game.homeTeam?.id
+        const awayId = game.awayTeam?.id
+        if (!homeId || !awayId)
             return
 
-        const playsAgainstUs = pendingGames.some(g =>
-            g.homeTeam?.id === team.team.id || g.awayTeam?.id === team.team.id,
-        )
+        const gameKey = game.id || `${homeId}-${awayId}`
+        if (processedGameKeys.has(gameKey))
+            return
+        processedGameKeys.add(gameKey)
 
-        if (playsAgainstUs)
+        const homeTeam = simulatedStanding.find(t => t.team.id === homeId)
+        const awayTeam = simulatedStanding.find(t => t.team.id === awayId)
+
+        // Skip games involving teams not in the standing
+        if (!homeTeam || !awayTeam)
             return
 
-        const teamPendingGames = games.filter(g =>
-            !g.result
-            && (g.homeTeam?.id === team.team.id || g.awayTeam?.id === team.team.id)
-            && g.homeTeam?.id !== teamId
-            && g.awayTeam?.id !== teamId,
-        )
+        const involvesOurTeam = homeId === teamId || awayId === teamId
 
-        if (teamPendingGames.length > 0) {
-            // Process each pending game for this team considering dependencies
-            let expectedWins = 0
-            let expectedLosses = 0
+        if (involvesOurTeam) {
+            // Our team always wins in this simulation
+            const isHome = homeId === teamId
+            const opponentTeam = isHome ? awayTeam : homeTeam
 
-            teamPendingGames.forEach((pendingGame) => {
-                const opponentId = pendingGame.homeTeam?.id === team.team.id
-                    ? pendingGame.awayTeam?.id
-                    : pendingGame.homeTeam?.id
+            // Determine goal difference from H2H or average
+            const h2hStats = getHeadToHeadStats(teamId, opponentTeam.team.id, allGames)
+            let goalDiff: number
 
-                const opponent = simulatedStanding.find(t => t.team.id === opponentId)
+            if (h2hStats && h2hStats.winRate > 0.5) {
+                goalDiff = Math.max(2, h2hStats.goalDiff)
+            }
+            else if (h2hStats && h2hStats.winRate <= 0.5) {
+                // Even if H2H says we lose, we still assume we win (optimistic for our team)
+                goalDiff = Math.max(2, Math.abs(h2hStats.goalDiff))
+            }
+            else {
+                const avgGoalDiff = ourTeamData.wins > 0
+                    ? Math.max(3, Math.round(ourTeamData.goalDifference / ourTeamData.wins))
+                    : 5
+                goalDiff = avgGoalDiff
+            }
 
-                if (opponent) {
-                    // Calculate H2H between this team and opponent using tournament games if available
-                    const h2hStats = getHeadToHeadStats(team.team.id, opponentId, tournamentGames.length > 0 ? tournamentGames : games)
+            const ourGoals = Math.round(25 + goalDiff / 2)
+            const oppGoals = Math.round(25 - goalDiff / 2)
 
-                    let teamWins = false
+            // Update our team
+            const ourTeam = isHome ? homeTeam : awayTeam
+            ourTeam.points += 2
+            ourTeam.goalDifference += goalDiff
+            ourTeam.goals += ourGoals
+            ourTeam.goalsAgainst += oppGoals
 
-                    if (h2hStats) {
-                        // Use H2H to predict outcome
-                        teamWins = h2hStats.winRate > 0.5
-                    }
-                    else {
-                        // Fallback: use home/away stats and historical performance
-                        const teamStats = getHomeAwayStats(team, games)
-                        const isHome = pendingGame.homeTeam?.id === team.team.id
-                        const winRate = isHome ? teamStats.homeWinRate : teamStats.awayWinRate
-                        teamWins = winRate > 0.5
-                    }
+            // Update opponent
+            opponentTeam.goalDifference -= goalDiff
+            opponentTeam.goals += oppGoals
+            opponentTeam.goalsAgainst += ourGoals
+        }
+        else {
+            // Game between two other teams — predict realistically
+            const result = predictGameOutcome(homeTeam, awayTeam, homeId, awayId, allGames)
 
-                    if (teamWins) {
-                        expectedWins++
-                    }
-                    else {
-                        expectedLosses++
-                    }
-                }
-                else {
-                    // Fallback: assume average performance
-                    const teamStats = getHomeAwayStats(team, games)
-                    const isHome = pendingGame.homeTeam?.id === team.team.id
-                    const winRate = isHome ? teamStats.homeWinRate : teamStats.awayWinRate
-                    if (winRate > 0.5) {
-                        expectedWins++
-                    }
-                    else {
-                        expectedLosses++
-                    }
-                }
-            })
+            if (result.homeWins) {
+                homeTeam.points += 2
+                homeTeam.goalDifference += result.goalDiff
+                homeTeam.goals += result.homeGoals
+                homeTeam.goalsAgainst += result.awayGoals
 
-            // Add points and goal differences
-            team.points += expectedWins * 2
+                awayTeam.goalDifference -= result.goalDiff
+                awayTeam.goals += result.awayGoals
+                awayTeam.goalsAgainst += result.homeGoals
+            }
+            else if (result.draw) {
+                homeTeam.points += 1
+                awayTeam.points += 1
+                homeTeam.goals += result.homeGoals
+                homeTeam.goalsAgainst += result.awayGoals
+                awayTeam.goals += result.awayGoals
+                awayTeam.goalsAgainst += result.homeGoals
+            }
+            else {
+                awayTeam.points += 2
+                awayTeam.goalDifference += result.goalDiff
+                awayTeam.goals += result.awayGoals
+                awayTeam.goalsAgainst += result.homeGoals
 
-            const teamStats = getHomeAwayStats(team, games)
-            const homeGoalDiff = teamStats.homeGoalDiff || 2
-            const awayGoalDiff = teamStats.awayGoalDiff || 2
-
-            const homeGames = teamPendingGames.filter(g => g.homeTeam?.id === team.team.id).length
-            const awayGames = teamPendingGames.length - homeGames
-
-            // Estimate goal differences
-            const homeExpectedWins = Math.round(homeGames * teamStats.homeWinRate)
-            const awayExpectedWins = Math.round(awayGames * teamStats.awayWinRate)
-
-            const expectedGoalDiffHome = homeGoalDiff * (2 * homeExpectedWins - homeGames)
-            const expectedGoalDiffAway = awayGoalDiff * (2 * awayExpectedWins - awayGames)
-            const expectedGoalDiff = expectedGoalDiffHome + expectedGoalDiffAway
-
-            team.goalDifference += expectedGoalDiff
-            team.goals += expectedWins * 26 + expectedLosses * 24
-            team.goalsAgainst += expectedWins * 24 + expectedLosses * 26
+                homeTeam.goalDifference -= result.goalDiff
+                homeTeam.goals += result.homeGoals
+                homeTeam.goalsAgainst += result.awayGoals
+            }
         }
     })
 
     sortStanding(simulatedStanding)
     return simulatedStanding.findIndex(t => t.team.id === teamId) + 1
+}
+
+function predictGameOutcome(homeTeam: any, awayTeam: any, homeId: string, awayId: string, allGames: any[]): {
+    homeWins: boolean
+    draw: boolean
+    goalDiff: number
+    homeGoals: number
+    awayGoals: number
+} {
+    // 1. Check head-to-head
+    const h2hStats = getHeadToHeadStats(homeId, awayId, allGames)
+
+    if (h2hStats) {
+        const goalDiff = Math.max(1, Math.abs(h2hStats.goalDiff))
+        if (h2hStats.winRate > 0.5) {
+            // Home team wins based on H2H
+            return {
+                homeWins: true,
+                draw: false,
+                goalDiff,
+                homeGoals: Math.round(25 + goalDiff / 2),
+                awayGoals: Math.round(25 - goalDiff / 2),
+            }
+        }
+        else if (h2hStats.winRate < 0.5) {
+            // Away team wins based on H2H
+            return {
+                homeWins: false,
+                draw: false,
+                goalDiff,
+                homeGoals: Math.round(25 - goalDiff / 2),
+                awayGoals: Math.round(25 + goalDiff / 2),
+            }
+        }
+        // H2H is balanced (0.5), fall through to other heuristics
+    }
+
+    // 2. Use home/away performance stats
+    const homeStats = getHomeAwayStats(homeTeam, allGames)
+    const awayStats = getHomeAwayStats(awayTeam, allGames)
+
+    // Combine home team's home win rate with away team's away loss rate
+    const homeStrength = homeStats.homeWinRate
+    const awayStrength = awayStats.awayWinRate
+
+    // 3. Factor in standing position (higher rank = stronger)
+    const homePoints = homeTeam.points || 0
+    const awayPoints = awayTeam.points || 0
+    const pointDiff = homePoints - awayPoints
+    const standingBonus = pointDiff > 4 ? 0.1 : pointDiff < -4 ? -0.1 : 0
+
+    // Combined probability that the home team wins
+    const homeWinProbability = (homeStrength + (1 - awayStrength)) / 2 + standingBonus
+
+    if (homeWinProbability > 0.55) {
+        const goalDiff = Math.max(1, Math.round((homeWinProbability - 0.5) * 10))
+        return {
+            homeWins: true,
+            draw: false,
+            goalDiff,
+            homeGoals: Math.round(25 + goalDiff / 2),
+            awayGoals: Math.round(25 - goalDiff / 2),
+        }
+    }
+    else if (homeWinProbability < 0.45) {
+        const goalDiff = Math.max(1, Math.round((0.5 - homeWinProbability) * 10))
+        return {
+            homeWins: false,
+            draw: false,
+            goalDiff,
+            homeGoals: Math.round(25 - goalDiff / 2),
+            awayGoals: Math.round(25 + goalDiff / 2),
+        }
+    }
+    else {
+        // Essentially a draw scenario
+        return {
+            homeWins: false,
+            draw: true,
+            goalDiff: 0,
+            homeGoals: 25,
+            awayGoals: 25,
+        }
+    }
 }
 
 function createSimulatedStanding(standing: any[]) {
