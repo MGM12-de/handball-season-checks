@@ -12,26 +12,52 @@ interface ClubPlayer extends Player {
   }>
 }
 
-async function fetchTeamLineupsInBatches(
+interface ChunkLineupResult {
+  teamId: string
+  lineup: Player[]
+}
+
+function chunkArray<T>(items: T[], size: number): T[][] {
+  const chunks: T[][] = []
+
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size))
+  }
+
+  return chunks
+}
+
+async function fetchClubLineupsInChunks(
   teams: Team[],
-  batchSize: number = 4,
+  chunkSize: number = 10,
 ): Promise<Array<{ team: Team, lineup: Player[] }>> {
+  const teamById = new Map(teams.map(team => [team.id, team]))
+  const teamIdChunks = chunkArray(teams.map(team => team.id), chunkSize)
   const results: Array<{ team: Team, lineup: Player[] }> = []
 
-  for (let i = 0; i < teams.length; i += batchSize) {
-    const batch = teams.slice(i, i + batchSize)
-    const lineupPromises = batch.map(async (team) => {
-      const lineup = await $fetch<Player[]>(`/api/dhb/team/lineup`, {
-        query: { id: team.id },
-      }).catch(() => [])
+  for (let i = 0; i < teamIdChunks.length; i++) {
+    const teamIds = teamIdChunks[i]
+    if (!teamIds || teamIds.length === 0) {
+      continue
+    }
 
-      return { team, lineup }
-    })
+    const chunkResults = await $fetch<ChunkLineupResult[]>('/api/dhb/club/lineupChunk', {
+      query: { teamIds: teamIds.join(',') },
+    }).catch(() => [])
 
-    const batchResults = await Promise.all(lineupPromises)
-    results.push(...batchResults)
+    for (const chunkResult of chunkResults) {
+      const team = teamById.get(chunkResult.teamId)
+      if (!team) {
+        continue
+      }
 
-    if (i + batchSize < teams.length) {
+      results.push({
+        team,
+        lineup: chunkResult.lineup,
+      })
+    }
+
+    if (i + 1 < teamIdChunks.length) {
       await new Promise(resolve => setTimeout(resolve, 100))
     }
   }
@@ -53,7 +79,7 @@ export default defineEventHandler(async (event) => {
   const clubId = query.id as string
   const clubTeams: { data: Team[] } = await $fetch(`${getClubUrl(clubId)}/teams`)
 
-  const teamLineups = await fetchTeamLineupsInBatches(clubTeams.data)
+  const teamLineups = await fetchClubLineupsInChunks(clubTeams.data)
 
   // Process lineups and build player map
   teamLineups.forEach(({ team, lineup: teamLineup }) => {
