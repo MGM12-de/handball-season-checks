@@ -100,16 +100,20 @@ const seoDescription = computed(() => {
 })
 
 const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
+const defaultOgImage = computed(() => new URL('/favicon.svg', requestURL.origin).toString())
+const ogImage = computed(() => tournament.value?.logo || defaultOgImage.value)
 
 useSeoMeta({
   title: seoTitle,
   description: seoDescription,
   ogTitle: seoTitle,
   ogDescription: seoDescription,
+  ogImage,
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
+  twitterImage: ogImage,
 })
 
 useHead({

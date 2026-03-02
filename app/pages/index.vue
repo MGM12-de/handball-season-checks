@@ -6,16 +6,19 @@ const requestURL = useRequestURL()
 const seoTitle = computed(() => t('siteTitle'))
 const seoDescription = computed(() => t('siteDescription'))
 const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
+const ogImage = computed(() => new URL('/favicon.svg', requestURL.origin).toString())
 
 useSeoMeta({
   title: seoTitle,
   description: seoDescription,
   ogTitle: seoTitle,
   ogDescription: seoDescription,
+  ogImage,
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
+  twitterImage: ogImage,
 })
 
 useHead({

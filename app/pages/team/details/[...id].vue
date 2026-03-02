@@ -86,7 +86,8 @@ const seoTitle = computed(() => {
 })
 
 const seoDescription = computed(() => team.value?.defaultTournament?.name || t('siteDescription'))
-const ogImage = computed(() => team.value?.logo || team.value?.organization?.logo || undefined)
+const defaultOgImage = computed(() => new URL('/favicon.svg', requestURL.origin).toString())
+const ogImage = computed(() => team.value?.logo || team.value?.organization?.logo || defaultOgImage.value)
 const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
 
 useSeoMeta({

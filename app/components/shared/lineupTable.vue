@@ -13,7 +13,7 @@ interface Player {
   penalties?: number
   redCards?: number
   blueCards?: number
-  teams?: Array<{ id: string, name: string, acronym: string }>
+  teams?: Array<{ id: string, name: string, acronym?: string }>
   club?: { id: string, name: string, acronym: string }
   [key: string]: any
 }

@@ -41,7 +41,8 @@ const seoDescription = computed(() => {
 })
 
 const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
-const ogImage = computed(() => club.value?.logo || club.value?.organization?.logo || undefined)
+const defaultOgImage = computed(() => new URL('/favicon.svg', requestURL.origin).toString())
+const ogImage = computed(() => club.value?.logo || club.value?.organization?.logo || defaultOgImage.value)
 
 useSeoMeta({
   title: seoTitle,
