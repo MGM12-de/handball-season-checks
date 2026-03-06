@@ -19,15 +19,15 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { teamId, games, tournamentId } = props
+const asyncDataKey = computed(() => `team/${props.teamId}/prognosis/${props.tournamentId || 'none'}`)
 
 // Lade die Prognose-Daten von der API
-const { data: prognosis } = useLazyAsyncData(
-  `team/${teamId}/prognosis`,
+const { data: prognosis, pending: prognosisPending, error: prognosisError } = useLazyAsyncData(
+  asyncDataKey,
   () => $fetch('/api/dhb/team/prognosis', {
     query: {
-      id: teamId,
-      ...(tournamentId && { tournamentId }),
+      id: props.teamId,
+      ...(props.tournamentId && { tournamentId: props.tournamentId }),
     },
   }),
   { watch: [() => props.teamId, () => props.tournamentId] },
@@ -79,17 +79,17 @@ function calculateAwayStats(games: any[], teamId: string) {
   }
 }
 
-const homeStats = calculateHomeStats(games, teamId)
-const awayStats = calculateAwayStats(games, teamId)
+const homeStats = computed(() => calculateHomeStats(props.games as any[], props.teamId))
+const awayStats = computed(() => calculateAwayStats(props.games as any[], props.teamId))
 
-const totalGames = homeStats.games + awayStats.games
-const totalGoalsShot = homeStats.goalsShot + awayStats.goalsShot
-const totalGoalsGot = homeStats.goalsGot + awayStats.goalsGot
+const totalGames = computed(() => homeStats.value.games + awayStats.value.games)
+const totalGoalsShot = computed(() => homeStats.value.goalsShot + awayStats.value.goalsShot)
+const totalGoalsGot = computed(() => homeStats.value.goalsGot + awayStats.value.goalsGot)
 
 // Berechne den Spielverlauf (Form) für die letzten Spiele
 const recentForm = computed(() => {
-  const playedGames = (games as any[]).filter((g: any) =>
-    g.result && (g.homeTeam.id === teamId || g.awayTeam.id === teamId),
+  const playedGames = (props.games as any[]).filter((g: any) =>
+    g.result && (g.homeTeam.id === props.teamId || g.awayTeam.id === props.teamId),
   )
 
   const sortedGames = playedGames.sort((a: any, b: any) => {
@@ -100,7 +100,7 @@ const recentForm = computed(() => {
   })
 
   return sortedGames.map((game: any) => {
-    const isHome = game.homeTeam.id === teamId
+    const isHome = game.homeTeam.id === props.teamId
     const goalDiff = isHome ? game.goalDifference : -game.goalDifference
 
     if (goalDiff > 0) {
@@ -115,31 +115,33 @@ const recentForm = computed(() => {
   })
 })
 
+const noPendingGamesForPrognosis = computed(() => prognosis.value?.pendingGames === 0)
+
 // State für die Anzeige mit reaktiven Werten
 const state = reactive({
   rankIfWinning: computed(() => prognosis.value?.bestPossibleRank?.toString() || ''),
   realisticRankIfWinning: computed(() => prognosis.value?.realisticRank?.toString() || ''),
   simulatedRankAllTeams: computed(() => prognosis.value?.simulatedRank?.toString() || ''),
-  highestHomeWin: homeStats.highestWin
-    ? `${homeStats.highestWin.awayTeam.name} (${homeStats.highestWin.result})`
-    : undefined,
-  highestAwayWin: awayStats.highestWin
-    ? `${awayStats.highestWin.homeTeam.name} (${awayStats.highestWin.result})`
-    : undefined,
-  highestHomeLoose: homeStats.highestLoss
-    ? `${homeStats.highestLoss.awayTeam.name} (${homeStats.highestLoss.result})`
-    : undefined,
-  highestAwayLoose: awayStats.highestLoss
-    ? `${awayStats.highestLoss.homeTeam.name} (${awayStats.highestLoss.result})`
-    : undefined,
-  homeQuota: homeStats.games > 0 ? ((homeStats.wins / homeStats.games) * 100).toFixed(2) : '0.00',
-  awayQuota: awayStats.games > 0 ? ((awayStats.wins / awayStats.games) * 100).toFixed(2) : '0.00',
-  homeAverageGoalsShot: homeStats.games > 0 ? (homeStats.goalsShot / homeStats.games).toFixed(2) : '0.00',
-  homeAverageGoalsGot: homeStats.games > 0 ? (homeStats.goalsGot / homeStats.games).toFixed(2) : '0.00',
-  awayAverageGoalsShot: awayStats.games > 0 ? (awayStats.goalsShot / awayStats.games).toFixed(2) : '0.00',
-  awayAverageGoalsGot: awayStats.games > 0 ? (awayStats.goalsGot / awayStats.games).toFixed(2) : '0.00',
-  averageGoalsShot: totalGames > 0 ? (totalGoalsShot / totalGames).toFixed(2) : '0.00',
-  averageGoalsGot: totalGames > 0 ? (totalGoalsGot / totalGames).toFixed(2) : '0.00',
+  highestHomeWin: computed(() => homeStats.value.highestWin
+    ? `${homeStats.value.highestWin.awayTeam.name} (${homeStats.value.highestWin.result})`
+    : undefined),
+  highestAwayWin: computed(() => awayStats.value.highestWin
+    ? `${awayStats.value.highestWin.homeTeam.name} (${awayStats.value.highestWin.result})`
+    : undefined),
+  highestHomeLoose: computed(() => homeStats.value.highestLoss
+    ? `${homeStats.value.highestLoss.awayTeam.name} (${homeStats.value.highestLoss.result})`
+    : undefined),
+  highestAwayLoose: computed(() => awayStats.value.highestLoss
+    ? `${awayStats.value.highestLoss.homeTeam.name} (${awayStats.value.highestLoss.result})`
+    : undefined),
+  homeQuota: computed(() => homeStats.value.games > 0 ? ((homeStats.value.wins / homeStats.value.games) * 100).toFixed(2) : '0.00'),
+  awayQuota: computed(() => awayStats.value.games > 0 ? ((awayStats.value.wins / awayStats.value.games) * 100).toFixed(2) : '0.00'),
+  homeAverageGoalsShot: computed(() => homeStats.value.games > 0 ? (homeStats.value.goalsShot / homeStats.value.games).toFixed(2) : '0.00'),
+  homeAverageGoalsGot: computed(() => homeStats.value.games > 0 ? (homeStats.value.goalsGot / homeStats.value.games).toFixed(2) : '0.00'),
+  awayAverageGoalsShot: computed(() => awayStats.value.games > 0 ? (awayStats.value.goalsShot / awayStats.value.games).toFixed(2) : '0.00'),
+  awayAverageGoalsGot: computed(() => awayStats.value.games > 0 ? (awayStats.value.goalsGot / awayStats.value.games).toFixed(2) : '0.00'),
+  averageGoalsShot: computed(() => totalGames.value > 0 ? (totalGoalsShot.value / totalGames.value).toFixed(2) : '0.00'),
+  averageGoalsGot: computed(() => totalGames.value > 0 ? (totalGoalsGot.value / totalGames.value).toFixed(2) : '0.00'),
 })
 </script>
 
@@ -147,6 +149,17 @@ const state = reactive({
   <div>
     <UContainer>
       <UForm :state="state" class="space-y-4">
+        <UAlert v-if="prognosisError" color="error" variant="soft" :title="t('prognosisLoadFailed')"
+          :description="prognosisError.message" />
+
+        <div v-else-if="prognosisPending" class="space-y-2">
+          <USkeleton class="h-10 w-full" />
+          <USkeleton class="h-10 w-full" />
+        </div>
+
+        <UAlert v-else-if="noPendingGamesForPrognosis" color="info" variant="soft"
+          :title="t('noPendingGamesForPrognosis')" />
+
         <UFormField v-if="state.rankIfWinning" :label="t('possibleRankIfWinning')">
           <UInput v-model="state.rankIfWinning" icon="i-mdi-trophy" disabled />
         </UFormField>

@@ -56,6 +56,8 @@
   "possibleRankIfWinning": "Possible Rank If Winning All Pending Games",
   "realisticRankIfWinning": "Realistic Rank If Winning All Pending Games",
   "simulatedRankAllTeams": "Simulated Rank (same model for all teams)",
+  "prognosisLoadFailed": "Failed to load prognosis",
+  "noPendingGamesForPrognosis": "No pending games - no prognosis available",
   "recentForm": "Recent Form",
   "win": "W",
   "loss": "L",
