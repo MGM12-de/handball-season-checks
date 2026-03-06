@@ -55,7 +55,7 @@
   "awayQuota": "Away Quota",
   "possibleRankIfWinning": "Possible Rank If Winning All Pending Games",
   "realisticRankIfWinning": "Realistic Rank If Winning All Pending Games",
-  "simulatedRankAllTeams": "Simulated Rank With Same Logic For All Teams",
+  "simulatedRankAllTeams": "Simulated Rank (same model for all teams)",
   "recentForm": "Recent Form",
   "win": "W",
   "loss": "L",

@@ -55,7 +55,7 @@
   "awayQuota": "Auswärtsquote",
   "possibleRankIfWinning": "Möglicher Platz bei Gewinn aller offenen Spiele",
   "realisticRankIfWinning": "Realistischer Platz bei Gewinn aller offenen Spiele",
-  "simulatedRankAllTeams": "Simulierter Platz bei gleicher Prognose für alle Teams",
+  "simulatedRankAllTeams": "Simulierter Platz (gleiches Modell für alle Teams)",
   "recentForm": "Form (letzte Spiele)",
   "win": "S",
   "loss": "N",

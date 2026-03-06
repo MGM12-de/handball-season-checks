@@ -7,8 +7,8 @@ const querySchema = z.object({
 
 defineRouteMeta({
     openAPI: {
-        description: 'Get team prognosis for remaining games',
-        summary: 'Calculate best-case and realistic rank if team wins all remaining games',
+        description: 'Get team prognosis for remaining games, including best-case, win-all, and fully simulated rank',
+        summary: 'Calculate best-case rank, realistic win-all rank, and simulated rank with same model for all teams',
         tags: ['Team', 'DHB'],
         parameters: [
             {
