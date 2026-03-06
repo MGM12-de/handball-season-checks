@@ -112,16 +112,19 @@ function calculatePrognosis(standing: any[], teamId: string, games: any[], tourn
         return {
             bestPossibleRank: undefined,
             realisticRank: undefined,
+            simulatedRank: undefined,
             pendingGames: 0,
         }
     }
 
     const bestRank = calculateBestPossibleRank(standing, teamId, games)
     const realisticRank = calculateRealisticRank(standing, teamId, games, tournamentGames)
+    const simulatedRank = calculateSimulatedRank(standing, teamId, games, tournamentGames)
 
     return {
         bestPossibleRank: bestRank,
         realisticRank,
+        simulatedRank,
         pendingGames: pendingGames.length,
     }
 }
@@ -213,6 +216,20 @@ function calculateBestPossibleRank(standing: any[], teamId: string, games: any[]
 }
 
 function calculateRealisticRank(standing: any[], teamId: string, games: any[], tournamentGames: any[] = []): number | undefined {
+    return calculateTournamentSimulationRank(standing, teamId, games, tournamentGames, true)
+}
+
+function calculateSimulatedRank(standing: any[], teamId: string, games: any[], tournamentGames: any[] = []): number | undefined {
+    return calculateTournamentSimulationRank(standing, teamId, games, tournamentGames, false)
+}
+
+function calculateTournamentSimulationRank(
+    standing: any[],
+    teamId: string,
+    games: any[],
+    tournamentGames: any[] = [],
+    forceOwnTeamWins = false,
+): number | undefined {
     if (!standing || standing.length === 0)
         return undefined
 
@@ -268,7 +285,7 @@ function calculateRealisticRank(standing: any[], teamId: string, games: any[], t
 
         const involvesOurTeam = homeId === teamId || awayId === teamId
 
-        if (involvesOurTeam) {
+        if (involvesOurTeam && forceOwnTeamWins) {
             // Our team always wins in this simulation
             const isHome = homeId === teamId
             const opponentTeam = isHome ? awayTeam : homeTeam
@@ -310,39 +327,53 @@ function calculateRealisticRank(standing: any[], teamId: string, games: any[], t
             // Game between two other teams — predict realistically
             const result = predictGameOutcome(homeTeam, awayTeam, homeId, awayId, allGames)
 
-            if (result.homeWins) {
-                homeTeam.points += 2
-                homeTeam.goalDifference += result.goalDiff
-                homeTeam.goals += result.homeGoals
-                homeTeam.goalsAgainst += result.awayGoals
-
-                awayTeam.goalDifference -= result.goalDiff
-                awayTeam.goals += result.awayGoals
-                awayTeam.goalsAgainst += result.homeGoals
-            }
-            else if (result.draw) {
-                homeTeam.points += 1
-                awayTeam.points += 1
-                homeTeam.goals += result.homeGoals
-                homeTeam.goalsAgainst += result.awayGoals
-                awayTeam.goals += result.awayGoals
-                awayTeam.goalsAgainst += result.homeGoals
-            }
-            else {
-                awayTeam.points += 2
-                awayTeam.goalDifference += result.goalDiff
-                awayTeam.goals += result.awayGoals
-                awayTeam.goalsAgainst += result.homeGoals
-
-                homeTeam.goalDifference -= result.goalDiff
-                homeTeam.goals += result.homeGoals
-                homeTeam.goalsAgainst += result.awayGoals
-            }
+            applyPredictedGameResult(homeTeam, awayTeam, result)
         }
     })
 
     sortStanding(simulatedStanding)
     return simulatedStanding.findIndex(t => t.team.id === teamId) + 1
+}
+
+function applyPredictedGameResult(
+    homeTeam: any,
+    awayTeam: any,
+    result: {
+        homeWins: boolean
+        draw: boolean
+        goalDiff: number
+        homeGoals: number
+        awayGoals: number
+    },
+) {
+    if (result.homeWins) {
+        homeTeam.points += 2
+        homeTeam.goalDifference += result.goalDiff
+        homeTeam.goals += result.homeGoals
+        homeTeam.goalsAgainst += result.awayGoals
+
+        awayTeam.goalDifference -= result.goalDiff
+        awayTeam.goals += result.awayGoals
+        awayTeam.goalsAgainst += result.homeGoals
+    }
+    else if (result.draw) {
+        homeTeam.points += 1
+        awayTeam.points += 1
+        homeTeam.goals += result.homeGoals
+        homeTeam.goalsAgainst += result.awayGoals
+        awayTeam.goals += result.awayGoals
+        awayTeam.goalsAgainst += result.homeGoals
+    }
+    else {
+        awayTeam.points += 2
+        awayTeam.goalDifference += result.goalDiff
+        awayTeam.goals += result.awayGoals
+        awayTeam.goalsAgainst += result.homeGoals
+
+        homeTeam.goalDifference -= result.goalDiff
+        homeTeam.goals += result.homeGoals
+        homeTeam.goalsAgainst += result.awayGoals
+    }
 }
 
 function predictGameOutcome(homeTeam: any, awayTeam: any, homeId: string, awayId: string, allGames: any[]): {

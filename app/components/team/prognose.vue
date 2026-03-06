@@ -119,6 +119,7 @@ const recentForm = computed(() => {
 const state = reactive({
   rankIfWinning: computed(() => prognosis.value?.bestPossibleRank?.toString() || ''),
   realisticRankIfWinning: computed(() => prognosis.value?.realisticRank?.toString() || ''),
+  simulatedRankAllTeams: computed(() => prognosis.value?.simulatedRank?.toString() || ''),
   highestHomeWin: homeStats.highestWin
     ? `${homeStats.highestWin.awayTeam.name} (${homeStats.highestWin.result})`
     : undefined,
@@ -152,6 +153,10 @@ const state = reactive({
 
         <UFormField v-if="state.realisticRankIfWinning" :label="t('realisticRankIfWinning')">
           <UInput v-model="state.realisticRankIfWinning" icon="i-mdi-trophy" disabled />
+        </UFormField>
+
+        <UFormField v-if="state.simulatedRankAllTeams" :label="t('simulatedRankAllTeams')">
+          <UInput v-model="state.simulatedRankAllTeams" icon="i-mdi-chart-line" disabled />
         </UFormField>
 
         <UFormField v-if="recentForm.length > 0" :label="t('recentForm')">
