@@ -2,6 +2,8 @@
   "name": "Bezirk Oberschwaben-Ostalb",
   "clubs": [
     { "name": "MTG Wangen" },
-    { "name": "TSV 1899 Blaustein" }
+    { "name": "TSV 1899 Blaustein" },
+    { "name": "HSG Langenau/Elchingen" },
+    { "name": "HV Rot-Weiß Laupheim" }
   ]
 }

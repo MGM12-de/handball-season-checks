@@ -2,6 +2,7 @@
   "name": "Bezirk Schwarzwald-Rhein",
   "parent": "bwhv",
   "clubs": [
-    { "name": "SG Pforzheim-Eutingen" }
+    { "name": "SG Pforzheim-Eutingen" },
+    { "name": "TV Knielingen" }
   ]
 }

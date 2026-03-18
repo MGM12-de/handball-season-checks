@@ -13,7 +13,7 @@
     { "name": "TSG Schwäbisch Hall" },
     { "name": "TSV 1863 Buchen" },
     { "name": "HSG Leudelsb." },
-    { "name": "HSG Dittigheim/Tauberbischofsheim" },
+    { "name": "HSG Dittig/TBB" },
     { "name": "TSV Bönnigheim" },
     { "name": "Sport-Union Neckarsulm e.V." },
     { "name": "Team Neckar" },
@@ -23,17 +23,19 @@
     { "name": "HSG Marbach-Rielingshausen" },
     { "name": "HB Ludwigsburg" },
     { "name": "TSV Willsbach" },
-    { "name": "TV Hardheim 1895" },
+    { "name": "TV Hardheim" },
     { "name": "HSG Kochertürn/Stein" },
     { "name": "SG Heuchelberg" },
     { "name": "SG Bad Mergentheim" },
     { "name": "TSV Korntal" },
     { "name": "SG Degmarn-Oedheim" },
-    { "name": "EK Besigheim Handball" },
+    { "name": "EK Besigheim" },
     { "name": "TV Mosbach" },
     { "name": "TSV 1866 Weinsberg" },
     { "name": "FSV Bad Friedrichshall 1898" },
-    { "name": "HG Königshofen/Sachsenflur" },
-    { "name": "TB Richen" }
+    { "name": "HG Kön/Sachs" },
+    { "name": "TB Richen" },
+    { "name": "TV 1895 Flein" },
+    { "name": "ETSV Lauda" }
   ]
 }
