@@ -7,11 +7,16 @@ const querySchema = z.object({
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
-  const data = [{
-    id: 'sportradar.dhbdata.16059',
-    promoted: 2,
-    relegated: 3,
-  }]
+  const rules = [
+    { pattern: /sportradar\.dhbdata\.16059/, promoted: 2, relegated: 3 },
+    { pattern: /m-rl-bw_bwhv/, promoted: 2, relegated: 2 },
+    { pattern: /m-ol-\d-bw_bwhv/, promoted: 1, relegated: 2 },
+    { pattern: /m-vl-\d-bw_bwhv/, promoted: 1, relegated: 3 },
+    { pattern: /m-ll-\d-bw_bwhv/, promoted: 1, relegated: 2 },
+    { pattern: /m-bol-\d-nf_nf/, promoted: 1, relegated: 5 },
+  ]
 
-  return data.find(item => item.id === query.id) || null
+  const match = rules.find(rule => rule.pattern.test(query.id))
+
+  return match ? { id: query.id, promoted: match.promoted, relegated: match.relegated } : null
 })
