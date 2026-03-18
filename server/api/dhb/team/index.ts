@@ -11,9 +11,10 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.36',
-        summary: 'Team id'
-      }],
-  }
+        summary: 'Team id',
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {
@@ -28,7 +29,17 @@ export default defineEventHandler(async (event) => {
     })
   }
   const teamId = query.id as string
-  const teamApi = await $fetch(getTeamUrl(teamId))
+  const teamApi: any = await $fetch(getTeamUrl(teamId))
+
+  const teamOrganizations: any = await $fetch(`/api/dhb/team/organization`, {
+    query: {
+      name: teamApi.data?.club.name || '',
+    },
+  }).catch(() => null)
+
+  if (teamApi.data?.club) {
+    teamApi.data.club.organizations = teamOrganizations?.organizations || []
+  }
 
   return teamApi.data
 })

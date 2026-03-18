@@ -13,7 +13,10 @@ export default defineEventHandler(async (event) => {
     { pattern: /m-ol-\d-bw_bwhv/, promoted: 1, relegated: 2 },
     { pattern: /m-vl-\d-bw_bwhv/, promoted: 1, relegated: 3 },
     { pattern: /m-ll-\d-bw_bwhv/, promoted: 1, relegated: 2 },
-    { pattern: /m-bol-\d-nf_nf/, promoted: 1, relegated: 5 },
+    { pattern: /m-bol-\d-nf_nf/, promoted: 1, relegated: 4 },
+    { pattern: /m-bl-nf_nf/, promoted: 2, relegated: 2 },
+    { pattern: /m-bk-\d-nf_nf/, promoted: 2, relegated: 2 },
+    { pattern: /m-2bk-\d-nf_nf/, promoted: 2, relegated: 0 },
   ]
 
   const match = rules.find(rule => rule.pattern.test(query.id))

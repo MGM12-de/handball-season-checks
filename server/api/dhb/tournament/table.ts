@@ -53,20 +53,27 @@ export default defineEventHandler(async (event): Promise<any[]> => {
     const numPromoted = promotionRelegationRulesResponse?.promoted || 0
     const numRelegated = promotionRelegationRulesResponse?.relegated || 0
 
-    return rows.map((row: any, index: number) => {
+    return await Promise.all(rows.map(async (row: any, index: number) => {
       const isPromoted = index < numPromoted
       const isRelegated = index >= rows.length - numRelegated
+
+      const teamDetails = await $fetch('/api/dhb/team', {
+        query: {
+          id: row.team.id,
+        },
+      })
 
       return {
         ...row,
         team: {
           ...row.team,
           logo: row.team?.logo ? normalizeImageUrl(row.team.logo) : row.team?.logo,
+          organizations: teamDetails?.club?.organizations || [],
         },
         promoted: isPromoted,
         relegated: isRelegated,
       }
-    })
+    }))
   }
   catch (error) {
     // Handle potential errors from $fetch
