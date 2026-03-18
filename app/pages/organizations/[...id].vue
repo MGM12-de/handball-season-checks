@@ -1,15 +1,25 @@
 <script lang="ts" setup>
 const route = useRoute()
 
+const organizationId = route.params.id as string
+
+const { data: organization } = useAsyncData('organization', async () => {
+  return await $fetch(`/api/dhb/organization?id=${organizationId}`)
+})
+
+const superOrganisation = organization.value?.parent
+
 const leagueConfigs = [
-  { title: '3. Liga', ids: ['sportradar.dhbdata.16059&phase=sportradar.dhbdata.18980'] },
-  { title: 'Regionalliga', ids: ['handball4all.baden-wuerttemberg.m-rl-bw_bwhv'] },
+  { title: '3. Liga', ids: ['sportradar.dhbdata.16059&phase=sportradar.dhbdata.18980'], organization: 'dhb', sort: 3 },
+  { title: 'Regionalliga', ids: ['handball4all.baden-wuerttemberg.m-rl-bw_bwhv'], organization: 'bwhv', sort: 4 },
   {
     title: 'Oberliga',
     ids: [
       'handball4all.baden-wuerttemberg.m-ol-1-bw_bwhv',
       'handball4all.baden-wuerttemberg.m-ol-2-bw_bwhv',
     ],
+    organization: 'bwhv',
+    sort: 5,
   },
   {
     title: 'Verbandsliga',
@@ -19,6 +29,9 @@ const leagueConfigs = [
       'handball4all.baden-wuerttemberg.m-vl-3-bw_bwhv',
       'handball4all.baden-wuerttemberg.m-vl-4-bw_bwhv',
     ],
+    organization: 'bwhv',
+    sort: 6,
+
   },
   {
     title: 'Landesliga',
@@ -32,6 +45,8 @@ const leagueConfigs = [
       'handball4all.baden-wuerttemberg.m-ll-7-bw_bwhv',
       'handball4all.baden-wuerttemberg.m-ll-8-bw_bwhv',
     ],
+    organization: 'bwhv',
+    sort: 7,
   },
   {
     title: 'Bezirksoberliga',
@@ -39,12 +54,16 @@ const leagueConfigs = [
       'handball4all.baden-wuerttemberg.m-bol-1-nf_nf',
       'handball4all.baden-wuerttemberg.m-bol-2-nf_nf',
     ],
+    organization: 'bwhv-nf',
+    sort: 8,
   },
   {
     title: 'Bezirksliga',
     ids: [
       'handball4all.baden-wuerttemberg.m-bl-nf_nf',
     ],
+    organization: 'bwhv-nf',
+    sort: 9,
   },
   {
     title: 'Bezirksklasse',
@@ -52,6 +71,8 @@ const leagueConfigs = [
       'handball4all.baden-wuerttemberg.m-bk-1-nf_nf',
       'handball4all.baden-wuerttemberg.m-bk-2-nf_nf',
     ],
+    organization: 'bwhv-nf',
+    sort: 10,
   },
   {
     title: '2. Bezirksklasse',
@@ -59,27 +80,80 @@ const leagueConfigs = [
       'handball4all.baden-wuerttemberg.m-2bk-1-nf_nf',
       'handball4all.baden-wuerttemberg.m-2bk-2-nf_nf',
     ],
+    organization: 'bwhv-nf',
+    sort: 11,
   },
 ]
 
 const { data: leagues } = useAsyncData('organization-leagues', async () => {
-  return await Promise.all(
+  const rawLeagues = await Promise.all(
     leagueConfigs.map(async (config) => {
       // Lade alle Tabellen einer Liga-Ebene (z.B. alle 8 Landesligen) parallel
       const tables = await Promise.all(
         config.ids.map(id => $fetch<any[]>(`/api/dhb/tournament/table?id=${id}`)),
       )
-
-      // Füge die Arrays der einzelnen Tabellen zu einem großen Array zusammen
-      const combinedData = tables.flat()
-
-      return {
-        title: config.title,
-        promoted: combinedData.filter(row => row.promoted === true),
-        relegated: combinedData.filter(row => row.relegated === true),
-      }
+      return { config, tables, extraRelegations: 0 }
     }),
   )
+
+  // Ligen anhand von `sort` sortieren (damit wir sicher von oben nach unten durchlaufen)
+  rawLeagues.sort((a, b) => a.config.sort - b.config.sort)
+
+  const results = []
+
+  for (let i = 0; i < rawLeagues.length; i++) {
+    const current = rawLeagues[i]
+    const config = current.config
+
+    if (i > 0) {
+      const prev = rawLeagues[i - 1]
+      // Wenn sich die Organisation ändert (z.B. dhb -> bwhv, oder bwhv -> bwhv-nf)
+      if (prev.config.organization !== config.organization) {
+        const prevRelegated = results[i - 1].relegated
+        // Zähle, wie viele Absteiger der HÖHEREN Liga in die Organisation der AKTUELLEN Liga fallen
+        const matchingCount = prevRelegated.filter((row: any) => {
+          const orgs = row.team?.organizations || []
+          return orgs.some((o: any) =>
+            o === config.organization || o.id === config.organization || o.name === config.organization,
+          )
+        }).length
+        current.extraRelegations = matchingCount
+      }
+      else {
+        // Innerhalb derselben Organisation (z.B. Regionalliga -> Oberliga) wird der gleitende Abstieg weitergegeben
+        current.extraRelegations = prev.extraRelegations
+      }
+    }
+
+    const combinedPromoted: any[] = []
+    const combinedRelegated: any[] = []
+
+    for (const table of current.tables) {
+      // Bisherigen Standard-Absteiger zählen (welche von der API berechnet wurden)
+      const standardRelegatedCount = table.filter((r: any) => r.relegated === true).length
+      // Standard Absteiger + die zusätzlichen Absteiger von oben
+      const totalRelegatedCount = standardRelegatedCount + current.extraRelegations
+
+      table.forEach((row: any, index: number) => {
+        const isPromoted = row.promoted === true
+        // Berechne den Abstieg neu: Die untersten `totalRelegatedCount` Teams steigen ab
+        const isRelegated = index >= table.length - totalRelegatedCount
+
+        if (isPromoted)
+          combinedPromoted.push(row)
+        if (isRelegated)
+          combinedRelegated.push({ ...row, relegated: true })
+      })
+    }
+
+    results.push({
+      title: config.title,
+      promoted: combinedPromoted,
+      relegated: combinedRelegated,
+    })
+  }
+
+  return results
 })
 </script>
 

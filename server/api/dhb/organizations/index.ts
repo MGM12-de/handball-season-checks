@@ -17,6 +17,30 @@ export default defineEventHandler(async (event) => {
     id: 'bwhv-nf',
     name: 'Bezirk Neckar-Franken',
     parent: 'bwhv',
+  }, {
+    id: 'bwhv-sr',
+    name: 'Bezirk Schwarzwald-Rhein',
+    parent: 'bwhv',
+  }, {
+    id: 'bwhv-rn',
+    name: 'Bezirk Rhein-Neckar',
+    parent: 'bwhv',
+  }, {
+    id: 'bwhv-na',
+    name: 'Bezirk Neckar-Alb',
+    parent: 'bwhv',
+  }, {
+    id: 'bwhv-bn',
+    name: 'Bezirk Bodensee-Neckar',
+    parent: 'bwhv',
+  }, {
+    id: 'bwhv-srm',
+    name: 'Bezirk Stuttgart-Rems-Murr',
+    parent: 'bwhv',
+  }, {
+    id: 'bwhv-sb',
+    name: 'Bezirk Süd-Baden',
+    parent: 'bwhv',
   }]
 
   if (query.id) {
