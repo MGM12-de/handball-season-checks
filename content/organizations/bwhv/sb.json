@@ -2,6 +2,7 @@
   "name": "Bezirk Süd-Baden",
   "parent": "bwhv",
   "clubs": [
-    { "name": "SG Köndringen/Teningen" }
+    { "name": "SG Köndringen/Teningen" },
+    { "name": "TuS Altenheim" }
   ]
 }
