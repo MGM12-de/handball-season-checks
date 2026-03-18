@@ -1,7 +1,9 @@
 {
   "name": "Bezirk Neckar-Franken",
+  "parent": "bwhv",
   "clubs": [
     { "name": "TSB Heilbronn-Horkheim" },
-    { "name": "SV Salamander Kornwestheim 1894" }
+    { "name": "SV Salamander Kornwestheim 1894" },
+    { "name": "TSV Asperg" }
   ]
 }

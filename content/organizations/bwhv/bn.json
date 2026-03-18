@@ -1,0 +1,9 @@
+{
+  "name": "Bezirk Bodensee-Neckar",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "HSG Konstanz" },
+    { "name": "HBW Balingen-Weilstetten" },
+    { "name": "HSG Albstadt" }
+  ]
+}

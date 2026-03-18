@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 const route = useRoute()
 
-const organizationId = route.params.id as string
+const organizationIdParts = route.params.id as string[]
 
-const { data: organization } = useAsyncData('organization', async () => {
-  return await $fetch(`/api/dhb/organization?id=${organizationId}`)
+const { data: organization } = useAsyncData('organization', () => {
+  return queryContent('organizations', ...organizationIdParts).findOne()
 })
 
 const superOrganisation = organization.value?.parent

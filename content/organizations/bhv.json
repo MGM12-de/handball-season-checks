@@ -1,6 +1,9 @@
 {
-  "name": "Bayrischer Handball-Verband",
-  "clubs": [{
-    "name": "HC Erlangen"
-  }]
+  "name": "Bayrischer Handball-Verband e.V.",
+  "clubs": [
+    { "name": "HC Erlangen" },
+    { "name": "Wölfe Würzburg" },
+    { "name": "TuS Fürstenfeldbruck" },
+    { "name": "TV Erlangen-Bruck" }
+  ]
 }

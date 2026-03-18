@@ -1,0 +1,7 @@
+{
+  "name": "Bezirk Schwarzwald-Rhein",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "SG Pforzheim-Eutingen" }
+  ]
+}

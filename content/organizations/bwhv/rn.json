@@ -1,0 +1,9 @@
+{
+  "name": "Bezirk Rhein-Neckar",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "Rhein-Neckar Löwen" },
+    { "name": "Saase3 Leutershausen" },
+    { "name": "HG Oftersheim/Schwetzingen" }
+  ]
+}
