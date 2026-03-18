@@ -32,6 +32,15 @@ export default defineEventHandler(async (event): Promise<any[]> => {
   // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
+  const promotionRelegationRulesResponse: any = await $fetch<any>(
+    `/api/dhb/tournament/promotion-relegation-rules`,
+    {
+      query: {
+        id: query.id,
+      },
+    },
+  ).catch(() => null)
+
   try {
     const tournamentTable: any = await $fetch<any>(`${getTournamentUrl(query.id)}/table`, {
       query: {
@@ -41,13 +50,23 @@ export default defineEventHandler(async (event): Promise<any[]> => {
 
     const rows: any[] = tournamentTable.data?.rows || []
 
-    return rows.map((row: any) => ({
-      ...row,
-      team: {
-        ...row.team,
-        logo: row.team?.logo ? normalizeImageUrl(row.team.logo) : row.team?.logo,
-      },
-    }))
+    const numPromoted = promotionRelegationRulesResponse?.promoted || 0
+    const numRelegated = promotionRelegationRulesResponse?.relegated || 0
+
+    return rows.map((row: any, index: number) => {
+      const isPromoted = index < numPromoted
+      const isRelegated = index >= rows.length - numRelegated
+
+      return {
+        ...row,
+        team: {
+          ...row.team,
+          logo: row.team?.logo ? normalizeImageUrl(row.team.logo) : row.team?.logo,
+        },
+        promoted: isPromoted,
+        relegated: isRelegated,
+      }
+    })
   }
   catch (error) {
     // Handle potential errors from $fetch
