@@ -12,6 +12,12 @@ defineRouteMeta({
         required: true,
         example: 'handball4all.wuerttemberg.m-bol_hf',
       },
+      {
+        in: 'query',
+        name: 'phase',
+        required: false,
+        example: 'sportradar.dhbdata.18980',
+      },
     ],
   },
 })
@@ -19,6 +25,7 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
   const query = getQuery(event)
+  let url
 
   if (!query.id) {
     throw createError({
@@ -28,7 +35,13 @@ export default defineEventHandler(async (event) => {
   }
   try {
     const tournamentId = query.id as string
-    const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
+    if (query.phase) {
+      url = `${getTournamentUrl(tournamentId)}/table?phase=${query.phase}`
+    }
+    else {
+      url = `${getTournamentUrl(tournamentId)}/table`
+    }
+    const tournamentTable = await $fetch(url)
 
     tournamentTable.data.rows.forEach((row) => {
       if (row.team.logo) {
