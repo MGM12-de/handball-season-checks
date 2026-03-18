@@ -173,7 +173,8 @@ const { data: leagues } = useAsyncData('organization-leagues', async () => {
           orientation="horizontal" reverse highlight highlight-color="success">
           <img :src="row.team.logo" alt="Team Logo" class="w-16 h-16 object-contain">
           <template #footer>
-            <UBadge v-for="n in row.team.organizations.filter(o => o.id !== league.organization)" :key="n.id" color="primary" class="ml-auto" size="md">
+            <UBadge v-for="n in row.team.organizations.filter(o => o.id !== league.organization)" :key="n.id"
+              color="primary" class="ml-auto" size="md">
               {{ n.name }}
             </UBadge>
           </template>
@@ -185,7 +186,8 @@ const { data: leagues } = useAsyncData('organization-leagues', async () => {
           orientation="horizontal" reverse highlight highlight-color="error">
           <img :src="row.team.logo" alt="Team Logo" class="w-16 h-16 object-contain">
           <template #footer>
-            <UBadge v-for="n in row.team.organizations.filter(o => o.id !== league.organization)" :key="n.id" color="primary" class="ml-auto" size="md">
+            <UBadge v-for="n in row.team.organizations.filter(o => o.id !== league.organization)" :key="n.id"
+              color="primary" class="ml-auto" size="md">
               {{ n.name }}
             </UBadge>
           </template>
