@@ -33,25 +33,14 @@ export default defineNuxtConfig({
   imports: {
     autoImport: true,
   },
+  content: {
+    database: {
+      type: 'd1',
+      bindingName: 'DB',
+    },
+  },
   routeRules: {
     '/': { prerender: true },
-  },
-  hub,
-  nitro: {
-    preset: 'cloudflare_module',
-    cloudflare: {
-      deployConfig: true,
-      nodeCompat: true,
-    },
-  },
-  i18n,
-  pwa,
-  runtimeConfig: {
-    public: {
-      dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
-    },
-  },
-  routeRules: {
     // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
     '/api/dhb/club/**': {
       swr: 60 * 60 * 24,
@@ -85,6 +74,21 @@ export default defineNuxtConfig({
     // 4. Live-Daten: Aktuelles Spiel (kein Cache, immer live)
     '/api/dhb/game/**': {
       cache: false, // Explizit Caching deaktivieren
+    },
+  },
+  hub,
+  nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
+  },
+  i18n,
+  pwa,
+  runtimeConfig: {
+    public: {
+      dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
     },
   },
 })
