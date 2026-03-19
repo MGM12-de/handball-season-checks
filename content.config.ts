@@ -13,5 +13,17 @@ export default defineContentConfig({
                 })),
             }),
         }),
+        leagues: defineCollection({
+            type: 'data',
+            source: 'leagues/**.json',
+            schema: z.object({
+                title: z.string(),
+                ids: z.array(z.string()),
+                organization: z.string(),
+                sort: z.number(),
+                promoted: z.number(),
+                relegated: z.number(),
+            }),
+        }),
     },
 })
