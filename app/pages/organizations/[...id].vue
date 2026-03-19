@@ -206,6 +206,9 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
             </h2>
 
             <LazyUPageGrid v-if="league.promoted.length">
+                <h3 class="text-base font-semibold text-warning-600">
+                    Aufsteiger
+                </h3>
                 <UPageCard v-for="(row, index) in league.promoted" :key="`p-${index}`"
                     :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
                     highlight-color="success">
@@ -242,6 +245,9 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
             </div>
 
             <LazyUPageGrid v-if="league.relegated.length">
+                <h3 class="text-base font-semibold text-warning-600">
+                    Absteiger
+                </h3>
                 <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
                     :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
                     highlight-color="error">
