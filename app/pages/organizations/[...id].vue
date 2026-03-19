@@ -106,6 +106,7 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
 
         if (i > 0) {
             const prev = rawLeagues[i - 1]!
+            const prevResult = results[i - 1]
 
             // If organization changes (e.g. dhb -> bwhv), carry down matching relegations.
             if (prev.config.organization !== config.organization) {
@@ -119,8 +120,9 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
                 current.extraRelegations = matchingCount
             }
             else {
-                // Within same organization, keep carrying the dynamic extra relegations.
-                current.extraRelegations = prev.extraRelegations
+                // Within same organization, playoff losers of the higher league are guaranteed relegations.
+                const guaranteedPlayoffLosers = prevResult?.relegationPlayoffSpots || 0
+                current.extraRelegations = prev.extraRelegations + guaranteedPlayoffLosers
             }
         }
 
