@@ -5,7 +5,7 @@ export default defineContentConfig({
     collections: {
         organizations: defineCollection({
             type: 'data',
-            source: 'organizations/**.json',
+            source: 'organizations/**/*.json',
             schema: z.object({
                 name: z.string(),
                 clubs: z.array(z.object({
@@ -15,7 +15,7 @@ export default defineContentConfig({
         }),
         leagues: defineCollection({
             type: 'data',
-            source: 'leagues/**.json',
+            source: 'leagues/**/*.json',
             schema: z.object({
                 title: z.string(),
                 ids: z.array(z.string()),
