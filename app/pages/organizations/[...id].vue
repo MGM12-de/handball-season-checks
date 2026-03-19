@@ -37,7 +37,11 @@ interface TableRow {
 interface LeagueResult {
     title: string
     promoted: TableRow[]
+    promotionPlayoff: TableRow[]
+    promotionPlayoffSpots: number
     relegated: TableRow[]
+    relegationPlayoff: TableRow[]
+    relegationPlayoffSpots: number
     organization: string
 }
 
@@ -120,29 +124,54 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
             }
         }
 
+        const tableCount = Math.max(current.tables.length, 1)
+        const totalPromotedCount = config.promoted
+        const hasConfiguredRelegation = config.relegated > 0
+        const totalRelegatedCount = hasConfiguredRelegation ? config.relegated + current.extraRelegations : 0
+
+        const directPromotedPerTable = Math.floor(totalPromotedCount / tableCount)
+        const promotionPlayoffSpots = totalPromotedCount % tableCount
+        const directRelegatedPerTable = Math.floor(totalRelegatedCount / tableCount)
+        const relegationPlayoffSpots = totalRelegatedCount % tableCount
+
         const combinedPromoted: TableRow[] = []
+        const combinedPromotionPlayoff: TableRow[] = []
         const combinedRelegated: TableRow[] = []
+        const combinedRelegationPlayoff: TableRow[] = []
 
         for (const table of current.tables) {
-            const standardRelegatedCount = table.filter(row => row.relegated === true).length
-            const totalRelegatedCount = standardRelegatedCount + current.extraRelegations
+            const promotionPlayoffIndex = directPromotedPerTable
+            const relegationPlayoffIndex = table.length - directRelegatedPerTable - 1
+            const relegationStartIndex = Math.max(table.length - directRelegatedPerTable, 0)
 
             table.forEach((row, index) => {
-                const isPromoted = row.promoted === true
-                const isRelegated = index >= table.length - totalRelegatedCount
+                const isPromoted = index < directPromotedPerTable
+                const isPromotionPlayoff = promotionPlayoffSpots > 0 && index === promotionPlayoffIndex
+                const isRelegated = index >= relegationStartIndex
+                const isRelegationPlayoff = relegationPlayoffSpots > 0 && index === relegationPlayoffIndex && !isRelegated
 
                 if (isPromoted)
                     combinedPromoted.push(row)
 
+                if (isPromotionPlayoff)
+                    combinedPromotionPlayoff.push(row)
+
                 if (isRelegated)
                     combinedRelegated.push({ ...row, relegated: true })
+
+                if (isRelegationPlayoff)
+                    combinedRelegationPlayoff.push(row)
             })
         }
 
         results.push({
             title: config.title,
             promoted: combinedPromoted,
+            promotionPlayoff: combinedPromotionPlayoff,
+            promotionPlayoffSpots,
             relegated: combinedRelegated,
+            relegationPlayoff: combinedRelegationPlayoff,
+            relegationPlayoffSpots,
             organization: config.organization,
         })
     }
@@ -156,7 +185,8 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
 
     <UPageBody>
         <div v-for="league in leagues" :key="league.title" class="mb-8 space-y-4">
-            <h2 v-if="league.promoted.length || league.relegated.length" class="text-xl font-bold">
+            <h2 v-if="league.promoted.length || league.promotionPlayoff.length || league.relegated.length || league.relegationPlayoff.length"
+                class="text-xl font-bold">
                 {{ league.title }}
             </h2>
 
@@ -175,6 +205,27 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
                 </UPageCard>
             </LazyUPageGrid>
 
+            <div v-if="league.promotionPlayoff.length" class="space-y-2">
+                <h3 class="text-base font-semibold text-warning-600">
+                    Aufstiegsrelegation ({{ league.promotionPlayoffSpots }} Platz<span
+                        v-if="league.promotionPlayoffSpots !== 1">e</span>)
+                </h3>
+                <LazyUPageGrid>
+                    <UPageCard v-for="(row, index) in league.promotionPlayoff" :key="`pr-${index}`"
+                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        highlight-color="warning">
+                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+
+                        <template #footer>
+                            <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
+                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
+                                {{ n.name }}
+                            </UBadge>
+                        </template>
+                    </UPageCard>
+                </LazyUPageGrid>
+            </div>
+
             <LazyUPageGrid v-if="league.relegated.length">
                 <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
                     :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
@@ -189,6 +240,27 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
                     </template>
                 </UPageCard>
             </LazyUPageGrid>
+
+            <div v-if="league.relegationPlayoff.length" class="space-y-2">
+                <h3 class="text-base font-semibold text-warning-600">
+                    Abstiegsrelegation ({{ league.relegationPlayoffSpots }} Platz<span
+                        v-if="league.relegationPlayoffSpots !== 1">e</span>)
+                </h3>
+                <LazyUPageGrid>
+                    <UPageCard v-for="(row, index) in league.relegationPlayoff" :key="`rr-${index}`"
+                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        highlight-color="warning">
+                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+
+                        <template #footer>
+                            <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
+                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
+                                {{ n.name }}
+                            </UBadge>
+                        </template>
+                    </UPageCard>
+                </LazyUPageGrid>
+            </div>
         </div>
     </UPageBody>
 </template>
