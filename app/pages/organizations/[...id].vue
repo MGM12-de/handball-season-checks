@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import organizationsIndex from '~~/content/organizations/index.json'
+
 const route = useRoute()
 
 const organizationId = computed(() => {
@@ -19,6 +21,12 @@ interface LeagueConfig {
 interface OrganizationObject {
     id?: string
     name?: string
+}
+
+interface OrganizationListItem {
+    id: string
+    name: string
+    parent?: string
 }
 
 type TeamOrganization = OrganizationObject | string
@@ -78,6 +86,11 @@ function getOrganizationScope(orgId: string) {
 
     return scope
 }
+
+const organizationName = computed(() => {
+    const organization = (organizationsIndex as OrganizationListItem[]).find(item => item.id === organizationId.value)
+    return organization?.name || organizationId.value
+})
 
 const { data: leagues } = useAsyncData(() => `organization-leagues-${organizationId.value || 'all'}`, async () => {
     const leagueConfigs = (await queryCollection('leagues').all()) as LeagueConfig[]
@@ -183,7 +196,7 @@ const { data: leagues } = useAsyncData(() => `organization-leagues-${organizatio
 </script>
 
 <template>
-    <UPageHeader :title="`Organization ${organizationId}`" />
+    <UPageHeader :title="organizationName" />
 
     <UPageBody>
         <div v-for="league in leagues" :key="league.title" class="mb-8 space-y-4">
