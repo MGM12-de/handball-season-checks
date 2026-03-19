@@ -1,0 +1,15 @@
+{
+  "name": "Bezirk Süd-Baden",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "SG Köndringen/Teningen" },
+    { "name": "TuS Altenheim" },
+    { "name": "SV Zunsweier" },
+    { "name": "SG ERA" },
+    { "name": "SG Scutro" },
+    { "name": "SG Waldkirch/Denzlingen" },
+    { "name": "HandBall Löwen Heitersheim" },
+    { "name": "HG Müllheim/Neuenburg" },
+    { "name": "HSG Nonn./Ott." }
+  ]
+}

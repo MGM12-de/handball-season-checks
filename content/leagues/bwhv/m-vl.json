@@ -1,0 +1,14 @@
+{
+  "title": "Verbandsliga",
+  "ids": [
+    "handball4all.baden-wuerttemberg.m-vl-1-bw_bwhv",
+    "handball4all.baden-wuerttemberg.m-vl-2-bw_bwhv",
+    "handball4all.baden-wuerttemberg.m-vl-3-bw_bwhv",
+    "handball4all.baden-wuerttemberg.m-vl-4-bw_bwhv"
+  ],
+  "organization": "bwhv",
+  "sort": 6,
+  "promoted": 6,
+  "relegated": 12
+
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Bezirk Schwarzwald-Rhein",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "SG Pforzheim-Eutingen" },
+    { "name": "TV Knielingen" },
+    { "name": "SG Ottersweier/Großweier" },
+    { "name": "HSG Bruchsal/Untergrombach" },
+    { "name": "TV Ispringen" },
+    { "name": "SG Heidelsheim/Helmsheim" },
+    { "name": "TSG Germania Dossenheim" }
+  ]
+}

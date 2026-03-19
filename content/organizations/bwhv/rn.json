@@ -1,0 +1,19 @@
+{
+  "name": "Bezirk Rhein-Neckar",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "Rhein-Neckar Löwen" },
+    { "name": "S3L Handball" },
+    { "name": "HG Oftersheim/Schwetzingen" },
+    { "name": "HW Plankstadt" },
+    { "name": "TSG Wiesloch" },
+    { "name": "TSV Birkenau" },
+    { "name": "TSV Rot-Malsch" },
+    { "name": "SG HD-Leimen" },
+    { "name": "BSV Phönix Sinzheim" },
+    { "name": "TV Friedrichsf" },
+    { "name": "SG Nußloch" },
+    { "name": "TV Brühl" },
+    { "name": "HC Neuenbürg 2000" }
+  ]
+}

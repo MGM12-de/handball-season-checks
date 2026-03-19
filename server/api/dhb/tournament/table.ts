@@ -1,4 +1,10 @@
+import { z } from 'zod'
 import { getTournamentUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+
+const querySchema = z.object({
+  id: z.string().min(1, 'Tournament ID is required'),
+  phase: z.string().optional(),
+})
 
 defineRouteMeta({
   openAPI: {
@@ -12,31 +18,62 @@ defineRouteMeta({
         required: true,
         example: 'handball4all.wuerttemberg.m-bol_hf',
       },
+      {
+        in: 'query',
+        name: 'phase',
+        required: false,
+        example: 'sportradar.dhbdata.18980',
+      },
     ],
   },
 })
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<any[]> => {
   // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
-  const query = getQuery(event)
+  const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
-  if (!query.id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No id received',
-    })
-  }
+  const promotionRelegationRulesResponse: any = await $fetch<any>(
+    `/api/dhb/tournament/promotion-relegation-rules`,
+    {
+      query: {
+        id: query.id,
+      },
+    },
+  ).catch(() => null)
+
   try {
-    const tournamentId = query.id as string
-    const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
-
-    tournamentTable.data.rows.forEach((row) => {
-      if (row.team.logo) {
-        row.team.logo = normalizeImageUrl(row.team.logo)
-      }
+    const tournamentTable: any = await $fetch<any>(`${getTournamentUrl(query.id)}/table`, {
+      query: {
+        phase: query.phase,
+      },
     })
 
-    return tournamentTable.data.rows
+    const rows: any[] = tournamentTable.data?.rows || []
+
+    const numPromoted = promotionRelegationRulesResponse?.promoted || 0
+    const numRelegated = promotionRelegationRulesResponse?.relegated || 0
+
+    return await Promise.all(rows.map(async (row: any, index: number) => {
+      const isPromoted = index < numPromoted
+      const isRelegated = index >= rows.length - numRelegated
+
+      const teamDetails = await $fetch('/api/dhb/team', {
+        query: {
+          id: row.team.id,
+        },
+      })
+
+      return {
+        ...row,
+        team: {
+          ...row.team,
+          logo: row.team?.logo ? normalizeImageUrl(row.team.logo) : row.team?.logo,
+          organizations: teamDetails?.club?.organizations || [],
+        },
+        promoted: isPromoted,
+        relegated: isRelegated,
+      }
+    }))
   }
   catch (error) {
     // Handle potential errors from $fetch

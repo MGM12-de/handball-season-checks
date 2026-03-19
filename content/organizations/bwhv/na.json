@@ -1,0 +1,23 @@
+{
+  "name": "Bezirk Neckar-Alb",
+  "parent": "bwhv",
+  "clubs": [
+    { "name": "TSV Neuhausen/Filder 1898" },
+    { "name": "TSV Neuhausen/F. 1898" },
+    { "name": "VfL Pfullingen" },
+    { "name": "TSV Heiningen 1892" },
+    { "name": "TV 1893 Neuhausen/E." },
+    { "name": "TV Plochingen" },
+    { "name": "SKV Unterensingen" },
+    { "name": "SG Lauterstein" },
+    { "name": "TV Altenstadt" },
+    { "name": "HSG Böblingen/Sindelfingen" },
+    { "name": "HT Uhingen-Holzhausen" },
+    { "name": "HSG WinzWiDonz" },
+    { "name": "TEAM Esslingen" },
+    { "name": "TSV Weilheim" },
+    { "name": "EK Bernhausen" },
+    { "name": "TSV Zizishausen" },
+    { "name": "TV Treffelhausen" }
+  ]
+}
