@@ -142,6 +142,8 @@ export class LeagueSeasonCalculator {
         const combinedPromotionPlayoff: TableRow[] = []
         const combinedRelegated: TableRow[] = []
         const combinedRelegationPlayoff: TableRow[] = []
+        const rowToTableIndex = new Map<TableRow, number>()
+        const relegatedByTable = new Map<number, TableRow[]>()
         const relegationZoneSet = new Set<TableRow>()
 
         const withFlags = (row: TableRow, extra?: Partial<TableRow>): TableRow => ({
@@ -150,11 +152,13 @@ export class LeagueSeasonCalculator {
             ...extra,
         })
 
-        for (const table of tables) {
+        for (const [tableIndex, table] of tables.entries()) {
             const relegationStartIndex = Math.max(table.length - directRelegatedPerTable, 0)
             const relegationPlayoffIndex = relegationStartIndex - 1
 
             table.forEach((row, index) => {
+                rowToTableIndex.set(row, tableIndex)
+
                 if (index < directPromotedPerTable) {
                     combinedPromoted.push(withFlags(row))
                 }
@@ -162,7 +166,11 @@ export class LeagueSeasonCalculator {
                     combinedPromotionPlayoff.push(withFlags(row))
                 }
                 else if (index >= relegationStartIndex) {
-                    combinedRelegated.push(withFlags(row, { relegated: true }))
+                    const relegatedRow = withFlags(row, { relegated: true })
+                    combinedRelegated.push(relegatedRow)
+                    const relegatedInTable = relegatedByTable.get(tableIndex) ?? []
+                    relegatedInTable.push(relegatedRow)
+                    relegatedByTable.set(tableIndex, relegatedInTable)
                     relegationZoneSet.add(row)
                 }
                 else if (relegationPlayoffSpots > 0 && index === relegationPlayoffIndex) {
@@ -173,10 +181,30 @@ export class LeagueSeasonCalculator {
         }
 
         // Apply the n-th team rule: if a higher-ranked team from the same club is relegated,
-        // the lower-ranked team in this league is forced down too.
-        const forcedRelegations: TableRow[] = forcedRelegationTeams
-            .filter(row => !relegationZoneSet.has(row))
-            .map(row => withFlags(row, { relegated: true }))
+        // the lower-ranked team in this league is forced down too. One positional relegation
+        // from the same table is reprieved to keep the overall number of relegations unchanged.
+        const forcedRelegations: TableRow[] = []
+
+        for (const forcedSourceRow of forcedRelegationTeams) {
+            if (relegationZoneSet.has(forcedSourceRow))
+                continue
+
+            forcedRelegations.push(withFlags(forcedSourceRow, { relegated: true }))
+
+            const tableIndex = rowToTableIndex.get(forcedSourceRow)
+            if (tableIndex === undefined)
+                continue
+
+            const relegatedInSameTable = relegatedByTable.get(tableIndex) ?? []
+            const reprievedRow = relegatedInSameTable.shift()
+
+            if (!reprievedRow)
+                continue
+
+            const reprievedIndex = combinedRelegated.indexOf(reprievedRow)
+            if (reprievedIndex >= 0)
+                combinedRelegated.splice(reprievedIndex, 1)
+        }
 
         return {
             title: config.title,
