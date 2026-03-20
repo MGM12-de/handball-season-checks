@@ -31,6 +31,7 @@ defineRouteMeta({
 export default defineEventHandler(async (event): Promise<any[]> => {
   // https://www.handball.net/a/sportdata/1/tournaments/handball4all.wuerttemberg.126171
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
+  const teamDetailsCache = new Map<string, Promise<any>>()
 
   const promotionRelegationRulesResponse: any = await $fetch<any>(
     `/api/dhb/tournament/promotion-relegation-rules`,
@@ -53,15 +54,24 @@ export default defineEventHandler(async (event): Promise<any[]> => {
     const numPromoted = promotionRelegationRulesResponse?.promoted || 0
     const numRelegated = promotionRelegationRulesResponse?.relegated || 0
 
+    const getTeamDetails = (teamId?: string) => {
+      if (!teamId)
+        return Promise.resolve(null)
+
+      if (!teamDetailsCache.has(teamId)) {
+        teamDetailsCache.set(teamId, $fetch<any>('/api/dhb/team', {
+          query: { id: teamId },
+        }))
+      }
+
+      return teamDetailsCache.get(teamId)!
+    }
+
     return await Promise.all(rows.map(async (row: any, index: number) => {
       const isPromoted = index < numPromoted
       const isRelegated = index >= rows.length - numRelegated
 
-      const teamDetails = await $fetch('/api/dhb/team', {
-        query: {
-          id: row.team.id,
-        },
-      })
+      const teamDetails = await getTeamDetails(row?.team?.id)
 
       return {
         ...row,
