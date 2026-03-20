@@ -40,14 +40,18 @@ export class LeagueSeasonCalculator {
         const results: LeagueResult[] = []
         const extraRelegationsTracker: number[] = []
 
+        const lastIndex = sorted.length - 1
+
         for (let i = 0; i < sorted.length; i++) {
-            const extra = i === 0
+            const isLowestLeague = i === lastIndex
+
+            const extra = (i === 0 || isLowestLeague)
                 ? 0
                 : this.computeExtraRelegations(sorted, results, extraRelegationsTracker, i)
 
             extraRelegationsTracker.push(extra)
 
-            const allPrevRelegated = i > 0
+            const allPrevRelegated = (i > 0 && !isLowestLeague)
                 ? [...results[i - 1]!.relegated, ...results[i - 1]!.forcedRelegations]
                 : []
             const forcedRelegationTeams = this.findForcedRelegationTeams(allPrevRelegated, sorted[i]!.tables)
