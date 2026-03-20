@@ -15,3 +15,9 @@ The application uses a modern Nuxt architecture with a separated `app/` director
 - The application is deployed to Cloudflare (Cloudflare Pages).
 - The environment runs on an Edge Runtime, NOT a standard Node.js environment.
 - Be extremely careful with native Node.js built-in modules (like `fs`, `path`, `crypto`). If needed, ensure they are compatible with the Cloudflare Workers environment or use Nuxt/Nitro alternatives.
+
+# Programming Paradigm & Modularity
+- **CRITICAL**: Strictly apply Object-Oriented Programming (OOP) principles throughout the codebase.
+- Build highly modular, loosely coupled, and reusable code.
+- Extract complex business logic, calculations, and data transformations into dedicated, reusable TypeScript classes. Do not leave complex logic inside UI components or generic utility functions.
+- Use TypeScript features heavily: Define strict `interfaces`, use encapsulation (private/protected modifiers), and apply design patterns (like Strategy, Factory, or Dependency Injection) where it improves reusability.

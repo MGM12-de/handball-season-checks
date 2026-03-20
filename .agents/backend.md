@@ -17,3 +17,9 @@
 - You have access to the Model Context Protocol (MCP) server for Nuxt (`nuxt-docs`).
 - **CRITICAL**: Use this MCP tool to query the official Nuxt/Nitro documentation whenever you are working on server API routes (`server/api/`), server utilities, or storage/caching configurations.
 - Since the deployment targets Cloudflare Edge, always use the `nuxt-docs` MCP server to verify if a specific Nitro feature or built-in function is fully supported in an edge environment before implementing it.
+
+# Server Architecture & OOP
+- Apply the Service and Repository patterns. 
+- API route handlers (`defineEventHandler`) must be completely lean. They should only handle HTTP requests/responses and delegate all processing to dedicated service classes.
+- Create modular classes for handling the DHB API communication (e.g., `DhbApiService`) and separate classes for data parsing/transformation.
+- Store these reusable classes in the `server/utils/` or a dedicated `server/services/` directory.
