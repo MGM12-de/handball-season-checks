@@ -86,5 +86,6 @@
   "promotionPlayoff": "Aufstiegsrelegation",
   "relegationPlayoff": "Abstiegsrelegation",
   "ranks": "Plätze",
-  "forcedRelegation": "Zwangsabsteiger"
+  "forcedRelegation": "Zwangsabsteiger",
+  "withdrawn": "Zurückgezogen"
 }

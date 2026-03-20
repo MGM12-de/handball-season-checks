@@ -86,5 +86,6 @@
   "promotionPlayoff": "promotion playoff",
   "relegationPlayoff": "relegation playoff",
   "ranks": "Ranks",
-  "forcedRelegation": "Forced Relegation"
+  "forcedRelegation": "Forced Relegation",
+  "withdrawn": "Withdrawn"
 }

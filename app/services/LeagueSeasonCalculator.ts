@@ -122,11 +122,29 @@ export class LeagueSeasonCalculator {
         const directRelegatedPerTable = Math.floor(totalRelegatedCount / tableCount)
         const relegationPlayoffSpots = totalRelegatedCount % tableCount
 
+        // Detect withdrawn teams: 0 games played while most teams in the table have already played.
+        const withdrawnNames = new Set<string>()
+        for (const table of tables) {
+            const playedCount = table.filter(r => (r.games as number ?? 0) > 0).length
+            if (playedCount > table.length / 2) {
+                for (const row of table) {
+                    if ((row.games as number ?? 0) === 0)
+                        withdrawnNames.add(row.team?.name ?? '')
+                }
+            }
+        }
+
         const combinedPromoted: TableRow[] = []
         const combinedPromotionPlayoff: TableRow[] = []
         const combinedRelegated: TableRow[] = []
         const combinedRelegationPlayoff: TableRow[] = []
         const relegationZoneSet = new Set<TableRow>()
+
+        const withFlags = (row: TableRow, extra?: Partial<TableRow>): TableRow => ({
+            ...row,
+            withdrawn: withdrawnNames.has(row.team?.name ?? ''),
+            ...extra,
+        })
 
         for (const table of tables) {
             const relegationStartIndex = Math.max(table.length - directRelegatedPerTable, 0)
@@ -134,17 +152,17 @@ export class LeagueSeasonCalculator {
 
             table.forEach((row, index) => {
                 if (index < directPromotedPerTable) {
-                    combinedPromoted.push(row)
+                    combinedPromoted.push(withFlags(row))
                 }
                 else if (promotionPlayoffSpots > 0 && index === directPromotedPerTable) {
-                    combinedPromotionPlayoff.push(row)
+                    combinedPromotionPlayoff.push(withFlags(row))
                 }
                 else if (index >= relegationStartIndex) {
-                    combinedRelegated.push({ ...row, relegated: true })
+                    combinedRelegated.push(withFlags(row, { relegated: true }))
                     relegationZoneSet.add(row)
                 }
                 else if (relegationPlayoffSpots > 0 && index === relegationPlayoffIndex) {
-                    combinedRelegationPlayoff.push(row)
+                    combinedRelegationPlayoff.push(withFlags(row))
                     relegationZoneSet.add(row)
                 }
             })
@@ -154,7 +172,7 @@ export class LeagueSeasonCalculator {
         // the lower-ranked team in this league is forced down too.
         const forcedRelegations: TableRow[] = forcedRelegationTeams
             .filter(row => !relegationZoneSet.has(row))
-            .map(row => ({ ...row, relegated: true }))
+            .map(row => withFlags(row, { relegated: true }))
 
         return {
             title: config.title,

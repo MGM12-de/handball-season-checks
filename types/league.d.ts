@@ -24,6 +24,7 @@ export interface TableRow {
     }
     promoted?: boolean
     relegated?: boolean
+    withdrawn?: boolean
     [key: string]: unknown
 }
 

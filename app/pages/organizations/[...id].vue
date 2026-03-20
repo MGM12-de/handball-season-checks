@@ -35,6 +35,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
+                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
+                                {{ t('withdrawn') }}
+                            </UBadge>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
@@ -57,6 +60,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
+                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
+                                {{ t('withdrawn') }}
+                            </UBadge>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
@@ -82,6 +88,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                                 size="md">
                                 {{ t('forcedRelegation') }}
                             </UBadge>
+                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
+                                {{ t('withdrawn') }}
+                            </UBadge>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
@@ -104,6 +113,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
+                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
+                                {{ t('withdrawn') }}
+                            </UBadge>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
