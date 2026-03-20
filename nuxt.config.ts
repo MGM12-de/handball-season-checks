@@ -5,7 +5,6 @@ const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test'
 
 // Always include test-utils; exclude PWA during tests to avoid virtual module issues
 const modulesList = [
-  '@nuxt/hints',
   '@nuxt/test-utils/module',
   '@nuxt/content',
   '@nuxt/ui',
