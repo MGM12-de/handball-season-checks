@@ -1,5 +1,7 @@
 import type { LeagueConfig, LeagueResult, OrganizationObject, TableRow, TeamOrganization } from '~~/types/league'
 
+const TEAM_SUFFIX_REGEXP = /\s+(I{2,3}|IV|VI{0,3}|IX|XX?|[2-9])$/
+
 interface RawLeague {
     config: LeagueConfig
     tables: TableRow[][]
@@ -44,7 +46,13 @@ export class LeagueSeasonCalculator {
                 : this.computeExtraRelegations(sorted, results, extraRelegationsTracker, i)
 
             extraRelegationsTracker.push(extra)
-            results.push(this.computeLeagueResult(sorted[i]!.config, sorted[i]!.tables, extra))
+
+            const allPrevRelegated = i > 0
+                ? [...results[i - 1]!.relegated, ...results[i - 1]!.forcedRelegations]
+                : []
+            const forcedRelegationTeams = this.findForcedRelegationTeams(allPrevRelegated, sorted[i]!.tables)
+
+            results.push(this.computeLeagueResult(sorted[i]!.config, sorted[i]!.tables, extra, forcedRelegationTeams))
         }
 
         return results
@@ -59,9 +67,10 @@ export class LeagueSeasonCalculator {
         const current = sorted[i]!
         const prev = sorted[i - 1]!
         const prevResult = results[i - 1]!
+        const allPrevRelegated = [...prevResult.relegated, ...prevResult.forcedRelegations]
 
         if (prev.config.organization !== current.config.organization) {
-            return prevResult.relegated.filter((row) => {
+            return allPrevRelegated.filter((row) => {
                 const orgs = row.team?.organizations ?? []
                 return orgs.some(org => LeagueSeasonCalculator.matchesOrganization(org, current.config.organization))
             }).length
@@ -70,7 +79,41 @@ export class LeagueSeasonCalculator {
         return (extraRelegationsTracker[i - 1] ?? 0) + prevResult.relegationPlayoffSpots
     }
 
-    private computeLeagueResult(config: LeagueConfig, tables: TableRow[][], extraRelegations: number): LeagueResult {
+    /**
+     * Finds teams in the current league that belong to the same club as a relegated team
+     * from the league above and are therefore forced to relegate (n-th team rule).
+     */
+    private findForcedRelegationTeams(prevAllRelegated: TableRow[], currentTables: TableRow[][]): TableRow[] {
+        const forced = new Map<string, TableRow>()
+
+        for (const prevRow of prevAllRelegated) {
+            const prevClubName = LeagueSeasonCalculator.extractClubName(prevRow.team?.name ?? '')
+            if (!prevClubName)
+                continue
+
+            for (const table of currentTables) {
+                for (const row of table) {
+                    const rowClubName = LeagueSeasonCalculator.extractClubName(row.team?.name ?? '')
+                    const rowTeamName = row.team?.name ?? ''
+                    if (rowClubName === prevClubName && rowTeamName !== (prevRow.team?.name ?? '') && !forced.has(rowTeamName)) {
+                        forced.set(rowTeamName, row)
+                    }
+                }
+            }
+        }
+
+        return [...forced.values()]
+    }
+
+    /**
+     * Strips the team-number suffix (2, 3, II, III, …) from a team name to get the base club name.
+     * Examples: "SV Example 2" → "SV Example", "SV Example III" → "SV Example".
+     */
+    private static extractClubName(teamName: string): string {
+        return teamName.replace(TEAM_SUFFIX_REGEXP, '').trim()
+    }
+
+    private computeLeagueResult(config: LeagueConfig, tables: TableRow[][], extraRelegations: number, forcedRelegationTeams: TableRow[] = []): LeagueResult {
         const tableCount = Math.max(tables.length, 1)
         const totalRelegatedCount = config.relegated > 0 ? config.relegated + extraRelegations : 0
 
@@ -83,6 +126,7 @@ export class LeagueSeasonCalculator {
         const combinedPromotionPlayoff: TableRow[] = []
         const combinedRelegated: TableRow[] = []
         const combinedRelegationPlayoff: TableRow[] = []
+        const relegationZoneSet = new Set<TableRow>()
 
         for (const table of tables) {
             const relegationStartIndex = Math.max(table.length - directRelegatedPerTable, 0)
@@ -97,12 +141,20 @@ export class LeagueSeasonCalculator {
                 }
                 else if (index >= relegationStartIndex) {
                     combinedRelegated.push({ ...row, relegated: true })
+                    relegationZoneSet.add(row)
                 }
                 else if (relegationPlayoffSpots > 0 && index === relegationPlayoffIndex) {
                     combinedRelegationPlayoff.push(row)
+                    relegationZoneSet.add(row)
                 }
             })
         }
+
+        // Apply the n-th team rule: if a higher-ranked team from the same club is relegated,
+        // the lower-ranked team in this league is forced down too.
+        const forcedRelegations: TableRow[] = forcedRelegationTeams
+            .filter(row => !relegationZoneSet.has(row))
+            .map(row => ({ ...row, relegated: true }))
 
         return {
             title: config.title,
@@ -112,6 +164,7 @@ export class LeagueSeasonCalculator {
             relegated: combinedRelegated,
             relegationPlayoff: combinedRelegationPlayoff,
             relegationPlayoffSpots,
+            forcedRelegations,
             organization: config.organization,
         }
     }

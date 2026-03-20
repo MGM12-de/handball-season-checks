@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
+import type { LeagueConfig, OrganizationListItem, TableRow } from '~~/types/league'
 import organizationsIndex from '~~/content/organizations/index.json'
 import { LeagueSeasonCalculator } from '~/services/LeagueSeasonCalculator'
-import type { LeagueConfig, OrganizationListItem, TableRow } from '~~/types/league'
 
 export function useOrganizationLeagues(organizationId: Ref<string>) {
     const organizationName = computed(() => {

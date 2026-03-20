@@ -66,17 +66,22 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 </LazyUPageGrid>
             </div>
 
-            <div v-if="league.relegated.length" class="space-y-2">
+            <div v-if="league.relegated.length || league.forcedRelegations.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
-                    {{ t('relegated') }} ({{ league.relegated.length }} {{ t('teams') }})
+                    {{ t('relegated') }} ({{ league.relegated.length + league.forcedRelegations.length }} {{ t('teams')
+                    }})
                 </h3>
                 <LazyUPageGrid>
-                    <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
-                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="error">
+                    <UPageCard v-for="(row, index) in [...league.relegated, ...league.forcedRelegations]"
+                        :key="`r-${index}`" :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse
+                        highlight highlight-color="error">
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
+                            <UBadge v-if="league.forcedRelegations.includes(row)" color="error" variant="subtle"
+                                size="md">
+                                {{ t('forcedRelegation') }}
+                            </UBadge>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}

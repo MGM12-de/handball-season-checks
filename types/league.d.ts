@@ -35,5 +35,6 @@ export interface LeagueResult {
     relegated: TableRow[]
     relegationPlayoff: TableRow[]
     relegationPlayoffSpots: number
+    forcedRelegations: TableRow[]
     organization: string
 }
