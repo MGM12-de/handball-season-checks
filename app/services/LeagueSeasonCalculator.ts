@@ -144,7 +144,10 @@ export class LeagueSeasonCalculator {
         const combinedRelegationPlayoff: TableRow[] = []
         const rowToTableIndex = new Map<TableRow, number>()
         const relegatedByTable = new Map<number, TableRow[]>()
-        const relegationZoneSet = new Set<TableRow>()
+        const sourceRowsInRelegation = new Set<TableRow>()
+        const sourceRowsInRelegationPlayoff = new Set<TableRow>()
+        const playoffByTable = new Map<number, TableRow>()
+        const sourceToPlayoffRow = new Map<TableRow, TableRow>()
 
         const withFlags = (row: TableRow, extra?: Partial<TableRow>): TableRow => ({
             ...row,
@@ -171,11 +174,14 @@ export class LeagueSeasonCalculator {
                     const relegatedInTable = relegatedByTable.get(tableIndex) ?? []
                     relegatedInTable.push(relegatedRow)
                     relegatedByTable.set(tableIndex, relegatedInTable)
-                    relegationZoneSet.add(row)
+                    sourceRowsInRelegation.add(row)
                 }
                 else if (relegationPlayoffSpots > 0 && index === relegationPlayoffIndex) {
-                    combinedRelegationPlayoff.push(withFlags(row))
-                    relegationZoneSet.add(row)
+                    const playoffRow = withFlags(row)
+                    combinedRelegationPlayoff.push(playoffRow)
+                    sourceRowsInRelegationPlayoff.add(row)
+                    playoffByTable.set(tableIndex, playoffRow)
+                    sourceToPlayoffRow.set(row, playoffRow)
                 }
             })
         }
@@ -186,14 +192,21 @@ export class LeagueSeasonCalculator {
         const forcedRelegations: TableRow[] = []
 
         for (const forcedSourceRow of forcedRelegationTeams) {
-            if (relegationZoneSet.has(forcedSourceRow))
+            if (sourceRowsInRelegation.has(forcedSourceRow))
                 continue
-
-            forcedRelegations.push(withFlags(forcedSourceRow, { relegated: true }))
 
             const tableIndex = rowToTableIndex.get(forcedSourceRow)
             if (tableIndex === undefined)
                 continue
+
+            const existingPlayoffRow = sourceToPlayoffRow.get(forcedSourceRow)
+            if (existingPlayoffRow) {
+                const existingPlayoffIndex = combinedRelegationPlayoff.indexOf(existingPlayoffRow)
+                if (existingPlayoffIndex >= 0)
+                    combinedRelegationPlayoff.splice(existingPlayoffIndex, 1)
+            }
+
+            forcedRelegations.push(withFlags(forcedSourceRow, { relegated: true }))
 
             const relegatedInSameTable = relegatedByTable.get(tableIndex) ?? []
             const reprievedRow = relegatedInSameTable.shift()
@@ -204,6 +217,20 @@ export class LeagueSeasonCalculator {
             const reprievedIndex = combinedRelegated.indexOf(reprievedRow)
             if (reprievedIndex >= 0)
                 combinedRelegated.splice(reprievedIndex, 1)
+
+            if (relegationPlayoffSpots > 0) {
+                const currentPlayoff = playoffByTable.get(tableIndex)
+                if (currentPlayoff) {
+                    const playoffIndex = combinedRelegationPlayoff.indexOf(currentPlayoff)
+                    if (playoffIndex >= 0)
+                        combinedRelegationPlayoff.splice(playoffIndex, 1, reprievedRow)
+                    playoffByTable.set(tableIndex, reprievedRow)
+                }
+                else {
+                    combinedRelegationPlayoff.push(reprievedRow)
+                    playoffByTable.set(tableIndex, reprievedRow)
+                }
+            }
         }
 
         return {
