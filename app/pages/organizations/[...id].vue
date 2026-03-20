@@ -24,23 +24,25 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 {{ league.title }}
             </h2>
 
-            <LazyUPageGrid v-if="league.promoted.length" class="space-y-2">
+            <div v-if="league.promoted.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
                     Aufsteiger
                 </h3>
-                <UPageCard v-for="(row, index) in league.promoted" :key="`p-${index}`"
-                    :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
-                    highlight-color="success">
-                    <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                <LazyUPageGrid>
+                    <UPageCard v-for="(row, index) in league.promoted" :key="`p-${index}`"
+                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        highlight-color="success">
+                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
 
-                    <template #footer>
-                        <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
-                            :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                            {{ n.name }}
-                        </UBadge>
-                    </template>
-                </UPageCard>
-            </LazyUPageGrid>
+                        <template #footer>
+                            <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
+                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
+                                {{ n.name }}
+                            </UBadge>
+                        </template>
+                    </UPageCard>
+                </LazyUPageGrid>
+            </div>
 
             <div v-if="league.promotionPlayoff.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
@@ -63,23 +65,25 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 </LazyUPageGrid>
             </div>
 
-            <LazyUPageGrid v-if="league.relegated.length" class="space-y-2">
+            <div v-if="league.relegated.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
                     Absteiger
                 </h3>
-                <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
-                    :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
-                    highlight-color="error">
-                    <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                <LazyUPageGrid>
+                    <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
+                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        highlight-color="error">
+                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
 
-                    <template #footer>
-                        <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
-                            :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                            {{ n.name }}
-                        </UBadge>
-                    </template>
-                </UPageCard>
-            </LazyUPageGrid>
+                        <template #footer>
+                            <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
+                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
+                                {{ n.name }}
+                            </UBadge>
+                        </template>
+                    </UPageCard>
+                </LazyUPageGrid>
+            </div>
 
             <div v-if="league.relegationPlayoff.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
