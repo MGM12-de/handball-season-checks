@@ -78,5 +78,12 @@
   "goalsPerGame": "Tore pro Spiel",
   "filter": "Filtern ...",
   "ascending": "Aufsteigend",
-  "descending": "Absteigend"
+  "descending": "Absteigend",
+  "promoted": "Aufsteiger",
+  "unknownTeam": "unbekanntes team",
+  "teamLogo": "Teamlogo",
+  "relegated": "Absteiger",
+  "promotionPlayoff": "Aufstiegsrelegation",
+  "relegationPlayoff": "Abstiegsrelegation",
+  "ranks": "Plätze"
 }

@@ -2,7 +2,7 @@
 import { LeagueSeasonCalculator } from '~/services/LeagueSeasonCalculator'
 
 const { getForeignOrganizations } = LeagueSeasonCalculator
-
+const { t } = useI18n()
 const route = useRoute()
 
 const organizationId = computed(() => {
@@ -26,13 +26,13 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
 
             <div v-if="league.promoted.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
-                    Aufsteiger
+                    {{ t('promoted') }} ({{ league.promoted.length }} {{ t('teams') }})
                 </h3>
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.promoted" :key="`p-${index}`"
-                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
                         highlight-color="success">
-                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
@@ -46,14 +46,15 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
 
             <div v-if="league.promotionPlayoff.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
-                    Aufstiegsrelegation ({{ league.promotionPlayoffSpots }} Platz<span
-                        v-if="league.promotionPlayoffSpots !== 1">e</span>)
+                    {{ t('promotionPlayoff') }} ({{ league.promotionPlayoffSpots }} <span
+                        v-if="league.promotionPlayoffSpots !== 1">{{ t('ranks') }}</span><span v-else>{{ t('rank')
+                        }}</span>)
                 </h3>
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.promotionPlayoff" :key="`pr-${index}`"
-                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
                         highlight-color="warning">
-                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
@@ -67,13 +68,13 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
 
             <div v-if="league.relegated.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
-                    Absteiger
+                    {{ t('relegated') }} ({{ league.relegated.length }} {{ t('teams') }})
                 </h3>
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.relegated" :key="`r-${index}`"
-                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
                         highlight-color="error">
-                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
@@ -87,14 +88,15 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
 
             <div v-if="league.relegationPlayoff.length" class="space-y-2">
                 <h3 class="text-base font-semibold text-warning-600">
-                    Abstiegsrelegation ({{ league.relegationPlayoffSpots }} Platz<span
-                        v-if="league.relegationPlayoffSpots !== 1">e</span>)
+                    {{ t('relegationPlayoff') }} ({{ league.relegationPlayoffSpots }} <span
+                        v-if="league.relegationPlayoffSpots !== 1">{{ t('ranks') }}</span><span v-else>{{ t('rank')
+                        }}</span>)
                 </h3>
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.relegationPlayoff" :key="`rr-${index}`"
-                        :title="row.team?.name || 'Unknown Team'" orientation="horizontal" reverse highlight
+                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
                         highlight-color="warning">
-                        <img :src="row.team?.logo" alt="Team Logo" class="w-16 h-16 object-contain">
+                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"

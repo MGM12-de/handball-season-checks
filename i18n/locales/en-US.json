@@ -78,5 +78,12 @@
   "goalsPerGame": "Goals Per Game",
   "filter": "Filter ...",
   "ascending": "Asc",
-  "descending": "Desc"
+  "descending": "Desc",
+  "promoted": "Promoted",
+  "unknownTeam": "unknown team",
+  "teamLogo": "team logo",
+  "relegated": "Relegated",
+  "promotionPlayoff": "promotion playoff",
+  "relegationPlayoff": "relegation playoff",
+  "ranks": "Ranks"
 }
