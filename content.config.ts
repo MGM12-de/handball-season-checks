@@ -8,9 +8,10 @@ export default defineContentConfig({
             source: 'organizations/**/*.json',
             schema: z.object({
                 name: z.string(),
+                parent: z.string().optional(),
                 clubs: z.array(z.object({
                     name: z.string(),
-                })),
+                })).optional(),
             }),
         }),
         leagues: defineCollection({
