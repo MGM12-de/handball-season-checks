@@ -31,7 +31,7 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.promoted" :key="`p-${index}`"
                         :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="success">
+                        highlight-color="success" spotlight-color="success" spotlight>
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
@@ -56,7 +56,7 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.promotionPlayoff" :key="`pr-${index}`"
                         :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="warning">
+                        highlight-color="warning" spotlight-color="warning" spotlight>
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
@@ -80,7 +80,7 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in [...league.relegated, ...league.forcedRelegations]"
                         :key="`r-${index}`" :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse
-                        highlight highlight-color="error">
+                        highlight highlight-color="error" spotlight-color="error" spotlight>
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
@@ -109,7 +109,7 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                 <LazyUPageGrid>
                     <UPageCard v-for="(row, index) in league.relegationPlayoff" :key="`rr-${index}`"
                         :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="warning">
+                        highlight-color="warning" spotlight-color="warning" spotlight>
                         <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
 
                         <template #footer>
