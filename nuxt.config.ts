@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': { prerender: true },
+    '/organizations/bwhv-nf': { prerender: true },
     // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
     '/api/dhb/club/**': {
       swr: 60 * 60 * 24,
