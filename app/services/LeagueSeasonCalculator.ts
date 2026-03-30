@@ -150,8 +150,6 @@ export class LeagueSeasonCalculator {
         const sourceRowsInPromotionPlayoff = new Set<TableRow>()
         const playoffByTable = new Map<number, TableRow>()
         const sourceToPlayoffRow = new Map<TableRow, TableRow>()
-        const sourceToPromotedRow = new Map<TableRow, TableRow>()
-        const sourceToPromotionPlayoffRow = new Map<TableRow, TableRow>()
 
         const withFlags = (row: TableRow, extra?: Partial<TableRow>): TableRow => ({
             ...row,
@@ -170,13 +168,11 @@ export class LeagueSeasonCalculator {
                     const promotedRow = withFlags(row)
                     combinedPromoted.push(promotedRow)
                     sourceRowsInPromotion.add(row)
-                    sourceToPromotedRow.set(row, promotedRow)
                 }
                 else if (promotionPlayoffSpots > 0 && index === directPromotedPerTable) {
                     const promotionPlayoffRow = withFlags(row)
                     combinedPromotionPlayoff.push(promotionPlayoffRow)
                     sourceRowsInPromotionPlayoff.add(row)
-                    sourceToPromotionPlayoffRow.set(row, promotionPlayoffRow)
                 }
                 else if (index >= relegationStartIndex) {
                     const relegatedRow = withFlags(row, { relegated: true })
@@ -202,26 +198,10 @@ export class LeagueSeasonCalculator {
         const forcedRelegations: TableRow[] = []
 
         for (const forcedSourceRow of forcedRelegationTeams) {
-            // If a team would be promoted (directly or via playoff), forced relegation cancels out.
-            if (sourceRowsInPromotion.has(forcedSourceRow)) {
-                const promotedRow = sourceToPromotedRow.get(forcedSourceRow)
-                if (promotedRow) {
-                    const promotedIndex = combinedPromoted.indexOf(promotedRow)
-                    if (promotedIndex >= 0)
-                        combinedPromoted.splice(promotedIndex, 1)
-                }
+            // A team that would be promoted cannot be a forced relegation.
+            // It stays listed as promoted/promotion-playoff.
+            if (sourceRowsInPromotion.has(forcedSourceRow) || sourceRowsInPromotionPlayoff.has(forcedSourceRow))
                 continue
-            }
-
-            if (sourceRowsInPromotionPlayoff.has(forcedSourceRow)) {
-                const promotionPlayoffRow = sourceToPromotionPlayoffRow.get(forcedSourceRow)
-                if (promotionPlayoffRow) {
-                    const promotionPlayoffIndex = combinedPromotionPlayoff.indexOf(promotionPlayoffRow)
-                    if (promotionPlayoffIndex >= 0)
-                        combinedPromotionPlayoff.splice(promotionPlayoffIndex, 1)
-                }
-                continue
-            }
 
             if (sourceRowsInRelegation.has(forcedSourceRow))
                 continue
