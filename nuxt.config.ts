@@ -84,6 +84,10 @@ export default defineNuxtConfig({
       deployConfig: true,
       nodeCompat: true,
     },
+    prerender: {
+      concurrency: 1,
+      interval: 250,
+    },
   },
   i18n,
   pwa,
