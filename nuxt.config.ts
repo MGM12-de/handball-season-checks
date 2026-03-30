@@ -42,6 +42,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/organizations/bwhv-nf': { prerender: true },
+    '/organizations/bwhv-srm': { prerender: true },
     // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
     '/api/dhb/club/**': {
       swr: 60 * 60 * 24,
@@ -83,6 +84,10 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
+    },
+    prerender: {
+      concurrency: 1,
+      interval: 250,
     },
   },
   i18n,

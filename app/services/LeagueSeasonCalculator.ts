@@ -146,6 +146,8 @@ export class LeagueSeasonCalculator {
         const relegatedByTable = new Map<number, TableRow[]>()
         const sourceRowsInRelegation = new Set<TableRow>()
         const sourceRowsInRelegationPlayoff = new Set<TableRow>()
+        const sourceRowsInPromotion = new Set<TableRow>()
+        const sourceRowsInPromotionPlayoff = new Set<TableRow>()
         const playoffByTable = new Map<number, TableRow>()
         const sourceToPlayoffRow = new Map<TableRow, TableRow>()
 
@@ -163,10 +165,14 @@ export class LeagueSeasonCalculator {
                 rowToTableIndex.set(row, tableIndex)
 
                 if (index < directPromotedPerTable) {
-                    combinedPromoted.push(withFlags(row))
+                    const promotedRow = withFlags(row)
+                    combinedPromoted.push(promotedRow)
+                    sourceRowsInPromotion.add(row)
                 }
                 else if (promotionPlayoffSpots > 0 && index === directPromotedPerTable) {
-                    combinedPromotionPlayoff.push(withFlags(row))
+                    const promotionPlayoffRow = withFlags(row)
+                    combinedPromotionPlayoff.push(promotionPlayoffRow)
+                    sourceRowsInPromotionPlayoff.add(row)
                 }
                 else if (index >= relegationStartIndex) {
                     const relegatedRow = withFlags(row, { relegated: true })
@@ -192,6 +198,11 @@ export class LeagueSeasonCalculator {
         const forcedRelegations: TableRow[] = []
 
         for (const forcedSourceRow of forcedRelegationTeams) {
+            // A team that would be promoted cannot be a forced relegation.
+            // It stays listed as promoted/promotion-playoff.
+            if (sourceRowsInPromotion.has(forcedSourceRow) || sourceRowsInPromotionPlayoff.has(forcedSourceRow))
+                continue
+
             if (sourceRowsInRelegation.has(forcedSourceRow))
                 continue
 
