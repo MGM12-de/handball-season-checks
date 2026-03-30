@@ -23,6 +23,7 @@ export interface TableRow {
         organizations?: TeamOrganization[]
     }
     promoted?: boolean
+    promotionBlocked?: boolean
     relegated?: boolean
     withdrawn?: boolean
     [key: string]: unknown

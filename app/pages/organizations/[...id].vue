@@ -39,6 +39,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
                             </UBadge>
+                            <UBadge v-if="row.promotionBlocked" color="warning" variant="subtle" size="md">
+                                {{ t('promotionBlocked') }}
+                            </UBadge>
                             <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
                                 {{ t('withdrawn') }}
                             </UBadge>
@@ -63,6 +66,9 @@ const { leagues, organizationName } = useOrganizationLeagues(organizationId)
                             <UBadge v-for="n in getForeignOrganizations(row.team?.organizations, league.organization)"
                                 :key="n.id || n.name" color="primary" class="ml-auto" size="md">
                                 {{ n.name }}
+                            </UBadge>
+                            <UBadge v-if="row.promotionBlocked" color="warning" variant="subtle" size="md">
+                                {{ t('promotionBlocked') }}
                             </UBadge>
                             <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
                                 {{ t('withdrawn') }}
