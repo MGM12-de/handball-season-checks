@@ -9,6 +9,8 @@ interface RawLeague {
 }
 
 export class LeagueSeasonCalculator {
+  private static readonly clubNameCache = new Map<string, string>()
+
   private readonly organizationScope: Set<string>
 
   constructor(organizationId: string) {
@@ -21,11 +23,11 @@ export class LeagueSeasonCalculator {
     if (!orgId)
       return scope
 
-    let current = orgId
-    scope.add(current)
+    const parts = orgId.split('-')
+    let current = ''
 
-    while (current.includes('-')) {
-      current = current.slice(0, current.lastIndexOf('-'))
+    for (const part of parts) {
+      current = current ? `${current}-${part}` : part
       scope.add(current)
     }
 
@@ -92,19 +94,34 @@ export class LeagueSeasonCalculator {
   private findForcedRelegationTeams(prevAllRelegated: TableRow[], currentTables: TableRow[][]): TableRow[] {
     const forced = new Map<string, TableRow>()
 
+    const rowsByClubName = new Map<string, TableRow[]>()
+    for (const table of currentTables) {
+      for (const row of table) {
+        const rowTeamName = row.team?.name ?? ''
+        if (!rowTeamName)
+          continue
+
+        const rowClubName = LeagueSeasonCalculator.extractClubName(rowTeamName)
+        if (!rowClubName)
+          continue
+
+        const rows = rowsByClubName.get(rowClubName) ?? []
+        rows.push(row)
+        rowsByClubName.set(rowClubName, rows)
+      }
+    }
+
     for (const prevRow of prevAllRelegated) {
-      const prevClubName = LeagueSeasonCalculator.extractClubName(prevRow.team?.name ?? '')
+      const prevTeamName = prevRow.team?.name ?? ''
+      const prevClubName = LeagueSeasonCalculator.extractClubName(prevTeamName)
       if (!prevClubName)
         continue
 
-      for (const table of currentTables) {
-        for (const row of table) {
-          const rowClubName = LeagueSeasonCalculator.extractClubName(row.team?.name ?? '')
-          const rowTeamName = row.team?.name ?? ''
-          if (rowClubName === prevClubName && rowTeamName !== (prevRow.team?.name ?? '') && !forced.has(rowTeamName)) {
-            forced.set(rowTeamName, row)
-          }
-        }
+      const candidates = rowsByClubName.get(prevClubName) ?? []
+      for (const row of candidates) {
+        const rowTeamName = row.team?.name ?? ''
+        if (rowTeamName && rowTeamName !== prevTeamName && !forced.has(rowTeamName))
+          forced.set(rowTeamName, row)
       }
     }
 
@@ -137,14 +154,16 @@ export class LeagueSeasonCalculator {
     ].map(row => row.team?.name ?? '').filter(Boolean))
     const occupiedClubNames = new Set<string>()
 
-    for (const row of higherLeague.tables.flat()) {
-      const teamName = row.team?.name ?? ''
-      if (leavingTeamNames.has(teamName))
-        continue
+    for (const table of higherLeague.tables) {
+      for (const row of table) {
+        const teamName = row.team?.name ?? ''
+        if (leavingTeamNames.has(teamName))
+          continue
 
-      const clubName = LeagueSeasonCalculator.extractClubName(teamName)
-      if (clubName)
-        occupiedClubNames.add(clubName)
+        const clubName = LeagueSeasonCalculator.extractClubName(teamName)
+        if (clubName)
+          occupiedClubNames.add(clubName)
+      }
     }
 
     for (const row of this.getIncomingRelegations(sorted, results, higherLeagueIndex)) {
@@ -179,13 +198,24 @@ export class LeagueSeasonCalculator {
    * Examples: "SV Example 2" → "SV Example", "SV Example III" → "SV Example".
    */
   private static extractClubName(teamName: string): string {
-    const parts = teamName.trim().split(WHITESPACE_REGEXP)
+    const normalizedTeamName = teamName.trim()
+    if (!normalizedTeamName)
+      return ''
+
+    const cachedClubName = this.clubNameCache.get(normalizedTeamName)
+    if (cachedClubName !== undefined)
+      return cachedClubName
+
+    const parts = normalizedTeamName.split(WHITESPACE_REGEXP)
     const suffix = parts.at(-1)
 
-    if (parts.length > 1 && suffix && TEAM_SUFFIXES.has(suffix))
-      return parts.slice(0, -1).join(' ')
+    const clubName = (parts.length > 1 && suffix && TEAM_SUFFIXES.has(suffix))
+      ? parts.slice(0, -1).join(' ')
+      : normalizedTeamName
 
-    return teamName.trim()
+    this.clubNameCache.set(normalizedTeamName, clubName)
+
+    return clubName
   }
 
   private computeLeagueResult(
@@ -223,7 +253,6 @@ export class LeagueSeasonCalculator {
     const rowToTableIndex = new Map<TableRow, number>()
     const relegatedByTable = new Map<number, TableRow[]>()
     const sourceRowsInRelegation = new Set<TableRow>()
-    const sourceRowsInRelegationPlayoff = new Set<TableRow>()
     const sourceRowsInPromotion = new Set<TableRow>()
     const sourceRowsInPromotionPlayoff = new Set<TableRow>()
     const playoffByTable = new Map<number, TableRow>()
@@ -263,7 +292,6 @@ export class LeagueSeasonCalculator {
         else if (relegationPlayoffSpots > 0 && index === relegationPlayoffIndex) {
           const playoffRow = withFlags(row)
           combinedRelegationPlayoff.push(playoffRow)
-          sourceRowsInRelegationPlayoff.add(row)
           playoffByTable.set(tableIndex, playoffRow)
           sourceToPlayoffRow.set(row, playoffRow)
         }
