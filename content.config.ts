@@ -23,6 +23,7 @@ export default defineContentConfig({
                 organization: z.string(),
                 sort: z.number(),
                 promoted: z.number(),
+                promotionPlayoff: z.number().optional(),
                 relegated: z.number(),
             }),
         }),

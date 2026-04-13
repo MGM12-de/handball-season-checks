@@ -3,6 +3,17 @@ import type { LeagueConfig, LeagueResult, OrganizationObject, TableRow, TeamOrga
 const TEAM_SUFFIXES = new Set(['2', '3', '4', '5', '6', '7', '8', '9', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
 const WHITESPACE_REGEXP = /\s+/
 
+function distributeSpots(total: number, bucketCount: number): number[] {
+  if (bucketCount <= 0)
+    return []
+
+  const safeTotal = Math.max(total, 0)
+  const base = Math.floor(safeTotal / bucketCount)
+  const remainder = safeTotal % bucketCount
+
+  return Array.from({ length: bucketCount }, (_, index) => base + (index < remainder ? 1 : 0))
+}
+
 interface RawLeague {
   config: LeagueConfig
   tables: TableRow[][]
@@ -228,8 +239,15 @@ export class LeagueSeasonCalculator {
     const tableCount = Math.max(tables.length, 1)
     const totalRelegatedCount = config.relegated > 0 ? config.relegated + extraRelegations : 0
 
-    const directPromotedPerTable = Math.floor(config.promoted / tableCount)
-    const promotionPlayoffSpots = config.promoted % tableCount
+    const hasExplicitPromotionPlayoff = typeof config.promotionPlayoff === 'number'
+    const directPromotedCount = hasExplicitPromotionPlayoff
+      ? Math.max(config.promoted, 0)
+      : Math.floor(config.promoted / tableCount) * tableCount
+    const promotionPlayoffSpots = hasExplicitPromotionPlayoff
+      ? Math.max(config.promotionPlayoff ?? 0, 0)
+      : config.promoted % tableCount
+    const directPromotedByTable = distributeSpots(directPromotedCount, tableCount)
+    const promotionPlayoffByTable = distributeSpots(promotionPlayoffSpots, tableCount)
     const directRelegatedPerTable = Math.floor(totalRelegatedCount / tableCount)
     const relegationPlayoffSpots = totalRelegatedCount % tableCount
 
@@ -265,18 +283,21 @@ export class LeagueSeasonCalculator {
     })
 
     for (const [tableIndex, table] of tables.entries()) {
+      const directPromotedInTable = directPromotedByTable[tableIndex] ?? 0
+      const promotionPlayoffInTable = promotionPlayoffByTable[tableIndex] ?? 0
+      const promotionPlayoffEndIndex = directPromotedInTable + promotionPlayoffInTable
       const relegationStartIndex = Math.max(table.length - directRelegatedPerTable, 0)
       const relegationPlayoffIndex = relegationStartIndex - 1
 
       table.forEach((row, index) => {
         rowToTableIndex.set(row, tableIndex)
 
-        if (index < directPromotedPerTable) {
+        if (index < directPromotedInTable) {
           const promotedRow = withFlags(row, blockedPromotionTeamNames.has(row.team?.name ?? '') ? { promotionBlocked: true } : undefined)
           combinedPromoted.push(promotedRow)
           sourceRowsInPromotion.add(row)
         }
-        else if (promotionPlayoffSpots > 0 && index === directPromotedPerTable) {
+        else if (promotionPlayoffInTable > 0 && index < promotionPlayoffEndIndex) {
           const promotionPlayoffRow = withFlags(row, blockedPromotionTeamNames.has(row.team?.name ?? '') ? { promotionBlocked: true } : undefined)
           combinedPromotionPlayoff.push(promotionPlayoffRow)
           sourceRowsInPromotionPlayoff.add(row)

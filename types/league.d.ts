@@ -13,6 +13,7 @@ export interface LeagueConfig {
     organization: string
     sort: number
     promoted: number
+    promotionPlayoff?: number
     relegated: number
 }
 
