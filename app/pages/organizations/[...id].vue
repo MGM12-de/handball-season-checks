@@ -8,10 +8,13 @@ const combinedRelegationsCache = new WeakMap<LeagueResult, TableRow[]>()
 const forcedRelegationSetCache = new WeakMap<LeagueResult, Set<TableRow>>()
 
 const organizationId = computed(() => {
-  const idParam = route.params.id
-  const rawId = Array.isArray(idParam) ? idParam.join('-') : idParam
-  return typeof rawId === 'string' ? rawId : ''
+    const idParam = route.params.id
+    const rawId = Array.isArray(idParam) ? idParam.join('-') : idParam
+    return typeof rawId === 'string' ? rawId : ''
 })
+
+const selectedLeagueType = ref<'m' | 'f'>('m')
+
 
 const {
     leagues,
@@ -21,7 +24,13 @@ const {
     loadingError,
     totalLeagueCount,
     loadedLeagueCount,
-} = useOrganizationLeagues(organizationId)
+} = useOrganizationLeagues(organizationId, selectedLeagueType)
+
+const leagueTypeButtonLabel = computed(() => selectedLeagueType.value === 'm' ? 'Zu den Damen' : 'Zu den Herren')
+
+function toggleLeagueType() {
+    selectedLeagueType.value = selectedLeagueType.value === 'm' ? 'f' : 'm'
+}
 
 const loadingProgressPercent = computed(() => {
     if (!totalLeagueCount.value)
@@ -31,27 +40,27 @@ const loadingProgressPercent = computed(() => {
 })
 
 function getRowKey(prefix: string, row: TableRow, index: number): string {
-  return `${prefix}-${row.team?.name ?? index}`
+    return `${prefix}-${row.team?.name ?? index}`
 }
 
 function getCombinedRelegations(league: LeagueResult): TableRow[] {
-  const cachedRows = combinedRelegationsCache.get(league)
-  if (cachedRows)
-    return cachedRows
+    const cachedRows = combinedRelegationsCache.get(league)
+    if (cachedRows)
+        return cachedRows
 
-  const rows = [...league.relegated, ...league.forcedRelegations]
-  combinedRelegationsCache.set(league, rows)
-  return rows
+    const rows = [...league.relegated, ...league.forcedRelegations]
+    combinedRelegationsCache.set(league, rows)
+    return rows
 }
 
 function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
-  let forcedRows = forcedRelegationSetCache.get(league)
-  if (!forcedRows) {
-    forcedRows = new Set(league.forcedRelegations)
-    forcedRelegationSetCache.set(league, forcedRows)
-  }
+    let forcedRows = forcedRelegationSetCache.get(league)
+    if (!forcedRows) {
+        forcedRows = new Set(league.forcedRelegations)
+        forcedRelegationSetCache.set(league, forcedRows)
+    }
 
-  return forcedRows.has(row)
+    return forcedRows.has(row)
 }
 </script>
 
@@ -59,27 +68,16 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
     <UPageHeader :title="organizationName" />
 
     <UPageBody>
+        <UButton :label="leagueTypeButtonLabel" class="mb-6" @click="toggleLeagueType" />
         <div v-if="isLoadingLeagues && totalLeagueCount" class="mb-6 space-y-2">
-            <UProgress
-                :model-value="loadedLeagueCount"
-                :max="totalLeagueCount"
-                size="sm"
-                color="primary"
-                status
-            />
+            <UProgress :model-value="loadedLeagueCount" :max="totalLeagueCount" size="sm" color="primary" status />
             <p class="text-sm text-muted">
                 {{ loadedLeagueCount }} / {{ totalLeagueCount }} Ligen geladen ({{ loadingProgressPercent }}%)
             </p>
         </div>
 
-        <UAlert
-            v-if="loadingError"
-            color="error"
-            variant="subtle"
-            icon="i-lucide-alert-circle"
-            class="mb-6"
-            :title="String(loadingError)"
-        />
+        <UAlert v-if="loadingError" color="error" variant="subtle" icon="i-lucide-alert-circle" class="mb-6"
+            :title="String(loadingError)" />
 
         <div v-for="league in leagues" :key="league.title" class="mb-8 space-y-4">
             <h2 v-if="league.promoted.length || league.promotionPlayoff.length || league.relegated.length || league.relegationPlayoff.length"
@@ -92,13 +90,8 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                     {{ t('promoted') }} ({{ league.promoted.length }} {{ t('teams') }})
                 </h3>
                 <LazyUPageGrid>
-                    <TeamCard
-                        v-for="(row, index) in league.promoted"
-                        :key="getRowKey('p', row, index)"
-                        :row="row"
-                        :league-organization="league.organization"
-                        highlight-color="success"
-                    />
+                    <TeamCard v-for="(row, index) in league.promoted" :key="getRowKey('p', row, index)" :row="row"
+                        :league-organization="league.organization" highlight-color="success" />
                 </LazyUPageGrid>
             </div>
 
@@ -109,13 +102,8 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                         }}</span>)
                 </h3>
                 <LazyUPageGrid>
-                    <TeamCard
-                        v-for="(row, index) in league.promotionPlayoff"
-                        :key="getRowKey('pr', row, index)"
-                        :row="row"
-                        :league-organization="league.organization"
-                        highlight-color="warning"
-                    />
+                    <TeamCard v-for="(row, index) in league.promotionPlayoff" :key="getRowKey('pr', row, index)"
+                        :row="row" :league-organization="league.organization" highlight-color="warning" />
                 </LazyUPageGrid>
             </div>
 
@@ -125,14 +113,9 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                     }})
                 </h3>
                 <LazyUPageGrid>
-                    <TeamCard
-                        v-for="(row, index) in getCombinedRelegations(league)"
-                        :key="getRowKey('r', row, index)"
-                        :row="row"
-                        :league-organization="league.organization"
-                        highlight-color="error"
-                        :forced-relegation="isForcedRelegation(league, row)"
-                    />
+                    <TeamCard v-for="(row, index) in getCombinedRelegations(league)" :key="getRowKey('r', row, index)"
+                        :row="row" :league-organization="league.organization" highlight-color="error"
+                        :forced-relegation="isForcedRelegation(league, row)" />
                 </LazyUPageGrid>
             </div>
 
@@ -143,13 +126,8 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                         }}</span>)
                 </h3>
                 <LazyUPageGrid>
-                    <TeamCard
-                        v-for="(row, index) in league.relegationPlayoff"
-                        :key="getRowKey('rr', row, index)"
-                        :row="row"
-                        :league-organization="league.organization"
-                        highlight-color="warning"
-                    />
+                    <TeamCard v-for="(row, index) in league.relegationPlayoff" :key="getRowKey('rr', row, index)"
+                        :row="row" :league-organization="league.organization" highlight-color="warning" />
                 </LazyUPageGrid>
             </div>
         </div>

@@ -8,7 +8,14 @@ interface RawLeague {
     tables: TableRow[][]
 }
 
-export function useOrganizationLeagues(organizationId: Ref<string>) {
+function matchesLeagueType(config: LeagueConfig, type: 'm' | 'f'): boolean {
+    return config.ids.some((id) => {
+        const idLower = id.toLowerCase()
+        return idLower.includes(`.${type}-`) || idLower.includes(`/${type}-`)
+    })
+}
+
+export function useOrganizationLeagues(organizationId: Ref<string>, type: Ref<'m' | 'f'>) {
     const organizationName = computed(() => {
         const found = (organizationsIndex as OrganizationListItem[]).find(item => item.id === organizationId.value)
         return found?.name ?? organizationId.value
@@ -22,7 +29,7 @@ export function useOrganizationLeagues(organizationId: Ref<string>) {
     const loadedLeagueCount = ref(0)
     let requestCounter = 0
 
-    watch(organizationId, async () => {
+    watch([organizationId, type], async () => {
         const requestId = ++requestCounter
 
         leagues.value = []
@@ -37,6 +44,7 @@ export function useOrganizationLeagues(organizationId: Ref<string>) {
             const allConfigs = (await queryCollection('leagues').all()) as LeagueConfig[]
             const filteredConfigs = calculator
                 .filterConfigs(allConfigs)
+                .filter(config => matchesLeagueType(config, type.value))
                 .toSorted((a, b) => a.sort - b.sort)
 
             if (requestId !== requestCounter)
