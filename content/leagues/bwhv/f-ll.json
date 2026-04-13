@@ -1,0 +1,17 @@
+{
+  "title": "Landesliga",
+  "ids": [
+    "handball4all.baden-wuerttemberg.f-ll-1-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-2-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-3-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-4-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-5-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-6-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-7-bw_bwhv",
+    "handball4all.baden-wuerttemberg.f-ll-8-bw_bwhv"
+  ],
+  "organization": "bwhv",
+  "sort": 7,
+  "promoted": 12,
+  "relegated": 16
+}
