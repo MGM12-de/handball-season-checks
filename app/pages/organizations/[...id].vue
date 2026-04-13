@@ -3,6 +3,7 @@ import type { LeagueResult, TableRow } from '~~/types/league'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 
 const combinedRelegationsCache = new WeakMap<LeagueResult, TableRow[]>()
 const forcedRelegationSetCache = new WeakMap<LeagueResult, Set<TableRow>>()
@@ -13,7 +14,12 @@ const organizationId = computed(() => {
     return typeof rawId === 'string' ? rawId : ''
 })
 
-const selectedLeagueType = ref<'m' | 'f'>('m')
+function getLeagueTypeFromQuery(typeParam: unknown): 'm' | 'f' | undefined {
+    const rawType = Array.isArray(typeParam) ? typeParam[0] : typeParam
+    return rawType === 'm' || rawType === 'f' ? rawType : undefined
+}
+
+const selectedLeagueType = ref<'m' | 'f'>(getLeagueTypeFromQuery(route.query.type) ?? 'm')
 
 
 const {
@@ -31,6 +37,36 @@ const leagueTypeButtonLabel = computed(() => selectedLeagueType.value === 'm' ? 
 function toggleLeagueType() {
     selectedLeagueType.value = selectedLeagueType.value === 'm' ? 'f' : 'm'
 }
+
+watch(() => route.query.type, (typeParam) => {
+    const queryType = getLeagueTypeFromQuery(typeParam) ?? 'm'
+    if (queryType !== selectedLeagueType.value)
+        selectedLeagueType.value = queryType
+})
+
+watch(selectedLeagueType, (typeValue) => {
+    const queryType = getLeagueTypeFromQuery(route.query.type)
+
+    if (typeValue === 'm') {
+        if (queryType === undefined)
+            return
+
+        const nextQuery = { ...route.query }
+        delete nextQuery.type
+        router.replace({ query: nextQuery })
+        return
+    }
+
+    if (queryType === 'f')
+        return
+
+    router.replace({
+        query: {
+            ...route.query,
+            type: 'f',
+        },
+    })
+})
 
 const loadingProgressPercent = computed(() => {
     if (!totalLeagueCount.value)
