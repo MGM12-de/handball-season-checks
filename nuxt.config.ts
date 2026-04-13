@@ -53,8 +53,8 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': { prerender: true },
-    '/organizations/bwhv-nf': { prerender: true },
-    '/organizations/bwhv-srm': { prerender: true },
+    // '/organizations/bwhv-nf': { prerender: true },
+    // '/organizations/bwhv-srm': { prerender: true },
     // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
     '/api/dhb/club/**': {
       swr: 60 * 60 * 24,
@@ -104,9 +104,29 @@ export default defineNuxtConfig({
   },
   i18n,
   pwa,
+  sourcemap: {
+    server: false,
+    client: false
+  },
   runtimeConfig: {
     public: {
       dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
     },
   },
+  vite: {
+    build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('vue') || id.includes('nuxt')) return 'framework';
+              if (id.includes('@iconify')) return 'icons';
+              if (id.includes('drizzle')) return 'db';
+            }
+          }
+        }
+      }
+    }
+  }
 })
