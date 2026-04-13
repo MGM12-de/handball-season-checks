@@ -8,6 +8,22 @@ interface OrganizationContentEntry {
   clubs?: Array<{ name?: string }>
 }
 
+const TEAM_SUFFIXES = new Set(['2', '3', '4', '5', '6', '7', '8', '9', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
+const WHITESPACE_REGEXP = /\s+/
+
+function extractClubName(teamName: string): string {
+  const normalizedTeamName = teamName.trim()
+  if (!normalizedTeamName)
+    return ''
+
+  const parts = normalizedTeamName.split(WHITESPACE_REGEXP)
+  const suffix = parts.at(-1)
+
+  return (parts.length > 1 && suffix && TEAM_SUFFIXES.has(suffix))
+    ? parts.slice(0, -1).join(' ')
+    : normalizedTeamName
+}
+
 defineRouteMeta({
   openAPI: {
     description: 'Get team data',
@@ -46,7 +62,7 @@ export default defineEventHandler(async (event) => {
     try {
       const organizationsList = organizationsIndex as OrganizationListItem[]
       const organizationDocuments = (await queryCollection(event, 'organizations').all()) as OrganizationContentEntry[]
-      const normalizedClubName = clubName.toLowerCase()
+      const normalizedClubName = extractClubName(clubName).toLowerCase()
 
       const foundOrganizations = new Map<string, OrganizationListItem>()
 
