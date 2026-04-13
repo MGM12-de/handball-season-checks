@@ -12,8 +12,6 @@ const modulesList = [
   '@nuxt/ui',
   '@nuxtjs/i18n',
   '@nuxt/image',
-  '@nuxt/eslint',
-  '@nuxthub/core',
 ]
 
 if (isTest) {
