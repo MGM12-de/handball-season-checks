@@ -1,0 +1,8 @@
+{
+  "name": "Bezirk Alpenvorland",
+  "parent": "bhv",
+  "clubs": [
+    { "name": "HCD Gröbenzell" },
+    { "name": "TuS Fürstenfeldbruck" }
+  ]
+}

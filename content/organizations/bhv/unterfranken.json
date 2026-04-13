@@ -1,0 +1,7 @@
+{
+  "name": "Bezirk Unterfranken",
+  "parent": "bhv",
+  "clubs": [
+    { "name": "Wölfe Würzburg" }
+  ]
+}

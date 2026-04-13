@@ -1,0 +1,9 @@
+{
+  "name": "Bezirk Ostbayern",
+  "parent": "bhv",
+  "clubs": [
+    { "name": "HC Erlangen" },
+    { "name": "TV Erlangen-Bruck" },
+    { "name": "TV 1861 Erlangen-Bruck" }
+  ]
+}
