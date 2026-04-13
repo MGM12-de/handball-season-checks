@@ -46,5 +46,50 @@
     "id": "bwhv-oo",
     "name": "Bezirk Oberschwaben-Ostalb",
     "parent": "bwhv"
+  },
+  {
+    "id": "bhv-ostbayern",
+    "name": "Bezirk Ostbayern",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-alpenvorland",
+    "name": "Bezirk Alpenvorland",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-altbayern",
+    "name": "Bezirk Altbayern",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-aschaffenburg-miltenberg",
+    "name": "Bezirk Aschaffenburg-Miltenberg",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-mittelfranken",
+    "name": "Bezirk Mittelfranken",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-oberbayern",
+    "name": "Bezirk Oberbayern",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-oberfranken",
+    "name": "Bezirk Oberfranken",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-schwaben",
+    "name": "Bezirk Schwaben",
+    "parent": "bhv"
+  },
+  {
+    "id": "bhv-unterfranken",
+    "name": "Bezirk Unterfranken",
+    "parent": "bhv"
   }
 ]

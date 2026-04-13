@@ -57,10 +57,18 @@ export default defineEventHandler(async (event) => {
         }
       }
 
-      const bhvOrgInfo = organizationsList.find(o => o.id === 'bhv')
-      if (bhvOrgInfo) {
-        const bhvOrgDocument = organizationDocuments.find(doc => doc.name === bhvOrgInfo.name)
-        if (bhvOrgDocument?.clubs?.some(c => c.name?.toLowerCase() === normalizedClubName)) {
+      const bhvDistrictDocuments = organizationDocuments.filter(doc => doc.parent === 'bhv')
+      for (const districtDocument of bhvDistrictDocuments) {
+        if (!districtDocument.clubs?.some(c => c.name?.toLowerCase() === normalizedClubName)) {
+          continue
+        }
+
+        const districtOrgInfo = organizationsList.find(
+          org => org.parent === 'bhv' && org.name === districtDocument.name,
+        )
+
+        if (districtOrgInfo) {
+          foundOrganizations.set(districtOrgInfo.id, districtOrgInfo)
           addOrganizationById('bhv')
         }
       }
