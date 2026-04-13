@@ -11,7 +11,21 @@ interface RawLeague {
 function matchesLeagueType(config: LeagueConfig, type: 'm' | 'f'): boolean {
     return config.ids.some((id) => {
         const idLower = id.toLowerCase()
-        return idLower.includes(`.${type}-`) || idLower.includes(`/${type}-`)
+
+        if (idLower.includes('.m-') || idLower.includes('/m-'))
+            return type === 'm'
+
+        if (idLower.includes('.f-') || idLower.includes('/f-'))
+            return type === 'f'
+
+        // DHB 3. Liga uses numeric Sportradar IDs without m-/f- markers.
+        if (idLower.includes('sportradar.dhbdata.16059'))
+            return type === 'm'
+
+        if (idLower.includes('sportradar.dhbdata.16060'))
+            return type === 'f'
+
+        return false
     })
 }
 
