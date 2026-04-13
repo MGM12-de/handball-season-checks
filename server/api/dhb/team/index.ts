@@ -57,37 +57,29 @@ export default defineEventHandler(async (event) => {
         }
       }
 
-      const bhvDistrictDocuments = organizationDocuments.filter(doc => doc.parent === 'bhv')
-      for (const districtDocument of bhvDistrictDocuments) {
-        if (!districtDocument.clubs?.some(c => c.name?.toLowerCase() === normalizedClubName)) {
-          continue
-        }
+      const processParentOrganization = (parentId: string) => {
+        const districtDocuments = organizationDocuments.filter(doc => doc.parent === parentId)
+        for (const districtDocument of districtDocuments) {
+          if (!districtDocument.clubs?.some(c => c.name?.toLowerCase() === normalizedClubName)) {
+            continue
+          }
 
-        const districtOrgInfo = organizationsList.find(
-          org => org.parent === 'bhv' && org.name === districtDocument.name,
-        )
+          const districtOrgInfo = organizationsList.find(
+            org => org.parent === parentId && org.name === districtDocument.name,
+          )
 
-        if (districtOrgInfo) {
-          foundOrganizations.set(districtOrgInfo.id, districtOrgInfo)
-          addOrganizationById('bhv')
-        }
-      }
-
-      const bwhvDistrictDocuments = organizationDocuments.filter(doc => doc.parent === 'bwhv')
-      for (const districtDocument of bwhvDistrictDocuments) {
-        if (!districtDocument.clubs?.some(c => c.name?.toLowerCase() === normalizedClubName)) {
-          continue
-        }
-
-        const districtOrgInfo = organizationsList.find(
-          org => org.parent === 'bwhv' && org.name === districtDocument.name,
-        )
-
-        if (districtOrgInfo) {
-          foundOrganizations.set(districtOrgInfo.id, districtOrgInfo)
-          addOrganizationById('bwhv')
+          if (districtOrgInfo) {
+            foundOrganizations.set(districtOrgInfo.id, districtOrgInfo)
+            addOrganizationById(parentId)
+          }
         }
       }
+
+      // Process all parent organizations (bhv, bwhv, etc.)
+      const uniqueParents = new Set(organizationDocuments
+        .filter(doc => doc.parent)
+        .map(doc => doc.parent))
+      uniqueParents.forEach(parent => processParentOrganization(parent!))
 
       teamOrganizationsData = Array.from(foundOrganizations.values())
     }
