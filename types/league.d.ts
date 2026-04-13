@@ -1,10 +1,11 @@
-export interface OrganizationObject { id?: string, name?: string }
+export interface OrganizationObject { id?: string, name?: string, color?: string }
 export type TeamOrganization = OrganizationObject | string
 
 export interface OrganizationListItem {
     id: string
     name: string
     parent?: string
+    color?: string
 }
 
 export interface LeagueConfig {

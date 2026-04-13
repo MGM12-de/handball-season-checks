@@ -5,8 +5,9 @@ const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test'
 const isProd = process.env.NODE_ENV === 'production'
 const isDev = !isProd
 
-const envFlag = (value: string | undefined, fallback: boolean) => {
-  if (value === undefined) return fallback
+function envFlag(value: string | undefined, fallback: boolean) {
+  if (value === undefined)
+    return fallback
   return value === 'true'
 }
 
@@ -61,7 +62,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/organizations/bwhv-nf': { prerender: true },
-    '/organizations/bwhv-nf?': { prerender: true },
+    '/organizations/bwhv-nf?type=f': { prerender: true },
     '/organizations/bwhv-srm': { prerender: true },
     // 1. Spezifische Regeln: Vereinsdaten ändern sich selten (z. B. 1 Tag Cache)
     '/api/dhb/club/**': {
@@ -114,7 +115,7 @@ export default defineNuxtConfig({
   pwa,
   sourcemap: {
     server: false,
-    client: false
+    client: false,
   },
   runtimeConfig: {
     public: {
@@ -128,13 +129,16 @@ export default defineNuxtConfig({
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('vue') || id.includes('nuxt')) return 'framework';
-              if (id.includes('@iconify')) return 'icons';
-              if (id.includes('drizzle')) return 'db';
+              if (id.includes('vue') || id.includes('nuxt'))
+                return 'framework'
+              if (id.includes('@iconify'))
+                return 'icons'
+              if (id.includes('drizzle'))
+                return 'db'
             }
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 })

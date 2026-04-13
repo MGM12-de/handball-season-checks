@@ -12,6 +12,7 @@ export default defineContentConfig({
                 clubs: z.array(z.object({
                     name: z.string(),
                 })).optional(),
+                color: z.string().optional(),
             }),
         }),
         leagues: defineCollection({

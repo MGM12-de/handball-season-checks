@@ -18,19 +18,13 @@ const foreignOrganizations = computed<OrganizationObject[]>(() =>
 </script>
 
 <template>
-  <UPageCard
-    :title="row.team?.name || t('unknownTeam')"
-    orientation="horizontal"
-    reverse
-    highlight
-    :highlight-color="highlightColor"
-    :spotlight-color="highlightColor"
-    spotlight
-  >
+  <UPageCard :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
+    :highlight-color="highlightColor" :spotlight-color="highlightColor" spotlight>
     <NuxtImg :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain" loading="lazy" />
 
     <template #footer>
-      <UBadge v-for="n in foreignOrganizations" :key="n.id || n.name" color="primary" class="ml-auto" size="md">
+      <UBadge v-for="n in foreignOrganizations" :key="n.id || n.name" :color="(n.color as any) || 'primary'"
+        class="ml-auto" size="md">
         {{ n.name }}
       </UBadge>
 
