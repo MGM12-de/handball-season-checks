@@ -373,16 +373,9 @@ export class LeagueSeasonCalculator {
     return org.id === leagueOrg || org.name === leagueOrg
   }
 
-  private static isSameOrAncestorOrganization(orgId: string | undefined, leagueOrg: string): boolean {
-    if (!orgId || !leagueOrg)
-      return false
-
-    return orgId === leagueOrg || leagueOrg.startsWith(`${orgId}-`)
-  }
-
   static getForeignOrganizations(orgs: TeamOrganization[] | undefined, leagueOrg: string): OrganizationObject[] {
     return (orgs ?? [])
       .filter(LeagueSeasonCalculator.isOrganizationObject)
-      .filter(org => !LeagueSeasonCalculator.isSameOrAncestorOrganization(org.id, leagueOrg))
+      .filter(org => org.id !== leagueOrg)
   }
 }
