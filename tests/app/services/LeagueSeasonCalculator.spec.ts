@@ -65,4 +65,25 @@ describe('leagueSeasonCalculator', () => {
     expect(results[2]?.promoted[0]?.team?.name).toBe('TSV Beispiel II')
     expect(results[2]?.promoted[0]?.promotionBlocked).toBe(true)
   })
+
+  it('hides the league organization and its parents from organization badges', () => {
+    expect(LeagueSeasonCalculator.getForeignOrganizations([
+      { id: 'bwhv-nf', name: 'Bezirk Neckar-Franken' },
+      { id: 'bwhv', name: 'BWHV' },
+      { id: 'bwhv-srm', name: 'Bezirk Stuttgart-Rems-Murr' },
+      { id: 'dhb', name: 'DHB' },
+    ], 'bwhv-nf')).toEqual([
+      { id: 'bwhv-srm', name: 'Bezirk Stuttgart-Rems-Murr' },
+      { id: 'dhb', name: 'DHB' },
+    ])
+  })
+
+  it('keeps child organizations visible on parent league pages', () => {
+    expect(LeagueSeasonCalculator.getForeignOrganizations([
+      { id: 'bwhv-nf', name: 'Bezirk Neckar-Franken' },
+      { id: 'bwhv', name: 'BWHV' },
+    ], 'bwhv')).toEqual([
+      { id: 'bwhv-nf', name: 'Bezirk Neckar-Franken' },
+    ])
+  })
 })
