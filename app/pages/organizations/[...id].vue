@@ -77,24 +77,13 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                     {{ t('promoted') }} ({{ league.promoted.length }} {{ t('teams') }})
                 </h3>
                 <LazyUPageGrid>
-                    <UPageCard v-for="(row, index) in league.promoted" :key="getRowKey('p', row, index)"
-                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="success" spotlight-color="success" spotlight>
-                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
-
-                        <template #footer>
-                            <UBadge v-for="n in getForeignOrganizationsCached(row.team?.organizations, league.organization)"
-                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                                {{ n.name }}
-                            </UBadge>
-                            <UBadge v-if="row.promotionBlocked" color="warning" variant="subtle" size="md">
-                                {{ t('promotionBlocked') }}
-                            </UBadge>
-                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
-                                {{ t('withdrawn') }}
-                            </UBadge>
-                        </template>
-                    </UPageCard>
+                    <TeamCard
+                        v-for="(row, index) in league.promoted"
+                        :key="getRowKey('p', row, index)"
+                        :row="row"
+                        :league-organization="league.organization"
+                        highlight-color="success"
+                    />
                 </LazyUPageGrid>
             </div>
 
@@ -105,24 +94,13 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                         }}</span>)
                 </h3>
                 <LazyUPageGrid>
-                    <UPageCard v-for="(row, index) in league.promotionPlayoff" :key="getRowKey('pr', row, index)"
-                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="warning" spotlight-color="warning" spotlight>
-                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
-
-                        <template #footer>
-                            <UBadge v-for="n in getForeignOrganizationsCached(row.team?.organizations, league.organization)"
-                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                                {{ n.name }}
-                            </UBadge>
-                            <UBadge v-if="row.promotionBlocked" color="warning" variant="subtle" size="md">
-                                {{ t('promotionBlocked') }}
-                            </UBadge>
-                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
-                                {{ t('withdrawn') }}
-                            </UBadge>
-                        </template>
-                    </UPageCard>
+                    <TeamCard
+                        v-for="(row, index) in league.promotionPlayoff"
+                        :key="getRowKey('p', row, index)"
+                        :row="row"
+                        :league-organization="league.organization"
+                        highlight-color="warning"
+                    />
                 </LazyUPageGrid>
             </div>
 
@@ -132,25 +110,14 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                     }})
                 </h3>
                 <LazyUPageGrid>
-                    <UPageCard v-for="(row, index) in getCombinedRelegations(league)"
-                        :key="getRowKey('r', row, index)" :title="row.team?.name || t('unknownTeam')" orientation="horizontal"
-                        reverse highlight highlight-color="error" spotlight-color="error" spotlight>
-                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
-
-                        <template #footer>
-                            <UBadge v-for="n in getForeignOrganizationsCached(row.team?.organizations, league.organization)"
-                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                                {{ n.name }}
-                            </UBadge>
-                            <UBadge v-if="isForcedRelegation(league, row)" color="error" variant="subtle"
-                                size="md">
-                                {{ t('forcedRelegation') }}
-                            </UBadge>
-                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
-                                {{ t('withdrawn') }}
-                            </UBadge>
-                        </template>
-                    </UPageCard>
+                    <TeamCard
+                        v-for="(row, index) in getCombinedRelegations(league)"
+                        :key="getRowKey('r', row, index)"
+                        :row="row"
+                        :league-organization="league.organization"
+                        highlight-color="error"
+                        :forced-relegation="isForcedRelegation(league, row)"
+                    />
                 </LazyUPageGrid>
             </div>
 
@@ -161,22 +128,13 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                         }}</span>)
                 </h3>
                 <LazyUPageGrid>
-                    <UPageCard v-for="(row, index) in league.relegationPlayoff" :key="getRowKey('rr', row, index)"
-                        :title="row.team?.name || t('unknownTeam')" orientation="horizontal" reverse highlight
-                        highlight-color="warning" spotlight-color="warning" spotlight>
-                        <img :src="row.team?.logo" :alt="t('teamLogo')" class="w-16 h-16 object-contain">
-
-                        <template #footer>
-                            <UBadge v-for="n in getForeignOrganizationsCached(row.team?.organizations, league.organization)"
-                                :key="n.id || n.name" color="primary" class="ml-auto" size="md">
-                                {{ n.name }}
-                            </UBadge>
-
-                            <UBadge v-if="row.withdrawn" color="neutral" variant="subtle" size="md">
-                                {{ t('withdrawn') }}
-                            </UBadge>
-                        </template>
-                    </UPageCard>
+                    <TeamCard
+                        v-for="(row, index) in league.relegationPlayoff"
+                        :key="getRowKey('p', row, index)"
+                        :row="row"
+                        :league-organization="league.organization"
+                        highlight-color="warning"
+                    />
                 </LazyUPageGrid>
             </div>
         </div>
