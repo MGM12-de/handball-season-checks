@@ -91,7 +91,7 @@ describe('leagueSeasonCalculator', () => {
     expect(LeagueSeasonCalculator.getForeignOrganizations([
       { id: 'bhv-oberbayern', name: 'Bezirk Oberbayern' },
     ], 'bwhv')).toEqual([
-      { id: 'bhv-oberbayern', name: 'Bezirk Oberbayern', color: 'blue' },
+      { id: 'bhv-oberbayern', name: 'Bezirk Oberbayern', color: 'secondary' },
     ])
   })
 })

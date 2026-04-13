@@ -423,9 +423,12 @@ export class LeagueSeasonCalculator {
       return org.color
 
     if (!org.id)
-      return 'primary'
+      return undefined
 
     let current = this.organizationsById.get(org.id)
+    if (current?.color)
+      return current.color
+
     while (current?.parent) {
       const parent = this.organizationsById.get(current.parent)
       if (!parent)
@@ -435,7 +438,7 @@ export class LeagueSeasonCalculator {
       current = parent
     }
 
-    return 'primary'
+    return undefined
   }
 
   static getForeignOrganizations(orgs: TeamOrganization[] | undefined, leagueOrg: string): OrganizationObject[] {
