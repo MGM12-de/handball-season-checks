@@ -13,7 +13,22 @@ const organizationId = computed(() => {
   return typeof rawId === 'string' ? rawId : ''
 })
 
-const { leagues, organizationName } = useOrganizationLeagues(organizationId)
+const {
+    leagues,
+    organizationName,
+    loadingLeagueTitles,
+    isLoadingLeagues,
+    loadingError,
+    totalLeagueCount,
+    loadedLeagueCount,
+} = useOrganizationLeagues(organizationId)
+
+const loadingProgressPercent = computed(() => {
+    if (!totalLeagueCount.value)
+        return 0
+
+    return Math.round((loadedLeagueCount.value / totalLeagueCount.value) * 100)
+})
 
 function getRowKey(prefix: string, row: TableRow, index: number): string {
   return `${prefix}-${row.team?.name ?? index}`
@@ -44,6 +59,28 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
     <UPageHeader :title="organizationName" />
 
     <UPageBody>
+        <div v-if="isLoadingLeagues && totalLeagueCount" class="mb-6 space-y-2">
+            <UProgress
+                :model-value="loadedLeagueCount"
+                :max="totalLeagueCount"
+                size="sm"
+                color="primary"
+                status
+            />
+            <p class="text-sm text-muted">
+                {{ loadedLeagueCount }} / {{ totalLeagueCount }} Ligen geladen ({{ loadingProgressPercent }}%)
+            </p>
+        </div>
+
+        <UAlert
+            v-if="loadingError"
+            color="error"
+            variant="subtle"
+            icon="i-lucide-alert-circle"
+            class="mb-6"
+            :title="String(loadingError)"
+        />
+
         <div v-for="league in leagues" :key="league.title" class="mb-8 space-y-4">
             <h2 v-if="league.promoted.length || league.promotionPlayoff.length || league.relegated.length || league.relegationPlayoff.length"
                 class="text-xl font-bold">
@@ -115,6 +152,29 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
                     />
                 </LazyUPageGrid>
             </div>
+        </div>
+
+        <div v-if="isLoadingLeagues && loadingLeagueTitles.length" class="space-y-8">
+            <div v-for="title in loadingLeagueTitles" :key="`loading-${title}`" class="space-y-3">
+                <h2 class="text-xl font-bold opacity-80">
+                    {{ title }}
+                </h2>
+
+                <LazyUPageGrid>
+                    <USkeleton class="h-28 w-full" />
+                    <USkeleton class="h-28 w-full" />
+                    <USkeleton class="h-28 w-full" />
+                </LazyUPageGrid>
+            </div>
+        </div>
+
+        <div v-else-if="isLoadingLeagues" class="space-y-3">
+            <USkeleton class="h-8 w-48" />
+            <LazyUPageGrid>
+                <USkeleton class="h-28 w-full" />
+                <USkeleton class="h-28 w-full" />
+                <USkeleton class="h-28 w-full" />
+            </LazyUPageGrid>
         </div>
     </UPageBody>
 </template>
