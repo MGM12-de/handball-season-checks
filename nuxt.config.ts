@@ -2,9 +2,16 @@ import { hub, i18n, pwa } from './config/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test'
-const isDev = process.env.NODE_ENV !== 'production'
-const enablePwa = process.env.NUXT_ENABLE_PWA === 'true' && !isTest
-const enableHub = process.env.NUXT_ENABLE_HUB === 'true'
+const isProd = process.env.NODE_ENV === 'production'
+const isDev = !isProd
+
+const envFlag = (value: string | undefined, fallback: boolean) => {
+  if (value === undefined) return fallback
+  return value === 'true'
+}
+
+const enablePwa = envFlag(process.env.NUXT_ENABLE_PWA, isProd && !isTest)
+const enableHub = envFlag(process.env.NUXT_ENABLE_HUB, isProd)
 
 // Always include test-utils; exclude PWA during tests to avoid virtual module issues
 const modulesList = [
