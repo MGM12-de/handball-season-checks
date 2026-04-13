@@ -21,6 +21,10 @@
     { "name": "TV Treffelhausen" },
     { "name": "TSV Bartenbach" },
     { "name": "HSG Ermstal" },
-    { "name": "SG Ober-/Unterhausen"}
+    { "name": "SG Ober-/Unterhausen"},
+    { "name": "FA Göppingen" },
+    { "name": "TSV Köngen"},
+    { "name": "TSV Neckartenzlingen"},
+    { "name": "SG Hegensberg-Liebersbronn"}
   ]
 }
