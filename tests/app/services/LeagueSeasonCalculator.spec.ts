@@ -86,4 +86,12 @@ describe('leagueSeasonCalculator', () => {
       { id: 'bwhv-nf', name: 'Bezirk Neckar-Franken' },
     ])
   })
+
+  it('inherits badge color from parent organization when child has no color', () => {
+    expect(LeagueSeasonCalculator.getForeignOrganizations([
+      { id: 'bhv-oberbayern', name: 'Bezirk Oberbayern' },
+    ], 'bwhv')).toEqual([
+      { id: 'bhv-oberbayern', name: 'Bezirk Oberbayern', color: 'blue' },
+    ])
+  })
 })

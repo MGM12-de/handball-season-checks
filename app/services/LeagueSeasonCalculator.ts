@@ -1,4 +1,5 @@
-import type { LeagueConfig, LeagueResult, OrganizationObject, TableRow, TeamOrganization } from '~~/types/league'
+import type { LeagueConfig, LeagueResult, OrganizationListItem, OrganizationObject, TableRow, TeamOrganization } from '~~/types/league'
+import organizationsIndex from '~~/content/organizations/index.json'
 
 const TEAM_SUFFIXES = new Set(['2', '3', '4', '5', '6', '7', '8', '9', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
 const WHITESPACE_REGEXP = /\s+/
@@ -21,6 +22,9 @@ interface RawLeague {
 
 export class LeagueSeasonCalculator {
   private static readonly clubNameCache = new Map<string, string>()
+  private static readonly organizationsById = new Map(
+    (organizationsIndex as OrganizationListItem[]).map(org => [org.id, org]),
+  )
 
   private readonly organizationScope: Set<string>
 
@@ -394,9 +398,58 @@ export class LeagueSeasonCalculator {
     return org.id === leagueOrg || org.name === leagueOrg
   }
 
+  private static getAncestorOrganizationIds(organizationId: string): Set<string> {
+    const ancestors = new Set<string>()
+    let current = this.organizationsById.get(organizationId)
+
+    while (current?.parent && !ancestors.has(current.parent)) {
+      ancestors.add(current.parent)
+      current = this.organizationsById.get(current.parent)
+    }
+
+    if (ancestors.size === 0 && organizationId.includes('-')) {
+      const parts = organizationId.split('-')
+      while (parts.length > 1) {
+        parts.pop()
+        ancestors.add(parts.join('-'))
+      }
+    }
+
+    return ancestors
+  }
+
+  private static resolveOrganizationColor(org: OrganizationObject): string | undefined {
+    if (org.color)
+      return org.color
+
+    if (!org.id)
+      return 'primary'
+
+    let current = this.organizationsById.get(org.id)
+    while (current?.parent) {
+      const parent = this.organizationsById.get(current.parent)
+      if (!parent)
+        break
+      if (parent.color)
+        return parent.color
+      current = parent
+    }
+
+    return 'primary'
+  }
+
   static getForeignOrganizations(orgs: TeamOrganization[] | undefined, leagueOrg: string): OrganizationObject[] {
+    const hiddenOrganizationIds = new Set<string>([
+      leagueOrg,
+      ...LeagueSeasonCalculator.getAncestorOrganizationIds(leagueOrg),
+    ])
+
     return (orgs ?? [])
       .filter(LeagueSeasonCalculator.isOrganizationObject)
-      .filter(org => org.id !== leagueOrg)
+      .filter(org => !org.id || !hiddenOrganizationIds.has(org.id))
+      .map(org => ({
+        ...org,
+        color: LeagueSeasonCalculator.resolveOrganizationColor(org),
+      }))
   }
 }
