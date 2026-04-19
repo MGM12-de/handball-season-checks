@@ -75,6 +75,7 @@ Before opening a PR:
 2. Create a topic branch
 3. Commit changes and open a PR
 
+
 ## License
 See the `LICENSE` file for licensing details.
 
