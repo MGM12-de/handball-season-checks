@@ -77,3 +77,4 @@ Before opening a PR:
 
 ## License
 See the `LICENSE` file for licensing details.
+
