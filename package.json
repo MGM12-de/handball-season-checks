@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@iconify-json/heroicons": "^1.2.3",
-    "@iconify-json/lucide": "^1.2.103",
+    "@iconify-json/lucide": "^1.2.104",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/simple-icons": "^1.2.79",
+    "@iconify-json/simple-icons": "^1.2.80",
     "@libsql/client": "^0.17.3",
     "@nuxt/content": "^3.13.0",
     "@nuxt/eslint": "1.15.2",
