@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '@nuxt/ui'
-import { UAvatar } from '#components'
+import { UAvatar, UButton } from '#components'
 import { h } from 'vue'
+import { useFavorites } from '~/composables/useFavorites'
 
 const { t } = useI18n()
+const { isFavoriteClub, toggleFavoriteClub } = useFavorites()
 
 interface Club {
   id: number
@@ -47,6 +49,29 @@ const columns: TableColumn<Club>[] = [{
     const org = row.getValue('organization') as Club['organization'] || { name: '', logo: '' }
     return h(UAvatar, { src: org.logo, alt: org.name })
   },
+}, {
+  id: 'favorite',
+  header: '',
+  cell: ({ row }) => {
+    const club = row.original
+    const isFav = isFavoriteClub(club.id.toString())
+    return h(UButton, {
+      icon: isFav ? 'i-heroicons-star-solid' : 'i-heroicons-star',
+      color: isFav ? 'primary' : 'gray',
+      variant: 'ghost',
+      title: isFav ? t('removeFromFavorites') : t('addToFavorites'),
+      onClick: (e: Event) => {
+        e.stopPropagation()
+        toggleFavoriteClub({
+          id: club.id.toString(),
+          name: club.name,
+          logo: club.logo,
+          acronym: club.acronym,
+          organizationName: club.organization?.name,
+        })
+      },
+    })
+  },
 }]
 
 const columnVisibility = ref({
@@ -89,8 +114,18 @@ function onRowSelected(e: Event, row: TableRow<Club>) {
         <div class="flex items-center gap-4">
           <UAvatar :src="club.logo" :alt="club.acronym" size="lg" class="shrink-0 bg-white" />
           <div class="flex flex-col flex-1 min-w-0">
-            <div class="font-bold text-lg truncate">
-              {{ club.name }}
+            <div class="flex justify-between items-center">
+              <div class="font-bold text-lg truncate">
+                {{ club.name }}
+              </div>
+              <UButton
+                :icon="isFavoriteClub(club.id.toString()) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+                :color="isFavoriteClub(club.id.toString()) ? 'primary' : 'gray'"
+                variant="ghost"
+                class="ml-2"
+                :title="isFavoriteClub(club.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
+                @click.stop="toggleFavoriteClub({ id: club.id.toString(), name: club.name, logo: club.logo, acronym: club.acronym, organizationName: club.organization?.name })"
+              />
             </div>
             <div class="text-sm text-gray-500 flex items-center gap-2 mt-1">
               <UBadge v-if="club.acronym" :label="club.acronym" size="xs" variant="subtle" />

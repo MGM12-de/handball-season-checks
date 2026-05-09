@@ -31,6 +31,8 @@
     "@nuxthub/core": "^0.10.7",
     "@nuxtjs/i18n": "^10.3.0",
     "@vite-pwa/nuxt": "1.1.1",
+    "@vueuse/core": "^14.3.0",
+    "@vueuse/nuxt": "^14.3.0",
     "better-sqlite3": "^12.9.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",

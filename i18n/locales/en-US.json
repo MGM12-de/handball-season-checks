@@ -89,5 +89,13 @@
   "forcedRelegation": "Forced Relegation",
   "promotionBlocked": "Promotion blocked",
   "withdrawn": "Withdrawn",
-  "organizations": "Organizations"
+  "organizations": "Organizations",
+  "favorites": "Favorites",
+  "myFavorites": "My Favorites",
+  "noFavoritesYet": "No favorites saved yet.",
+  "addToFavorites": "Add to favorites",
+  "removeFromFavorites": "Remove from favorites",
+  "favoriteClubs": "Favorite Clubs",
+  "favoriteTeams": "Favorite Teams",
+  "noData": "No data available"
 }

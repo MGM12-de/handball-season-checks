@@ -14,6 +14,11 @@ const links = [
     icon: 'i-lucide-search',
     to: '/tournament',
   },
+  {
+    label: t('favorites'),
+    icon: 'i-lucide-star',
+    to: '/favorites',
+  },
 ]
 </script>
 

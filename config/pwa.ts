@@ -14,6 +14,14 @@ export const pwa: ModuleOptions = {
     categories: ['games', 'sports', 'handball'],
     id: '/',
     orientation: 'portrait',
+    shortcuts: [
+      {
+        name: 'Meine Favoriten',
+        short_name: 'Favoriten',
+        description: 'Direkt zu deinen favorisierten Teams und Vereinen',
+        url: '/favorites',
+      },
+    ],
     screenshots: [
       {
         src: '../public/screenshots/desktop_standing.png',
