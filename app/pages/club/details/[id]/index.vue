@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useFavorites } from '~/composables/useFavorites'
+
 const route = useRoute()
 const clubId = route.params.id as string
 const club = ref({
@@ -15,6 +17,8 @@ const club = ref({
 
 const { t } = useI18n()
 const requestURL = useRequestURL()
+
+const { isFavoriteClub, toggleFavoriteClub } = useFavorites()
 
 const { data } = await useAsyncData(
   `club/${clubId}`,
@@ -65,7 +69,18 @@ useHead({
 <template>
   <div>
     <UPage>
-      <UPageHeader :headline="t('clubDetails')" :title="club.name" />
+      <UPageHeader :headline="t('clubDetails')" :title="club.name">
+        <template #links>
+          <UButton
+            :icon="isFavoriteClub(clubId) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+            :color="isFavoriteClub(clubId) ? 'primary' : 'gray'"
+            variant="ghost"
+            size="xl"
+            :title="isFavoriteClub(clubId) ? t('removeFromFavorites') : t('addToFavorites')"
+            @click="toggleFavoriteClub({ id: clubId, name: club.name, logo: club.logo, acronym: club.acronym, organizationName: club.organization?.name })"
+          />
+        </template>
+      </UPageHeader>
       <UPageBody>
         <ClubHeader :club="club" />
         <br> <br>
