@@ -149,16 +149,20 @@ const state = reactive({
   <div>
     <UContainer>
       <UForm :state="state" class="space-y-4">
-        <UAlert v-if="prognosisError" color="error" variant="soft" :title="t('prognosisLoadFailed')"
-          :description="prognosisError.message" />
+        <UAlert
+          v-if="prognosisError" color="error" variant="soft" :title="t('prognosisLoadFailed')"
+          :description="prognosisError.message"
+        />
 
         <div v-else-if="prognosisPending" class="space-y-2">
           <USkeleton class="h-10 w-full" />
           <USkeleton class="h-10 w-full" />
         </div>
 
-        <UAlert v-else-if="noPendingGamesForPrognosis" color="info" variant="soft"
-          :title="t('noPendingGamesForPrognosis')" />
+        <UAlert
+          v-else-if="noPendingGamesForPrognosis" color="info" variant="soft"
+          :title="t('noPendingGamesForPrognosis')"
+        />
 
         <UFormField v-if="state.rankIfWinning" :label="t('possibleRankIfWinning')">
           <UInput v-model="state.rankIfWinning" icon="i-mdi-trophy" disabled />

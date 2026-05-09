@@ -30,8 +30,10 @@ const links = [
 
       <ULocaleSelect :model-value="locale" :locales="[en, de]" @update:model-value="setLocale($event)" />
 
-      <UButton to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
-        color="neutral" variant="ghost" />
+      <UButton
+        to="https://github.com/MGM12-de/handball-season-checks" target="_blank" icon="i-simple-icons-github"
+        color="neutral" variant="ghost"
+      />
     </template>
 
     <template #body>

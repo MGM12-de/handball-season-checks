@@ -13,13 +13,13 @@
     { "name": "HSG Nonn./Ott." },
     { "name": "SG Ohl/Elg/Zun" },
     { "name": "SG Ohlsbach/Elgersweier" },
-    { "name": "ASV Ottenhöfen"},
-    { "name": "HSG Ortenau Süd"},
-    { "name": "HSG Freiburg"},
-    {"name": "TuS Helmlingen"},
-    { "name": "HSG Dreiland"},
-    { "name": "SG Gutach/Wolfach"},
-    { "name": "TSV Alemannia Freiburg-Zähringen"},
-    { "name": "TSV March"}
+    { "name": "ASV Ottenhöfen" },
+    { "name": "HSG Ortenau Süd" },
+    { "name": "HSG Freiburg" },
+    { "name": "TuS Helmlingen" },
+    { "name": "HSG Dreiland" },
+    { "name": "SG Gutach/Wolfach" },
+    { "name": "TSV Alemannia Freiburg-Zähringen" },
+    { "name": "TSV March" }
   ]
 }

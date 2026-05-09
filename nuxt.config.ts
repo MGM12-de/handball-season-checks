@@ -1,8 +1,9 @@
 import { hub, i18n, pwa } from './config/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
-const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test'
-const isProd = process.env.NODE_ENV === 'production'
+const isTest = require('node:process').env.VITEST === 'true' || require('node:process').env.NODE_ENV === 'test'
+const isProd = require('node:process').env.NODE_ENV === 'production'
+
 const isDev = !isProd
 
 function envFlag(value: string | undefined, fallback: boolean) {
@@ -11,8 +12,8 @@ function envFlag(value: string | undefined, fallback: boolean) {
   return value === 'true'
 }
 
-const enablePwa = envFlag(process.env.NUXT_ENABLE_PWA, isProd && !isTest)
-const enableHub = envFlag(process.env.NUXT_ENABLE_HUB, isProd)
+const enablePwa = envFlag(require('node:process').env.NUXT_ENABLE_PWA, isProd && !isTest)
+const enableHub = envFlag(require('node:process').env.NUXT_ENABLE_HUB, isProd)
 
 // Always include test-utils; exclude PWA during tests to avoid virtual module issues
 const modulesList = [
@@ -119,7 +120,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      dhbBaseUrl: process.env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
+      dhbBaseUrl: require('node:process').env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
     },
   },
   vite: {

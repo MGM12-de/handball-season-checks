@@ -33,8 +33,10 @@ if (club.hasMemberClubs) {
       <div v-if="club.hasMemberClubs">
         <h2>{{ t('memberClubs') }}</h2>
         <div v-for="member in memberClubs" :key="member.id">
-          <UBadge :avatar="{ src: member.logo, alt: member.acronym }" size="lg" variant="outline" color="neutral"
-            class="m-1">
+          <UBadge
+            :avatar="{ src: member.logo, alt: member.acronym }" size="lg" variant="outline" color="neutral"
+            class="m-1"
+          >
             {{ member.name }}
           </UBadge>
         </div>
