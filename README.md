@@ -10,6 +10,7 @@ a dashboard to search, view and explore teams, matches, lineups and standings.
 <p align="center"><img src="./public/favicon.svg" alt="Logo" width="140"/></p>
 
 ## Table of contents
+
 - [Screenshots](#screenshots)
 - [Features](#features)
 - [Quick start](#quick-start)
@@ -19,6 +20,7 @@ a dashboard to search, view and explore teams, matches, lineups and standings.
 - [License](#license)
 
 ## Features
+
 - Search clubs and teams
 - View lineups (`lineup`), matches (`games`) and standings (`standing`, `table`)
 - Responsive Nuxt 3 UI with i18n (German / English)
@@ -28,6 +30,7 @@ a dashboard to search, view and explore teams, matches, lineups and standings.
 <p align="center"><img src="./public/screenshots/desktop_standing.png" alt="Desktop screenshot" width="80%"/></p>
 
 ## Quick start
+
 Clone the repo and install dependencies:
 
 ```bash
@@ -55,17 +58,20 @@ pnpm test:ui
 ```
 
 ## Development
+
 - Build: `pnpm build`
 - Preview production build: `pnpm preview`
 - Lint: `pnpm lint` / `pnpm lint:fix`
 
 ## Project structure
+
 - `app/` — Nuxt application (pages & components)
 - `server/api/` — Server endpoints and DHB data adapters
 - `tests/` — Unit and component tests
 - `types/` — TypeScript type definitions
 
 ## Contributing
+
 Contributions are welcome. Please open issues for bugs or feature requests and
 create small, focused pull requests.
 
@@ -75,7 +81,6 @@ Before opening a PR:
 2. Create a topic branch
 3. Commit changes and open a PR
 
-
 ## License
-See the `LICENSE` file for licensing details.
 
+See the `LICENSE` file for licensing details.

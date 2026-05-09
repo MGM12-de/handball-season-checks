@@ -1,7 +1,7 @@
 export interface Referee {
-    id: string,
-    firstname: string,
-    lastname: string,
-    position: string,
-    type: string
+  id: string
+  firstname: string
+  lastname: string
+  position: string
+  type: string
 }

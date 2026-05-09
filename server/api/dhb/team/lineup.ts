@@ -1,4 +1,3 @@
-import type { H3Event } from 'h3'
 import type { Game, Lineup } from '~~/types'
 import { mergePlayerStats } from '../../../utils/dhbPlayerUtils'
 
@@ -31,7 +30,7 @@ async function processLineupsInBatches(
     const lineupPromises = batch.map(game =>
       $fetch('/api/dhb/game/lineup', {
         query: { id: game.id },
-      }).catch((error) => {
+      }).catch((e) => {
         return null
       }),
     )
@@ -81,7 +80,7 @@ export default defineEventHandler(async (event) => {
       return []
     }
 
-    // Process lineups in batches with error handling
+    // Process lineups in batches with e handling
     const teamPlayersMap = await processLineupsInBatches(teamGames, teamId)
 
     // Convert Map to Array and sort by goals (descending)
@@ -89,10 +88,10 @@ export default defineEventHandler(async (event) => {
 
     return teamLineup
   }
-  catch (error) {
+  catch {
     throw createError({
       statusCode: 500,
-      statusMessage: `Error fetching team lineup data. (${error})`,
+      statusMessage: `Error fetching team lineup data. (${e})`,
     })
   }
 })

@@ -133,8 +133,10 @@ useHead({
           <div>Stats</div>
         </template>
         <template #lineup>
-          <SharedLineupTable :data="tournamentLineup || []" :loading="tournamentLineupStatus === 'pending'"
-            :show-club="true" />
+          <SharedLineupTable
+            :data="tournamentLineup || []" :loading="tournamentLineupStatus === 'pending'"
+            :show-club="true"
+          />
         </template>
       </UTabs>
     </UPageBody>

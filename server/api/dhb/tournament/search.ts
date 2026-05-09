@@ -1,4 +1,4 @@
-import { getClubsUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+import { normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -11,35 +11,36 @@ defineRouteMeta({
         name: 'tournamentName',
         required: true,
         example: 'BOL_HF',
-      }],
+      },
+    ],
     responses: {
       400: {
-        description: "Bad Request",
-        summary: "Expected a clubname but got none",
+        description: 'Bad Request',
+        summary: 'Expected a clubname but got none',
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/Error'
-            }
-          }
-        }
+              $ref: '#/components/schemas/Error',
+            },
+          },
+        },
       },
       200: {
-        description: "Found a club",
-        summary: "Found a club",
+        description: 'Found a club',
+        summary: 'Found a club',
         content: {
           'application/json': {
             schema: {
               type: 'array',
               items: {
-                $ref: '#/components/schemas/Club'
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                $ref: '#/components/schemas/Club',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 })
 
 /**

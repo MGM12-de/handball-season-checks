@@ -12,9 +12,10 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.36',
-        summary: 'Club id'
-      }],
-  }
+        summary: 'Club id',
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {
@@ -38,12 +39,14 @@ export default defineEventHandler(async (event) => {
       name: team.name,
       acronym: team.acronym,
       logo: team.logo,
-      defaultTournament: team.defaultTournament ? {
-        id: team.defaultTournament.id,
-        name: team.defaultTournament.name,
-        acronym: team.defaultTournament.acronym,
-        logo: team.defaultTournament.logo,
-      } : undefined,
+      defaultTournament: team.defaultTournament
+        ? {
+            id: team.defaultTournament.id,
+            name: team.defaultTournament.name,
+            acronym: team.defaultTournament.acronym,
+            logo: team.defaultTournament.logo,
+          }
+        : undefined,
     } as Team
   })
 })

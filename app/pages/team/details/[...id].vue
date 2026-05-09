@@ -138,8 +138,10 @@ const { data: games, pending: gamesPending } = await useAsyncData(
             <TeamGames :games="games || []" :games-pending="gamesPending" />
           </template>
           <template #stats>
-            <TeamPrognose :team-id="team.id" :games="games || []" :games-pending="gamesPending"
-              :tournament-id="team.defaultTournament.id" />
+            <TeamPrognose
+              :team-id="team.id" :games="games || []" :games-pending="gamesPending"
+              :tournament-id="team.defaultTournament.id"
+            />
           </template>
 
           <template #lineup>
