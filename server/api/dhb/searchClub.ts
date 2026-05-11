@@ -1,4 +1,9 @@
+import { z } from 'zod'
 import { getClubsUrl, normalizeImageUrl } from '../../../server/utils/dhbUtils'
+
+const querySchema = z.object({
+  clubName: z.string().min(1, 'Expected a clubname but got none'),
+})
 
 defineRouteMeta({
   openAPI: {
@@ -50,17 +55,15 @@ defineRouteMeta({
  * @throws {Error}
  */
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
+  const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
-  if (!query.clubName) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Expected a clubname but got none',
-    })
-  }
-  const clubs = await $fetch(`${getClubsUrl()}/search?query=${query.clubName}`)
+  const clubs: any = await $fetch(`${getClubsUrl()}/search`, {
+    query: {
+      query: query.clubName,
+    },
+  })
 
-  clubs.data.forEach((club) => {
+  clubs.data.forEach((club: any) => {
     if (club.logo) {
       club.logo = normalizeImageUrl(club.logo)
     }
