@@ -11,9 +11,10 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.8615461',
-        summary: 'Game id'
-      }],
-  }
+        summary: 'Game id',
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {

@@ -1,5 +1,4 @@
 import { getTournamentUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
-import team from '../team'
 
 defineRouteMeta({
   openAPI: {

@@ -46,7 +46,9 @@ const { data: clubLineup, status: clubLineupState } = await useLazyAsyncData(
   <div>
     <h1>{{ $t('clubLineup') }}</h1>
 
-    <SharedLineupTable :data="clubLineup || []" :loading="clubLineupState === 'pending'" :show-teams="true"
-      :show-search="true" />
+    <SharedLineupTable
+      :data="clubLineup || []" :loading="clubLineupState === 'pending'" :show-teams="true"
+      :show-search="true"
+    />
   </div>
 </template>

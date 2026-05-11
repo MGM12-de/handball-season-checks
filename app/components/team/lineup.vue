@@ -18,8 +18,10 @@ const { data: teamLineup, status, error } = await useLazyAsyncData(
 
 <template>
   <div class="w-full">
-    <UAlert v-if="error" icon="i-lucide-alert-circle" color="error" variant="subtle" title="Error loading lineup"
-      :description="error.message" />
+    <UAlert
+      v-if="error" icon="i-lucide-alert-circle" color="error" variant="subtle" title="Error loading lineup"
+      :description="error.message"
+    />
 
     <SharedLineupTable :data="teamLineup || []" :loading="status === 'pending'" :show-teams="false" />
   </div>

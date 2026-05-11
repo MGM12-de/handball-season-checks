@@ -1,9 +1,17 @@
 <script lang="ts" setup>
+import { useFavorites } from '~/composables/useFavorites'
+
 const route = useRoute()
 const router = useRouter()
 const team = ref()
 const { t } = useI18n()
 const requestURL = useRequestURL()
+
+const { isFavoriteTeam, toggleFavoriteTeam } = useFavorites()
+const teamId = computed(() => {
+  const idParam = route.params.id
+  return Array.isArray(idParam) ? idParam[0] : idParam
+})
 
 const items = [{
   slot: 'standing',
@@ -118,7 +126,18 @@ const { data: games, pending: gamesPending } = await useAsyncData(
 <template>
   <div>
     <UPage>
-      <UPageHeader :title="team.name" :headline="team.defaultTournament.name" />
+      <UPageHeader :title="team.name" :headline="team.defaultTournament.name">
+        <template #links>
+          <UButton
+            :icon="isFavoriteTeam(teamId) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+            :color="isFavoriteTeam(teamId) ? 'primary' : 'gray'"
+            variant="ghost"
+            size="xl"
+            :title="isFavoriteTeam(teamId) ? t('removeFromFavorites') : t('addToFavorites')"
+            @click="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo, tournamentAcronym: team.defaultTournament?.acronym })"
+          />
+        </template>
+      </UPageHeader>
       <UPageBody>
         <UTabs v-model="activeTab" :items="items" value-key="slot" class="w-full" variant="link">
           <template #default="{ item }">
@@ -138,8 +157,10 @@ const { data: games, pending: gamesPending } = await useAsyncData(
             <TeamGames :games="games || []" :games-pending="gamesPending" />
           </template>
           <template #stats>
-            <TeamPrognose :team-id="team.id" :games="games || []" :games-pending="gamesPending"
-              :tournament-id="team.defaultTournament.id" />
+            <TeamPrognose
+              :team-id="team.id" :games="games || []" :games-pending="gamesPending"
+              :tournament-id="team.defaultTournament.id"
+            />
           </template>
 
           <template #lineup>

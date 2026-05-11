@@ -89,5 +89,13 @@
   "forcedRelegation": "Zwangsabsteiger",
   "promotionBlocked": "Kein Aufstieg möglich",
   "withdrawn": "Zurückgezogen",
-  "organizations": "Verbände/ Bezirke"
+  "organizations": "Verbände/ Bezirke",
+  "favorites": "Favoriten",
+  "myFavorites": "Meine Favoriten",
+  "noFavoritesYet": "Noch keine Favoriten gespeichert.",
+  "addToFavorites": "Zu Favoriten hinzufügen",
+  "removeFromFavorites": "Aus Favoriten entfernen",
+  "favoriteClubs": "Favorisierte Vereine",
+  "favoriteTeams": "Favorisierte Mannschaften",
+  "noData": "Keine Daten verfügbar"
 }

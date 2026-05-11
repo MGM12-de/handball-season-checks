@@ -1,4 +1,3 @@
-import type { Game } from '../../../../types'
 import { getGameUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
@@ -12,9 +11,10 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.7762871',
-        summary: 'Game id'
-      }],
-  }
+        summary: 'Game id',
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {

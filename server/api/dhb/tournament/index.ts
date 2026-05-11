@@ -1,6 +1,5 @@
 import { getTournamentUrl } from '../../../../server/utils/dhbUtils'
 
-
 defineRouteMeta({
   openAPI: {
     description: 'Get tournament data',
@@ -12,8 +11,9 @@ defineRouteMeta({
         name: 'id',
         required: true,
         example: 'handball4all.wuerttemberg.m-bol_hf',
-      }],
-  }
+      },
+    ],
+  },
 })
 
 export default defineEventHandler(async (event) => {

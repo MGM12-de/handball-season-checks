@@ -1,11 +1,9 @@
-<script setup lang="ts">
-const route = useRoute()
+const fs = require('node:fs')
 
-useHead({
-  meta: [{ property: 'og:title', content: `MGM12 Handball checks - ${route.meta.title}` }],
-})
-</script>
+const file = 'app/layouts/default.vue'
+let content = fs.readFileSync(file, 'utf8')
 
+const replacement = `
 <template>
   <div class="flex flex-col min-h-screen">
     <AppHeader />
@@ -19,3 +17,7 @@ useHead({
     <AppFooter />
   </div>
 </template>
+`
+
+content = content.replace(/<template>[\s\S]*?<\/template>/, replacement.trim())
+fs.writeFileSync(file, content)
