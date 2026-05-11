@@ -1,13 +1,16 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createError } from 'h3'
 
+// Mocking Nuxt/Nitro globals
+vi.stubGlobal('defineRouteMeta', vi.fn())
+vi.stubGlobal('defineEventHandler', (handler: any) => handler)
+
 // Mocking h3 and other dependencies
 vi.mock('h3', async () => {
   const actual = await vi.importActual('h3')
   return {
     ...actual as any,
     getValidatedQuery: vi.fn(),
-    defineEventHandler: (handler: any) => handler,
   }
 })
 
