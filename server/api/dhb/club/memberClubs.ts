@@ -1,5 +1,3 @@
-import { getClubUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
-
 defineRouteMeta({
   openAPI: {
     description: 'Get member clubs',
@@ -10,17 +8,21 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.1187',
+        example: '6762',
       },
     ],
   },
 })
 
 /**
- * Get members clubs
+ * Get member clubs (e.g. Spielgemeinschaft sub-clubs).
+ *
+ * NOT YET AVAILABLE: the new handball.net API has no documented equivalent
+ * of the old `/clubs/{id}/member-clubs` endpoint. Returning an empty list
+ * degrades gracefully (see app/components/club/header.vue) instead of
+ * calling a dead endpoint.
  */
 export default defineEventHandler(async (event) => {
-  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.1187/member-clubs
   const query = getQuery(event)
 
   if (!query.id) {
@@ -29,14 +31,6 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const clubId = query.id as string
-  const clubInfo = await $fetch(`${getClubUrl(clubId)}/member-clubs`)
 
-  clubInfo.data.forEach((club: any) => {
-    if (club.logo) {
-      club.logo = normalizeImageUrl(club.logo)
-    }
-  })
-
-  return clubInfo.data
+  return []
 })

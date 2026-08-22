@@ -1,13 +1,15 @@
-import type { Location, Team } from '../handball-season-checks'
+import type { Location } from './location'
+import type { Team } from './team'
 import type { Tournament } from './tournament'
 
 export interface Game {
-  id: string
-  startsAt: Date
-  tournament: Tournament
+  id: number
+  startsAt: string
+  tournament?: Tournament
   homeTeam: Team
   awayTeam: Team
-  field: Location
+  field?: Location
+  referee?: string
   result?: string
   homeGoals?: number
   awayGoals?: number

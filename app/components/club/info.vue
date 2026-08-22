@@ -45,24 +45,19 @@ useAsyncData(
   }),
 ).then((data) => {
   const clubInfoData = data.data.value
-  state.ceo = clubInfoData.ceo
+
+  // The new handball.net API doesn't expose ceo/fax/website/ticketshop/socials
+  // at all - those fields stay unset and are hidden by the v-if guards below.
   state.president = clubInfoData.president
   state.contact = {
-    info: clubInfoData.contact,
+    info: clubInfoData.contact_person,
     email: clubInfoData.email,
-    telephone: clubInfoData.telephone,
-    fax: clubInfoData.fax,
+    telephone: clubInfoData.phone,
+    fax: undefined,
   }
-  state.address = clubInfoData.address
-  state.socials = {
-    facebook: clubInfoData.facebook,
-    instagram: clubInfoData.instagram,
-    youtube: clubInfoData.youtube,
-    twitter: clubInfoData.twitter,
-    tikTok: clubInfoData.tikTok,
-  }
-  state.website = clubInfoData.website
-  state.ticketshop = clubInfoData.ticketshop
+  state.address = [clubInfoData.address, clubInfoData.postal_code, clubInfoData.city]
+    .filter(Boolean)
+    .join(', ')
 })
 </script>
 

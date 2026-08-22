@@ -1,5 +1,3 @@
-import { getClubUrl } from '../../../../server/utils/dhbUtils'
-
 defineRouteMeta({
   openAPI: {
     description: 'Get Club info',
@@ -10,17 +8,20 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.36',
+        example: '6762',
       },
     ],
   },
 })
 
 /**
- * Get club info
+ * Get club info.
+ *
+ * The old API had a separate `/clubs/{id}/info` sub-resource. The new API's
+ * club object already includes address/contact/installation details inline
+ * (see `/api/dhb/club`), so this just delegates to that endpoint.
  */
 export default defineEventHandler(async (event) => {
-  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/info
   const query = getQuery(event)
 
   if (!query.id) {
@@ -29,8 +30,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'No id received',
     })
   }
-  const clubId = query.id as string
-  const clubInfo = await $fetch(`${getClubUrl(clubId)}/info`)
 
-  return clubInfo.data
+  return $fetch('/api/dhb/club', {
+    query: { id: query.id },
+  })
 })

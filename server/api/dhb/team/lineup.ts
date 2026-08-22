@@ -1,5 +1,5 @@
-import type { Game, Lineup } from '~~/types'
-import { mergePlayerStats } from '../../../utils/dhbPlayerUtils'
+import { dhbFetch, getPlayerStatsUrl } from '../../../../server/utils/dhbUtils'
+import { mapPlayerStatsEntry } from '../../../utils/dhbPlayerUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -11,53 +11,18 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.1169541',
+        example: '84219',
         summary: 'Team id',
       },
     ],
   },
 })
 
-async function processLineupsInBatches(
-  games: Game[],
-  teamId: string,
-  batchSize: number = 3,
-): Promise<Map<string, Lineup>> {
-  const teamPlayersMap = new Map<string, Lineup>()
-
-  for (let i = 0; i < games.length; i += batchSize) {
-    const batch = games.slice(i, i + batchSize)
-    const lineupPromises = batch.map(game =>
-      $fetch('/api/dhb/game/lineup', {
-        query: { id: game.id },
-      }).catch((e) => {
-        return null
-      }),
-    )
-
-    const lineups = await Promise.all(lineupPromises)
-
-    // Process lineups for this batch
-    lineups.forEach((lineup, index) => {
-      if (!lineup)
-        return // Skip failed requests
-
-      const game = batch[index]
-      const isHomeTeam = game.homeTeam.id === teamId
-      const teamPlayers = isHomeTeam ? lineup.home : lineup.away
-
-      teamPlayers?.forEach(player => mergePlayerStats(teamPlayersMap, player))
-    })
-
-    // Add small delay between batches to prevent overwhelming the API
-    if (i + batchSize < games.length) {
-      await new Promise(resolve => setTimeout(resolve, 100))
-    }
-  }
-
-  return teamPlayersMap
-}
-
+/**
+ * The new API exposes season-aggregated player stats directly
+ * (`/stats/player-stats?team_id=`), so there's no need to fetch every game's
+ * lineup and merge it client-side like the old API required.
+ */
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -70,28 +35,16 @@ export default defineEventHandler(async (event) => {
 
   try {
     const teamId = query.id as string
+    const stats = await dhbFetch<any[]>(getPlayerStatsUrl(), { query: { team_id: teamId } })
 
-    // Fetch team games
-    const teamGames: Game[] = await $fetch(`/api/dhb/team/games`, {
-      query: { id: teamId },
-    })
-
-    if (!teamGames || teamGames.length === 0) {
-      return []
-    }
-
-    // Process lineups in batches with e handling
-    const teamPlayersMap = await processLineupsInBatches(teamGames, teamId)
-
-    // Convert Map to Array and sort by goals (descending)
-    const teamLineup = Array.from(teamPlayersMap.values()).sort((a, b) => b.goals - a.goals)
-
-    return teamLineup
+    return stats.data
+      .map(mapPlayerStatsEntry)
+      .sort((a, b) => b.goals - a.goals)
   }
-  catch {
+  catch (error) {
     throw createError({
       statusCode: 500,
-      statusMessage: `Error fetching team lineup data. (${e})`,
+      statusMessage: `Error fetching team lineup data. (${error})`,
     })
   }
 })

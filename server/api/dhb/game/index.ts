@@ -1,17 +1,17 @@
-import { getGameUrl } from '../../../../server/utils/dhbUtils'
+import { dhbFetch, getMatchesUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
-    description: 'Get Game data',
-    summary: 'Get Game data',
+    description: 'Get Game (match) data',
+    summary: 'Get Game (match) data',
     tags: ['Game', 'DHB'],
     parameters: [
       {
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.8615461',
-        summary: 'Game id',
+        example: '545201',
+        summary: 'Match id',
       },
     ],
   },
@@ -28,10 +28,10 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const gameId = query.id as string
-    const game = await $fetch(getGameUrl(gameId))
+    const matchId = query.id as string
+    const match = await dhbFetch<any[]>(getMatchesUrl(), { query: { match_id: matchId } })
 
-    return game.data
+    return match.data[0] ?? null
   }
   catch (error) {
     throw createError({

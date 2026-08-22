@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { currentRoundOnly, dhbFetch, getStandingsUrl } from '../../../../server/utils/dhbUtils'
 
 const querySchema = z.object({
   id: z.string().min(1, 'Team ID is required'),
@@ -22,8 +23,8 @@ defineRouteMeta({
         in: 'query',
         name: 'tournamentId',
         required: false,
-        example: 'handball4all.wuerttemberg.m-bol_hf',
-        summary: 'Tournament id for enhanced prognosis with tournament-wide dependencies',
+        example: '14360',
+        summary: 'Phase id for enhanced prognosis with tournament-wide dependencies',
       },
     ],
   },
@@ -65,11 +66,11 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-async function fetchTournamentGames(tournamentId: string): Promise<any[]> {
+async function fetchTournamentGames(phaseId: string): Promise<any[]> {
   try {
-    // Fetch tournament standing to get all teams
-    const standingData: any = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
-    const teams = standingData.data.rows.map((row: any) => row.team)
+    // Fetch phase standings to get all teams
+    const standingData = await dhbFetch<any[]>(getStandingsUrl(), { query: { phase_id: phaseId } })
+    const teams = currentRoundOnly(standingData.data).map((row: any) => row.team)
 
     // Fetch games for each team using own API via $fetch for server-to-server
     const gamesByTeam = await Promise.all(

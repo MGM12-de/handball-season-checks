@@ -1,6 +1,36 @@
 import type { Lineup, Player } from '~~/types'
 
 /**
+ * Map a raw entry from `/stats/player-stats?team_id=` to this app's Player shape.
+ *
+ * The new API breaks sanctions down by type (`warnings`, `suspensions`,
+ * `disqualifications`, `blue_cards`) instead of one combined `sanctions`
+ * counter, which maps cleanly onto the existing yellow/2min/red/blue fields.
+ * `seven_meters` (makes) is the closest match for `penaltyGoals`; there is no
+ * separate "missed" counter in the new API.
+ */
+export function mapPlayerStatsEntry(entry: any): Player {
+  const stats = entry.stats ?? {}
+
+  return {
+    id: entry.player.id,
+    firstname: entry.player.first_name,
+    lastname: entry.player.last_name,
+    position: '',
+    number: entry.dorsal ? Number(entry.dorsal) : 0,
+    goals: stats.goals ?? 0,
+    penaltyGoals: stats.seven_meters ?? 0,
+    penaltyMissed: 0,
+    penalties: stats.suspensions ?? 0,
+    yellowCards: stats.warnings ?? 0,
+    redCards: stats.disqualifications ?? 0,
+    blueCards: stats.blue_cards ?? 0,
+    type: '',
+    gamesPlayed: stats.matches_played ?? 0,
+  }
+}
+
+/**
  * Creates a unique key for a player based on normalized first and last name.
  * @param player - The player object.
  * @returns A unique string key.

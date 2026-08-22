@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getClubsUrl, normalizeImageUrl } from '../../../server/utils/dhbUtils'
+import { dhbFetch, getClubSearchUrl, normalizeImageUrl } from '../../../server/utils/dhbUtils'
 
 const querySchema = z.object({
   clubName: z.string().min(1, 'Expected a clubname but got none'),
@@ -57,20 +57,24 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
 
-  const clubs: any = await $fetch(`${getClubsUrl()}/search`, {
+  const clubs = await dhbFetch<any[]>(getClubSearchUrl(), {
     query: {
-      query: query.clubName,
+      'all': 1,
+      'filter[search]': query.clubName,
     },
   })
 
-  clubs.data.forEach((club: any) => {
-    if (club.logo) {
-      club.logo = normalizeImageUrl(club.logo)
-    }
-
-    if (club.organization.logo) {
-      club.organization.logo = normalizeImageUrl(club.organization.logo)
-    }
-  })
-  return clubs.data
+  return clubs.data.map((club: any) => ({
+    ...club,
+    logo: club.logo ? normalizeImageUrl(club.logo) : club.logo,
+    // Compat shim: the old API nested a club's Verband/Bezirk under
+    // `organization`; the new API calls the same thing `federation`.
+    organization: club.federation
+      ? {
+          id: club.federation.id,
+          name: club.federation.name,
+          logo: club.federation.image ? normalizeImageUrl(club.federation.image) : club.federation.image,
+        }
+      : undefined,
+  }))
 })

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getTeamUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+import { currentRoundOnly, dhbFetch, getStandingsUrl, mapStandingsRow, resolveCurrentPhase } from '../../../../server/utils/dhbUtils'
 
 const querySchema = z.object({
   id: z.string().min(1, 'Team ID is required'),
@@ -15,7 +15,7 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.36',
+        example: '84219',
         summary: 'Team id',
       },
     ],
@@ -26,20 +26,16 @@ export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, data => querySchema.parse(data))
   const teamId = query.id as string
 
-  const normalizeTeamLogo = (team) => {
-    return {
-      ...team,
-      logo: normalizeImageUrl(team.logo),
-    }
+  const phase = await resolveCurrentPhase(teamId)
+  if (!phase) {
+    return []
   }
-  const teamApi = await $fetch(`${getTeamUrl(teamId)}/table`)
-  const standings = teamApi.data.rows
 
-  const normalizedStandings = standings.map(standing => ({
-    ...standing,
-    team: normalizeTeamLogo(standing.team),
-  }))
-  const currentTeam = normalizedStandings.find(obj => obj.team.id === query.id)
+  const standings = await dhbFetch<any[]>(getStandingsUrl(), { query: { phase_id: phase.id } })
+  const currentRows = currentRoundOnly(standings.data)
+
+  const normalizedStandings = currentRows.map(mapStandingsRow)
+  const currentTeam = normalizedStandings.find(obj => String(obj.team.id) === String(teamId))
   if (currentTeam) {
     currentTeam.class = 'bg-primary-500 animate-pulse'
   }

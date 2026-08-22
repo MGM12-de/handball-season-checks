@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getClubUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+import { dhbFetch, getClubUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -11,7 +11,7 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.36',
+        example: '6762',
       },
     ],
   },
@@ -48,13 +48,19 @@ export default defineEventHandler(async (event) => {
 
   try {
     const clubId = query.id as string
-    const club = await $fetch(getClubUrl(clubId))
+    // BEST EFFORT: see getClubUrl() - single-club-by-id is not a confirmed endpoint.
+    const club = await dhbFetch<any>(getClubUrl(clubId))
 
     if (club?.data) {
       if (club.data.logo)
         club.data.logo = normalizeImageUrl(club.data.logo)
-      if (club.data.organization?.logo)
-        club.data.organization.logo = normalizeImageUrl(club.data.organization.logo)
+      if (club.data.federation) {
+        club.data.organization = {
+          id: club.data.federation.id,
+          name: club.data.federation.name,
+          logo: club.data.federation.image ? normalizeImageUrl(club.data.federation.image) : club.data.federation.image,
+        }
+      }
     }
 
     return club.data

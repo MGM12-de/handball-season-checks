@@ -1,20 +1,10 @@
-import type { Player, Team } from '~~/types'
-import { getClubUrl } from '../../../../server/utils/dhbUtils'
-import { getPlayerKey } from '../../../utils/dhbPlayerUtils'
+import type { Player } from '~~/types'
+import { dhbFetch, fetchTeamsForClub, getPlayerStatsUrl } from '../../../../server/utils/dhbUtils'
+import { getPlayerKey, mapPlayerStatsEntry } from '../../../utils/dhbPlayerUtils'
 
 // Extended player interface with teams array
 interface ClubPlayer extends Player {
-  teams: Array<{
-    id: string
-    name: string
-    acronym?: string
-    ageGroup?: string
-  }>
-}
-
-interface ChunkLineupResult {
-  teamId: string
-  lineup: Player[]
+  teams: Array<{ id: number, name: string }>
 }
 
 function chunkArray<T>(items: T[], size: number): T[][] {
@@ -28,36 +18,29 @@ function chunkArray<T>(items: T[], size: number): T[][] {
 }
 
 async function fetchClubLineupsInChunks(
-  teams: Team[],
+  teams: any[],
   chunkSize: number = 10,
-): Promise<Array<{ team: Team, lineup: Player[] }>> {
-  const teamById = new Map(teams.map(team => [team.id, team]))
-  const teamIdChunks = chunkArray(teams.map(team => team.id), chunkSize)
-  const results: Array<{ team: Team, lineup: Player[] }> = []
+): Promise<Array<{ team: any, lineup: Player[] }>> {
+  const teamChunks = chunkArray(teams, chunkSize)
+  const results: Array<{ team: any, lineup: Player[] }> = []
 
-  for (let i = 0; i < teamIdChunks.length; i++) {
-    const teamIds = teamIdChunks[i]
-    if (!teamIds || teamIds.length === 0) {
+  for (let i = 0; i < teamChunks.length; i++) {
+    const chunk = teamChunks[i]
+    if (!chunk || chunk.length === 0) {
       continue
     }
 
-    const chunkResults = await $fetch<ChunkLineupResult[]>('/api/dhb/club/lineupChunk', {
-      query: { teamIds: teamIds.join(',') },
-    }).catch(() => [])
+    const chunkResults = await Promise.all(chunk.map(async (team) => {
+      const stats = await dhbFetch<any[]>(getPlayerStatsUrl(), {
+        query: { team_id: team.id },
+      }).catch(() => ({ data: [] }))
 
-    for (const chunkResult of chunkResults) {
-      const team = teamById.get(chunkResult.teamId)
-      if (!team) {
-        continue
-      }
+      return { team, lineup: stats.data.map(mapPlayerStatsEntry) }
+    }))
 
-      results.push({
-        team,
-        lineup: chunkResult.lineup,
-      })
-    }
+    results.push(...chunkResults)
 
-    if (i + 1 < teamIdChunks.length) {
+    if (i + 1 < teamChunks.length) {
       await new Promise(resolve => setTimeout(resolve, 100))
     }
   }
@@ -77,9 +60,9 @@ export default defineEventHandler(async (event) => {
 
   const clubPlayersMap = new Map<string, ClubPlayer>()
   const clubId = query.id as string
-  const clubTeams: { data: Team[] } = await $fetch(`${getClubUrl(clubId)}/teams`)
+  const clubTeams = await fetchTeamsForClub(clubId)
 
-  const teamLineups = await fetchClubLineupsInChunks(clubTeams.data)
+  const teamLineups = await fetchClubLineupsInChunks(clubTeams)
 
   // Process lineups and build player map
   teamLineups.forEach(({ team, lineup: teamLineup }) => {
@@ -89,7 +72,7 @@ export default defineEventHandler(async (event) => {
 
       if (existingPlayer) {
         // Player exists - merge stats and add team to teams array
-        existingPlayer.gamesPlayed += player.gamesPlayed || 1
+        existingPlayer.gamesPlayed += player.gamesPlayed || 0
         existingPlayer.goals += player.goals || 0
         existingPlayer.penaltyGoals += player.penaltyGoals || 0
         existingPlayer.penaltyMissed += player.penaltyMissed || 0
@@ -101,24 +84,14 @@ export default defineEventHandler(async (event) => {
         // Add team to teams array if not already present
         const teamExists = existingPlayer.teams.some(t => t.id === team.id)
         if (!teamExists) {
-          existingPlayer.teams.push({
-            id: team.id,
-            name: team.name,
-            acronym: team.defaultTournament?.acronym,
-            ageGroup: team.defaultTournament?.ageGroup,
-          })
+          existingPlayer.teams.push({ id: team.id, name: team.name })
         }
       }
       else {
         // New player - add with teams as array
         clubPlayersMap.set(playerKey, {
           ...player,
-          teams: [{
-            id: team.id,
-            name: team.name,
-            acronym: team.defaultTournament?.acronym,
-            ageGroup: team.defaultTournament?.ageGroup,
-          }],
+          teams: [{ id: team.id, name: team.name }],
         })
       }
     }
