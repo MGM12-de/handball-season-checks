@@ -16,6 +16,7 @@ export function mapPlayerStatsEntry(entry: any): Player {
     id: entry.player.id,
     firstname: entry.player.first_name,
     lastname: entry.player.last_name,
+    photoUrl: entry.player.photo_url ?? undefined,
     position: '',
     number: entry.dorsal ? Number(entry.dorsal) : 0,
     goals: stats.goals ?? 0,

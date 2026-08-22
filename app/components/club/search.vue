@@ -53,7 +53,7 @@ const columns: TableColumn<Club>[] = [{
     const isFav = isFavoriteClub(club.id.toString())
     return h(UButton, {
       icon: isFav ? 'i-heroicons-star-solid' : 'i-heroicons-star',
-      color: isFav ? 'primary' : 'gray',
+      color: isFav ? 'primary' : 'neutral',
       variant: 'ghost',
       title: isFav ? t('removeFromFavorites') : t('addToFavorites'),
       onClick: (e: Event) => {
@@ -105,7 +105,7 @@ function onRowSelected(e: Event, row: TableRow<Club>) {
       <div v-if="loading" class="space-y-4">
         <USkeleton v-for="i in 3" :key="i" class="h-24 w-full" />
       </div>
-      <UCard v-for="club in clubs" v-else :key="club.id" class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" @click="navigateTo(`/club/details/${club.id}`)">
+      <UCard v-for="club in clubs" v-else :key="club.id" class="p-4 cursor-pointer hover:bg-elevated transition-colors" @click="navigateTo(`/club/details/${club.id}`)">
         <div class="flex items-center gap-4">
           <UAvatar :src="club.logo" :alt="club.name" size="lg" class="shrink-0 bg-white" />
           <div class="flex flex-col flex-1 min-w-0">
@@ -115,14 +115,14 @@ function onRowSelected(e: Event, row: TableRow<Club>) {
               </div>
               <UButton
                 :icon="isFavoriteClub(club.id.toString()) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
-                :color="isFavoriteClub(club.id.toString()) ? 'primary' : 'gray'"
+                :color="isFavoriteClub(club.id.toString()) ? 'primary' : 'neutral'"
                 variant="ghost"
                 class="ml-2"
                 :title="isFavoriteClub(club.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
                 @click.stop="toggleFavoriteClub({ id: club.id.toString(), name: club.name, logo: club.logo, organizationName: club.organization?.name })"
               />
             </div>
-            <div v-if="club.organization" class="text-sm text-gray-500 flex items-center gap-2 mt-1">
+            <div v-if="club.organization" class="text-sm text-muted flex items-center gap-2 mt-1">
               <div class="flex items-center gap-1 ml-auto">
                 <UAvatar :src="club.organization.logo" :alt="club.organization.name" size="2xs" class="bg-white" />
                 <span class="truncate max-w-[100px]">{{ club.organization.name }}</span>
@@ -132,7 +132,7 @@ function onRowSelected(e: Event, row: TableRow<Club>) {
         </div>
       </UCard>
 
-      <div v-if="clubs && clubs.length === 0 && !loading && state.clubName" class="text-center py-8 text-gray-500">
+      <div v-if="clubs && clubs.length === 0 && !loading && state.clubName" class="text-center py-8 text-muted">
         {{ t('noData') }}
       </div>
     </div>

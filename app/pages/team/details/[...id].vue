@@ -129,7 +129,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
         <template #links>
           <UButton
             :icon="isFavoriteTeam(teamId) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
-            :color="isFavoriteTeam(teamId) ? 'primary' : 'gray'"
+            :color="isFavoriteTeam(teamId) ? 'primary' : 'neutral'"
             variant="ghost"
             size="xl"
             :title="isFavoriteTeam(teamId) ? t('removeFromFavorites') : t('addToFavorites')"
@@ -145,7 +145,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
 
               <span class="truncate">{{ item.label }}</span>
 
-              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary" />
             </div>
           </template>
           <template #standing>

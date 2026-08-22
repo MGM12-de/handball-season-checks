@@ -199,7 +199,7 @@ const state = reactive({
 
               <span class="truncate">{{ item.label }}</span>
 
-              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+              <span class="absolute -right-4 w-2 h-2 rounded-full bg-primary" />
             </div>
           </template>
           <template #home>
@@ -214,7 +214,7 @@ const state = reactive({
             <UFormField :label="t('homeQuota')">
               <UInput v-model="state.homeQuota" disabled>
                 <template #trailing>
-                  <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+                  <span class="text-muted text-xs">%</span>
                 </template>
               </UInput>
             </UFormField>
@@ -239,7 +239,7 @@ const state = reactive({
             <UFormField :label="t('awayQuota')">
               <UInput v-model="state.awayQuota" disabled>
                 <template #trailing>
-                  <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+                  <span class="text-muted text-xs">%</span>
                 </template>
               </UInput>
             </UFormField>

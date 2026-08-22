@@ -49,6 +49,7 @@ export default defineEventHandler(async (event) => {
         id: player.id,
         firstname: player.first_name,
         lastname: player.last_name,
+        photoUrl: player.photo_url ?? undefined,
         position: '',
         number: 0,
         goals: 0,

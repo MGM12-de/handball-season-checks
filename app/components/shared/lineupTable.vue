@@ -6,6 +6,7 @@ interface Player {
   id: string
   firstname: string
   lastname: string
+  photoUrl?: string
   gamesPlayed?: number
   goals?: number
   goalsPerGame?: number
@@ -42,6 +43,7 @@ const { t } = useI18n()
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
+const UAvatar = resolveComponent('UAvatar')
 
 // Helper function to check if a column should be shown
 function shouldShowColumn(fieldName: string) {
@@ -69,7 +71,13 @@ const columns = computed<TableColumn<any>[]>(() => {
     {
       accessorKey: 'name',
       header: ({ column }) => getHeader(column, t('name')),
-      cell: ({ row }) => `${row.original.firstname} ${row.original.lastname}`,
+      cell: ({ row }) => {
+        const name = `${row.original.firstname} ${row.original.lastname}`
+        return h('div', { class: 'flex items-center gap-2' }, [
+          h(UAvatar, { src: row.original.photoUrl, alt: name, size: 'xs' }),
+          h('span', name),
+        ])
+      },
       footer: ({ column }) => {
         const rowCount = column.getFacetedRowModel().rows.length
         return h('div', { class: 'text-center font-medium' }, `${rowCount} ${t('players')}`)
@@ -240,8 +248,8 @@ function getHeader(column: Column<any>, label: string) {
 
 <template>
   <div>
-    <div v-if="showSearch" class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="q" :placeholder="t('filter')" />
+    <div v-if="showSearch" class="flex px-3 py-3.5 border-b border-default">
+      <UInput v-model="q" :placeholder="t('filter')" icon="i-lucide-search" class="w-full" />
     </div>
 
     <!-- Mobile View (Cards) -->
@@ -251,63 +259,66 @@ function getHeader(column: Column<any>, label: string) {
       </div>
       <UCard v-for="player in filteredRows" v-else :key="player.id" class="p-4">
         <div class="flex flex-col gap-2">
-          <div class="font-bold text-lg border-b border-gray-100 dark:border-gray-800 pb-2 mb-1 flex justify-between items-center">
-            <span>{{ player.firstname }} {{ player.lastname }}</span>
+          <div class="border-b border-default pb-2 mb-1 flex justify-between items-center gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <UAvatar :src="player.photoUrl" :alt="`${player.firstname} ${player.lastname}`" size="md" />
+              <span class="font-bold text-lg truncate">{{ player.firstname }} {{ player.lastname }}</span>
+            </div>
             <div v-if="showTeams && player.teams" class="flex gap-1 flex-wrap justify-end">
               <UBadge v-for="team in player.teams" :key="team.id" :label="team.acronym || team.name" size="sm" />
             </div>
-            <div v-if="showClub && player.team" class="flex justify-end">
+            <div v-if="showClub && player.team" class="flex justify-end shrink-0">
               <UBadge :label="player.team.name" size="sm" variant="outline" :avatar="{ src: player.team.logo || '', alt: player.team.name }" />
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-y-2 text-sm">
-            <div class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div class="flex items-center gap-1 text-muted">
               <UIcon name="i-mdi-whistle" class="w-4 h-4" />
               <span>{{ t('gamesPlayed') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.gamesPlayed || 0 }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.gamesPlayed || 0 }}</strong>
             </div>
 
-            <div class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div class="flex items-center gap-1 text-muted">
               <UIcon name="i-mdi-soccer" class="w-4 h-4" />
               <span>{{ t('goals') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.goals || 0 }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.goals || 0 }}</strong>
             </div>
 
-            <div class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div class="flex items-center gap-1 text-muted">
               <UIcon name="i-mdi-chart-line" class="w-4 h-4" />
               <span>Ø:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.gamesPlayed && player.goals ? (player.goals / player.gamesPlayed).toFixed(2) : '0.00' }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.gamesPlayed && player.goals ? (player.goals / player.gamesPlayed).toFixed(2) : '0.00' }}</strong>
             </div>
 
-            <div v-if="player.yellowCards" class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div v-if="player.yellowCards" class="flex items-center gap-1 text-muted">
               <div class="w-3 h-4 bg-yellow-400 rounded-sm" />
               <span>{{ t('yellowCards') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.yellowCards }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.yellowCards }}</strong>
             </div>
 
-            <div v-if="player.redCards" class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div v-if="player.redCards" class="flex items-center gap-1 text-muted">
               <div class="w-3 h-4 bg-red-500 rounded-sm" />
               <span>{{ t('redCards') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.redCards }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.redCards }}</strong>
             </div>
 
-            <div v-if="player.blueCards" class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <div v-if="player.blueCards" class="flex items-center gap-1 text-muted">
               <div class="w-3 h-4 bg-blue-500 rounded-sm" />
               <span>{{ t('blueCards') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.blueCards }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.blueCards }}</strong>
             </div>
 
-            <div v-if="player.penalties" class="flex items-center gap-1 text-gray-500 dark:text-gray-400 col-span-2">
+            <div v-if="player.penalties" class="flex items-center gap-1 text-muted col-span-2">
               <UIcon name="i-mdi-hand-back-left" class="w-4 h-4" />
               <span>{{ t('penalties') }}:</span>
-              <strong class="text-gray-900 dark:text-white ml-auto">{{ player.penalties }}</strong>
+              <strong class="text-highlighted ml-auto">{{ player.penalties }}</strong>
             </div>
           </div>
         </div>
       </UCard>
 
-      <div v-if="filteredRows.length === 0 && !loading" class="text-center py-8 text-gray-500">
+      <div v-if="filteredRows.length === 0 && !loading" class="text-center py-8 text-muted">
         {{ t('noData') }}
       </div>
     </div>
