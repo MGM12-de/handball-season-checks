@@ -100,5 +100,10 @@
   "noData": "Keine Daten verfügbar",
   "toWomen": "Zu den Damen",
   "toMen": "Zu den Herren",
-  "leaguesLoaded": "{loaded} / {total} Ligen geladen ({percent}%)"
+  "leaguesLoaded": "{loaded} / {total} Ligen geladen ({percent}%)",
+  "startPage": "Start",
+  "installAppTitle": "App installieren",
+  "installAppDescription": "Für schnelleren Zugriff zum Startbildschirm hinzufügen.",
+  "install": "Installieren",
+  "noLeague": "Ohne Liga"
 }

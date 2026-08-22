@@ -100,5 +100,10 @@
   "noData": "No data available",
   "toWomen": "To women's",
   "toMen": "To men's",
-  "leaguesLoaded": "{loaded} / {total} leagues loaded ({percent}%)"
+  "leaguesLoaded": "{loaded} / {total} leagues loaded ({percent}%)",
+  "startPage": "Home",
+  "installAppTitle": "Install app",
+  "installAppDescription": "Add to your home screen for quicker access.",
+  "install": "Install",
+  "noLeague": "No league"
 }
