@@ -58,6 +58,29 @@ const { data: teams, pending: teamsPending } = await useAsyncData(
   }),
 ) as unknown as { data: Team[], pending: boolean, error: any, refresh: () => object }
 
+const unknownLeagueLabel = computed(() => t('noLeague'))
+
+const sortedTeams = computed(() => {
+  return [...(teams.value || [])].sort((a, b) => {
+    const leagueA = a.league?.name ?? ''
+    const leagueB = b.league?.name ?? ''
+    return leagueA.localeCompare(leagueB) || a.name.localeCompare(b.name)
+  })
+})
+
+const groupedTeams = computed(() => {
+  const groups = new Map<string, Team[]>()
+
+  for (const team of sortedTeams.value) {
+    const key = team.league?.name || unknownLeagueLabel.value
+    const group = groups.get(key) ?? []
+    group.push(team)
+    groups.set(key, group)
+  }
+
+  return Array.from(groups.entries()).map(([league, teamsInLeague]) => ({ league, teams: teamsInLeague }))
+})
+
 function onRowSelected(e: Event, row: TableRow<Team>) {
   const teamId = row.getValue('id')
   navigateTo(`/team/details/${teamId}`)
@@ -66,38 +89,39 @@ function onRowSelected(e: Event, row: TableRow<Team>) {
 
 <template>
   <div>
-    <!-- Mobile View (Cards) -->
-    <div class="block md:hidden space-y-4">
+    <!-- Mobile View (Cards, grouped by league) -->
+    <div class="block md:hidden space-y-6">
       <div v-if="teamsPending" class="space-y-4">
         <USkeleton v-for="i in 3" :key="i" class="h-24 w-full" />
       </div>
-      <UCard v-for="team in teams" v-else :key="team.id" class="p-4 cursor-pointer hover:bg-elevated transition-colors" @click="navigateTo(`/team/details/${team.id}`)">
-        <div class="flex flex-col gap-1">
-          <div class="flex justify-between items-start">
-            <div class="font-bold text-lg text-primary">
-              {{ team.name }}
+      <div v-for="group in groupedTeams" v-else :key="group.league" class="space-y-3">
+        <h3 class="text-sm font-semibold text-muted uppercase tracking-wide">
+          {{ group.league }}
+        </h3>
+        <div class="space-y-3">
+          <UCard v-for="team in group.teams" :key="team.id" class="p-4 cursor-pointer hover:bg-elevated transition-colors" @click="navigateTo(`/team/details/${team.id}`)">
+            <div class="flex justify-between items-center">
+              <div class="font-bold text-lg text-primary">
+                {{ team.name }}
+              </div>
+              <UButton
+                :icon="isFavoriteTeam(team.id.toString()) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+                :color="isFavoriteTeam(team.id.toString()) ? 'primary' : 'neutral'"
+                variant="ghost"
+                class="ml-2"
+                :title="isFavoriteTeam(team.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
+                @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
+              />
             </div>
-            <UButton
-              :icon="isFavoriteTeam(team.id.toString()) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
-              :color="isFavoriteTeam(team.id.toString()) ? 'primary' : 'neutral'"
-              variant="ghost"
-              class="ml-2"
-              :title="isFavoriteTeam(team.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
-              @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
-            />
-          </div>
-          <div v-if="team.league?.name" class="text-sm text-muted flex items-center gap-2">
-            <UIcon name="i-heroicons-trophy" class="w-4 h-4" />
-            <span>{{ team.league.name }}</span>
-          </div>
+          </UCard>
         </div>
-      </UCard>
+      </div>
     </div>
 
     <!-- Desktop View (Table) -->
     <div class="hidden md:block">
       <UTable
-        v-model:column-visibility="columnVisibility" :data="teams" :columns="columns" :loading="teamsPending"
+        v-model:column-visibility="columnVisibility" :data="sortedTeams" :columns="columns" :loading="teamsPending"
         @select="onRowSelected"
       />
     </div>

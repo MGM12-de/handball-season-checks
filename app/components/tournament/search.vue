@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '@nuxt/ui'
+import { watchDebounced } from '@vueuse/core'
 import { h, resolveComponent } from 'vue'
 
 const { t } = useI18n()
@@ -47,6 +48,10 @@ const columnVisibility = ref({
 })
 
 async function onSearch() {
+  if (!state.tournament || state.tournament.trim().length < 2) {
+    return
+  }
+
   loading.value = true
   const { data } = useAsyncData(`${state.tournament}`, () => $fetch('/api/dhb/tournament/search', {
     query: { tournamentName: state.tournament },
@@ -54,6 +59,15 @@ async function onSearch() {
   clubs.value = data.value
   loading.value = false
 }
+
+watchDebounced(() => state.tournament, () => {
+  if (!state.tournament || state.tournament.trim().length < 2) {
+    clubs.value = []
+    return
+  }
+
+  onSearch()
+}, { debounce: 400 })
 
 function onRowSelected(e: Event, row: TableRow<any>) {
   const tournamentId = row.getValue('id')

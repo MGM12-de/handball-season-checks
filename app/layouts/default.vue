@@ -10,12 +10,16 @@ useHead({
   <div class="flex flex-col min-h-screen">
     <AppHeader />
 
-    <main class="flex-1 w-full flex flex-col pt-4 pb-8">
-      <UContainer class="flex-1 w-full flex flex-col">
-        <AppOriginInfo />
-        <slot />
-      </UContainer>
+    <main class="flex-1 w-full flex flex-col pt-4 pb-20 md:pb-8">
+      <AppPullToRefresh>
+        <UContainer class="flex-1 w-full flex flex-col">
+          <AppOriginInfo />
+          <slot />
+        </UContainer>
+      </AppPullToRefresh>
     </main>
-    <AppFooter />
+    <AppFooter class="hidden md:block" />
+    <AppPwaInstallPrompt />
+    <AppBottomNav />
   </div>
 </template>
