@@ -1,5 +1,19 @@
 {
   "extends": [
     "github>nuxt/renovate-config-nuxt"
-  ]
+  ],
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["nuxt", "@nuxt/kit", "@nuxt/schema", "@nuxt/ui"],
+      "automerge": false
+    }
+  ],
+  "lockFileMaintenance": {
+    "automerge": true
+  }
 }
