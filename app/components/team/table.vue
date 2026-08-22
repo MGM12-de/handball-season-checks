@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '@nuxt/ui'
 import type { Team } from '../../../types'
-import { UButton } from '#components'
 import { h } from 'vue'
+import { UButton } from '#components'
 import { useFavorites } from '~/composables/useFavorites'
 
 const props = defineProps({
