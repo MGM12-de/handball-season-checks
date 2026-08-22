@@ -121,7 +121,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      dhbBaseUrl: require('node:process').env.DHB_BASE_URL || 'https://www.handball.net/a/sportdata/1',
+      dhbBaseUrl: require('node:process').env.DHB_BASE_URL || 'https://handball.net/api/new',
     },
   },
   vite: {

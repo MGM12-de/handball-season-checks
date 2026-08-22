@@ -83,19 +83,18 @@ const { data } = await useAsyncData(
 team.value = data.value
 
 const seoTitle = computed(() => {
-  const tournamentAcronym = team.value?.defaultTournament?.acronym
   const teamName = team.value?.name
 
-  if (tournamentAcronym && teamName) {
-    return `${tournamentAcronym} - ${teamName} | ${t('siteTitle')}`
+  if (teamName) {
+    return `${teamName} | ${t('siteTitle')}`
   }
 
   return `${t('team')} | ${t('siteTitle')}`
 })
 
-const seoDescription = computed(() => team.value?.defaultTournament?.name || t('siteDescription'))
+const seoDescription = computed(() => team.value?.club?.name || t('siteDescription'))
 const defaultOgImage = computed(() => new URL('/favicon.svg', requestURL.origin).toString())
-const ogImage = computed(() => team.value?.logo || team.value?.organization?.logo || defaultOgImage.value)
+const ogImage = computed(() => team.value?.logo || team.value?.club?.logo || defaultOgImage.value)
 const canonicalUrl = computed(() => new URL(route.fullPath, requestURL.origin).toString())
 
 useSeoMeta({
@@ -126,7 +125,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
 <template>
   <div>
     <UPage>
-      <UPageHeader :title="team.name" :headline="team.defaultTournament.name">
+      <UPageHeader :title="team.name" :headline="team.club?.name">
         <template #links>
           <UButton
             :icon="isFavoriteTeam(teamId) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
@@ -134,7 +133,7 @@ const { data: games, pending: gamesPending } = await useAsyncData(
             variant="ghost"
             size="xl"
             :title="isFavoriteTeam(teamId) ? t('removeFromFavorites') : t('addToFavorites')"
-            @click="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo, tournamentAcronym: team.defaultTournament?.acronym })"
+            @click="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
           />
         </template>
       </UPageHeader>
@@ -159,7 +158,6 @@ const { data: games, pending: gamesPending } = await useAsyncData(
           <template #stats>
             <TeamPrognose
               :team-id="team.id" :games="games || []" :games-pending="gamesPending"
-              :tournament-id="team.defaultTournament.id"
             />
           </template>
 

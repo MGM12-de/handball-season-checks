@@ -1,5 +1,5 @@
 import type { Game } from '../../../../types'
-import { getTeamUrl } from '../../../../server/utils/dhbUtils'
+import { dhbFetchAllPages, getMatchesUrl } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
   openAPI: {
@@ -11,7 +11,7 @@ defineRouteMeta({
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.36',
+        example: '84219',
         summary: 'Team id',
       },
     ],
@@ -22,8 +22,6 @@ export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event)
 
-    const games: Game[] = []
-
     if (!query.id) {
       throw createError({
         statusCode: 400,
@@ -32,54 +30,53 @@ export default defineEventHandler(async (event) => {
     }
 
     const teamId = query.id as string
-    const teamApi = await $fetch(`${getTeamUrl(teamId)}/schedule`)
+    const matches = await dhbFetchAllPages<any>(getMatchesUrl(), { team_id: teamId })
 
-    teamApi.data.forEach((element) => {
-      if (element.startsAt) {
-        const date = new Date(element.startsAt)
-        element.startsAt = `${date.toLocaleDateString('de')}, ${date.toLocaleTimeString('de', {
+    const games: Game[] = matches.map((match) => {
+      const homeGoals = match.result?.local ?? undefined
+      const awayGoals = match.result?.visitor ?? undefined
+      const hasResult = homeGoals != null && awayGoals != null
+
+      const date = match.date ? new Date(match.date) : null
+      const startsAt = date
+        ? `${date.toLocaleDateString('de')}, ${date.toLocaleTimeString('de', {
           hour: '2-digit',
           minute: '2-digit',
         })}`
-      }
-      if (element.homeGoals) {
-        element.result = `${element.homeGoals}:${element.awayGoals}`
-      }
+        : match.date
 
-      games.push({
-        id: element.id,
-        startsAt: element.startsAt,
+      return {
+        id: match.id,
+        startsAt,
         homeTeam: {
-          id: element.homeTeam.id,
-          teamGroupId: element.homeTeam.teamGroupId,
-          name: element.homeTeam.name,
-          acronym: element.homeTeam.acronym,
+          id: match.local.id,
+          name: match.local.name,
         },
         awayTeam: {
-          id: element.awayTeam.id,
-          teamGroupId: element.awayTeam.teamGroupId,
-          name: element.awayTeam.name,
-          acronym: element.awayTeam.acronym,
+          id: match.visitor.id,
+          name: match.visitor.name,
         },
-        tournament: {
-          id: element.tournament.id,
-          name: element.tournament.name,
-        },
-        referee: element.refereeInfo,
-        result: element.result,
-        homeGoals: element.homeGoals,
-        awayGoals: element.awayGoals,
-        goalDifference: element.homeGoals - element.awayGoals,
-        remarks: element.remarks,
-        field: {
-          id: element.field.id,
-          fieldNumber: element.field.fieldNumber,
-          name: element.field.name,
-          city: element.field.city,
-        },
-        pdfUrl: element.pdfUrl,
-      })
+        tournament: match.phase
+          ? {
+              id: match.phase.id,
+              name: match.phase.name,
+              competition: match.phase.competition,
+            }
+          : undefined,
+        result: hasResult ? `${homeGoals}:${awayGoals}` : undefined,
+        homeGoals,
+        awayGoals,
+        goalDifference: hasResult ? homeGoals - awayGoals : undefined,
+        field: match.field
+          ? {
+              id: match.field.id,
+              name: match.field.name,
+              city: match.field.installation?.address,
+            }
+          : undefined,
+      } as Game
     })
+
     return games
   }
   catch (error) {

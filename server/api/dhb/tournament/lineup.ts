@@ -1,16 +1,18 @@
-import { getTournamentUrl, normalizeImageUrl } from '../../../../server/utils/dhbUtils'
+import { currentRoundOnly, dhbFetch, getPlayerStatsUrl, getStandingsUrl, mapStandingsRow } from '../../../../server/utils/dhbUtils'
+import { mapPlayerStatsEntry } from '../../../utils/dhbPlayerUtils'
 
 defineRouteMeta({
   openAPI: {
-    description: 'Get tournament lineup',
-    summary: 'Get tournament lineup',
+    description: 'Get tournament (phase) lineup',
+    summary: 'Get tournament (phase) lineup',
     tags: ['Tournament', 'DHB'],
     parameters: [
       {
         in: 'query',
         name: 'id',
         required: true,
-        example: 'handball4all.wuerttemberg.m-bol_hf',
+        example: '14360',
+        summary: 'Phase id',
       },
     ],
   },
@@ -27,17 +29,17 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const tournamentId = query.id as string
-    const tournamentTable = await $fetch(`${getTournamentUrl(tournamentId)}/table`)
+    const phaseId = query.id as string
+    const standings = await dhbFetch<any[]>(getStandingsUrl(), { query: { phase_id: phaseId } })
+    const rows = currentRoundOnly(standings.data)
 
     // Helper function to process promises in batches
-    const processInBatches = async (items, batchSize, callback) => {
-      const results = []
+    const processInBatches = async <T, R>(items: T[], batchSize: number, callback: (item: T) => Promise<R>) => {
+      const results: R[] = []
       for (let i = 0; i < items.length; i += batchSize) {
         const batch = items.slice(i, i + batchSize)
         const batchResults = await Promise.all(batch.map(callback))
         results.push(...batchResults)
-        // Optional: Add small delay between batches to prevent overwhelming the API
         if (i + batchSize < items.length) {
           await new Promise(resolve => setTimeout(resolve, 100))
         }
@@ -45,35 +47,19 @@ export default defineEventHandler(async (event) => {
       return results
     }
 
-    // Helper function to normalize team logo
-    const normalizeTeamLogo = (team) => {
-      return {
-        ...team,
-        logo: normalizeImageUrl(team.logo),
-      }
-    }
-
-    // Process team lineups in batches of 3-5
     const batchSize = 3
-    const resolvedLineups = await processInBatches(
-      tournamentTable.data.rows,
-      batchSize,
-      async (row) => {
-        const teamLineup = await $fetch(`/api/dhb/team/lineup`, {
-          query: { id: row.team.id },
-        })
-        return teamLineup.map(player => ({
-          ...player,
-          team: normalizeTeamLogo(row.team),
-        }))
-      },
-    )
+    const resolvedLineups = await processInBatches(rows, batchSize, async (row: any) => {
+      const team = mapStandingsRow(row).team
+      const stats = await dhbFetch<any[]>(getPlayerStatsUrl(), { query: { team_id: team.id } })
+        .catch(() => ({ data: [] }))
 
-    // Flatten results
-    const lineup = []
-    resolvedLineups.forEach(teamPlayers => lineup.push(...teamPlayers))
+      return stats.data.map(mapPlayerStatsEntry).map(player => ({
+        ...player,
+        team,
+      }))
+    })
 
-    return lineup
+    return resolvedLineups.flat()
   }
   catch (error) {
     throw createError({

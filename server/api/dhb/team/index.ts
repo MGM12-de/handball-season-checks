@@ -1,6 +1,6 @@
 import type { OrganizationListItem } from '~~/types/league'
 import organizationsIndex from '~~/content/organizations/index.json'
-import { getTeamUrl } from '../../../../server/utils/dhbUtils'
+import { dhbFetch, getTeamUrl } from '../../../../server/utils/dhbUtils'
 
 interface OrganizationContentEntry {
   name?: string
@@ -42,8 +42,6 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  // https://www.handball.net/a/sportdata/1/clubs/handball4all.wuerttemberg.36/teams
-
   const query = getQuery(event)
 
   if (!query.id) {
@@ -53,9 +51,9 @@ export default defineEventHandler(async (event) => {
     })
   }
   const teamId = query.id as string
-  const teamApi: any = await $fetch(getTeamUrl(teamId))
+  const teamApi = await dhbFetch<any>(getTeamUrl(teamId))
 
-  const clubName = teamApi.data?.club.name
+  const clubName = teamApi.data?.club?.name
   let teamOrganizationsData: OrganizationListItem[] = []
 
   if (clubName) {

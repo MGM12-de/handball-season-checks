@@ -25,10 +25,10 @@ if (club.hasMemberClubs) {
 
 <template>
   <div>
-    <UPageCard :title="club.acronym" :description="club.organization.name" orientation="horizontal">
+    <UPageCard :title="club.name" :description="club.organization?.name" orientation="horizontal">
       <UAvatarGroup size="2xl">
-        <UAvatar :src="club.organization.logo" :alt="club.organization.acronym" />
-        <UAvatar :src="club.logo" :alt="club.acronym" />
+        <UAvatar :src="club.organization?.logo" :alt="club.organization?.name" />
+        <UAvatar :src="club.logo" :alt="club.name" />
       </UAvatarGroup>
       <div v-if="club.hasMemberClubs">
         <h2>{{ t('memberClubs') }}</h2>

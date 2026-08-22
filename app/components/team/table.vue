@@ -22,12 +22,6 @@ const columns: TableColumn<Team>[] = [{
   accessorKey: 'name',
   header: t('name'),
 }, {
-  accessorKey: 'defaultTournament.name',
-  header: t('league'),
-}, {
-  accessorKey: 'defaultTournament.acronym',
-  header: t('acronym'),
-}, {
   id: 'favorite',
   header: '',
   cell: ({ row }) => {
@@ -44,7 +38,6 @@ const columns: TableColumn<Team>[] = [{
           id: team.id.toString(),
           name: team.name,
           logo: team.logo,
-          tournamentAcronym: team.defaultTournament?.acronym,
         })
       },
     })
@@ -87,13 +80,12 @@ function onRowSelected(e: Event, row: TableRow<Team>) {
               variant="ghost"
               class="ml-2"
               :title="isFavoriteTeam(team.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
-              @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo, tournamentAcronym: team.defaultTournament?.acronym })"
+              @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
             />
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
+          <div v-if="team.club?.name" class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
             <UIcon name="i-heroicons-trophy" class="w-4 h-4" />
-            <span>{{ team.defaultTournament?.name || t('league') }}</span>
-            <UBadge v-if="team.defaultTournament?.acronym" :label="team.defaultTournament.acronym" size="xs" variant="subtle" />
+            <span>{{ team.club.name }}</span>
           </div>
         </div>
       </UCard>

@@ -1,10 +1,18 @@
-import type { Tournament } from './tournament'
+import type { TeamOrganization } from './league'
+
+export interface Club {
+  id: number
+  name: string
+  logo?: string
+  organization?: { id: number, name: string, logo?: string }
+  organizations?: TeamOrganization[]
+}
 
 export interface Team {
-  id: string
-  teamGroupId: number
+  id: number
   name: string
-  acronym: string
   logo?: string
-  defaultTournament?: Tournament
+  club?: Club
+  gender?: { id: string, name: string }
+  ageCategory?: { id: number, name: string }
 }
