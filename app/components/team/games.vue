@@ -40,18 +40,14 @@ const conditionalColumns = [
     cell: ({ row }) => {
       if (!row.original.pdfUrl)
         return ''
-      return h('a', {
-        'href': row.original.pdfUrl,
+      return h(resolveComponent('UButton'), {
+        'to': row.original.pdfUrl,
         'target': '_blank',
-        'rel': 'noopener noreferrer',
-        'class': 'inline-flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors',
+        'icon': 'i-heroicons-document-text',
+        'color': 'neutral',
+        'variant': 'ghost',
         'aria-label': 'Open PDF',
-      }, [
-        h(resolveComponent('UIcon'), {
-          name: 'i-heroicons-document-text',
-          class: 'w-5 h-5',
-        }),
-      ])
+      })
     },
   },
 ]
@@ -97,27 +93,27 @@ const columns = computed<TableColumn<any>[]>(() => {
         <template #header>
           <div class="flex justify-between items-start">
             {{ game.homeTeam?.name }} vs {{ game.awayTeam?.name }}
-            <div v-if="game.result" class="text-sm font-medium text-green-600">
+            <div v-if="game.result" class="text-sm font-medium text-success">
               {{ game.result }}
             </div>
           </div>
         </template>
 
         <div class="space-y-2">
-          <div class="text-sm text-gray-500">
+          <div class="text-sm text-muted">
             {{ game.startsAt }}
           </div>
-          <div v-if="game.field?.name" class="text-sm text-gray-500">
+          <div v-if="game.field?.name" class="text-sm text-muted">
             📍 {{ game.field.name }}
           </div>
         </div>
 
         <template #footer>
-          <div v-if="game.remarks" class="text-sm text-gray-600">
+          <div v-if="game.remarks" class="text-sm text-toned">
             <UIcon name="i-heroicons-document" /> {{ game.remarks }}
           </div>
           <div class="grid grid-cols-2 gap-4 items-center">
-            <div v-if="game.referee" class="text-sm text-gray-600">
+            <div v-if="game.referee" class="text-sm text-toned">
               <UIcon name="i-heroicons-users" /> {{ game.referee }}
             </div>
             <div v-if="game.pdfUrl" class="pt-2 justify-self-end">

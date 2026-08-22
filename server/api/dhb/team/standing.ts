@@ -34,11 +34,5 @@ export default defineEventHandler(async (event) => {
   const standings = await dhbFetch<any[]>(getStandingsUrl(), { query: { phase_id: phase.id } })
   const currentRows = currentRoundOnly(standings.data)
 
-  const normalizedStandings = currentRows.map(mapStandingsRow)
-  const currentTeam = normalizedStandings.find(obj => String(obj.team.id) === String(teamId))
-  if (currentTeam) {
-    currentTeam.class = 'bg-primary-500 animate-pulse'
-  }
-
-  return normalizedStandings
+  return currentRows.map(mapStandingsRow)
 })

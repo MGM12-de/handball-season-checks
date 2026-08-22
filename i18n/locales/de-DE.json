@@ -97,5 +97,8 @@
   "removeFromFavorites": "Aus Favoriten entfernen",
   "favoriteClubs": "Favorisierte Vereine",
   "favoriteTeams": "Favorisierte Mannschaften",
-  "noData": "Keine Daten verfügbar"
+  "noData": "Keine Daten verfügbar",
+  "toWomen": "Zu den Damen",
+  "toMen": "Zu den Herren",
+  "leaguesLoaded": "{loaded} / {total} Ligen geladen ({percent}%)"
 }

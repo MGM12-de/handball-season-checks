@@ -12,7 +12,7 @@ const { t } = useI18n()
     <br>
     <ULink
       to="https://handball.net" active-class="text-primary"
-      inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+      inactive-class="text-muted hover:text-toned"
     >
       https://handball.net
     </ULink>

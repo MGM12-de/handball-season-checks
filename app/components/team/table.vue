@@ -32,7 +32,7 @@ const columns: TableColumn<Team>[] = [{
     const isFav = isFavoriteTeam(team.id.toString())
     return h(UButton, {
       icon: isFav ? 'i-heroicons-star-solid' : 'i-heroicons-star',
-      color: isFav ? 'primary' : 'gray',
+      color: isFav ? 'primary' : 'neutral',
       variant: 'ghost',
       title: isFav ? t('removeFromFavorites') : t('addToFavorites'),
       onClick: (e: Event) => {
@@ -71,22 +71,22 @@ function onRowSelected(e: Event, row: TableRow<Team>) {
       <div v-if="teamsPending" class="space-y-4">
         <USkeleton v-for="i in 3" :key="i" class="h-24 w-full" />
       </div>
-      <UCard v-for="team in teams" v-else :key="team.id" class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" @click="navigateTo(`/team/details/${team.id}`)">
+      <UCard v-for="team in teams" v-else :key="team.id" class="p-4 cursor-pointer hover:bg-elevated transition-colors" @click="navigateTo(`/team/details/${team.id}`)">
         <div class="flex flex-col gap-1">
           <div class="flex justify-between items-start">
-            <div class="font-bold text-lg text-primary-600 dark:text-primary-400">
+            <div class="font-bold text-lg text-primary">
               {{ team.name }}
             </div>
             <UButton
               :icon="isFavoriteTeam(team.id.toString()) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
-              :color="isFavoriteTeam(team.id.toString()) ? 'primary' : 'gray'"
+              :color="isFavoriteTeam(team.id.toString()) ? 'primary' : 'neutral'"
               variant="ghost"
               class="ml-2"
               :title="isFavoriteTeam(team.id.toString()) ? t('removeFromFavorites') : t('addToFavorites')"
               @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
             />
           </div>
-          <div v-if="team.league?.name" class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
+          <div v-if="team.league?.name" class="text-sm text-muted flex items-center gap-2">
             <UIcon name="i-heroicons-trophy" class="w-4 h-4" />
             <span>{{ team.league.name }}</span>
           </div>

@@ -78,14 +78,14 @@ function onRowSelected(e: Event, row: TableRow<any>) {
       <div v-if="loading" class="space-y-4">
         <USkeleton v-for="i in 3" :key="i" class="h-24 w-full" />
       </div>
-      <UCard v-for="tournament in clubs" v-else :key="tournament.id" class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" @click="navigateTo(`/tournament/${tournament.id}`)">
+      <UCard v-for="tournament in clubs" v-else :key="tournament.id" class="p-4 cursor-pointer hover:bg-elevated transition-colors" @click="navigateTo(`/tournament/${tournament.id}`)">
         <div class="flex items-center gap-4">
           <UAvatar :src="tournament.logo" :alt="tournament.acronym" size="lg" class="shrink-0 bg-white" />
           <div class="flex flex-col flex-1 min-w-0">
             <div class="font-bold text-lg truncate">
               {{ tournament.name }}
             </div>
-            <div class="text-sm text-gray-500 flex items-center gap-2 mt-1">
+            <div class="text-sm text-muted flex items-center gap-2 mt-1">
               <UBadge v-if="tournament.acronym" :label="tournament.acronym" size="xs" variant="subtle" />
               <div v-if="tournament.organization" class="flex items-center gap-1 ml-auto">
                 <UAvatar :src="tournament.organization.logo" :alt="tournament.organization.name" size="2xs" class="bg-white" />
@@ -96,7 +96,7 @@ function onRowSelected(e: Event, row: TableRow<any>) {
         </div>
       </UCard>
 
-      <div v-if="clubs && clubs.length === 0 && !loading && state.tournament" class="text-center py-8 text-gray-500">
+      <div v-if="clubs && clubs.length === 0 && !loading && state.tournament" class="text-center py-8 text-muted">
         {{ t('noData') }}
       </div>
     </div>

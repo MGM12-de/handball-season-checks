@@ -2,6 +2,7 @@ export interface Player {
   id: number
   firstname: string
   lastname: string
+  photoUrl?: string
   position: string
   number: number
   goals: number

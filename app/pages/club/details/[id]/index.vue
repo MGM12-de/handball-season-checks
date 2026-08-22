@@ -73,7 +73,7 @@ useHead({
         <template #links>
           <UButton
             :icon="isFavoriteClub(clubId) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
-            :color="isFavoriteClub(clubId) ? 'primary' : 'gray'"
+            :color="isFavoriteClub(clubId) ? 'primary' : 'neutral'"
             variant="ghost"
             size="xl"
             :title="isFavoriteClub(clubId) ? t('removeFromFavorites') : t('addToFavorites')"

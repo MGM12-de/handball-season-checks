@@ -31,7 +31,7 @@ const {
   loadedLeagueCount,
 } = useOrganizationLeagues(organizationId, selectedLeagueType)
 
-const leagueTypeButtonLabel = computed(() => selectedLeagueType.value === 'm' ? 'Zu den Damen' : 'Zu den Herren')
+const leagueTypeButtonLabel = computed(() => selectedLeagueType.value === 'm' ? t('toWomen') : t('toMen'))
 
 function toggleLeagueType() {
   selectedLeagueType.value = selectedLeagueType.value === 'm' ? 'f' : 'm'
@@ -107,7 +107,7 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
     <div v-if="isLoadingLeagues && totalLeagueCount" class="mb-6 space-y-2">
       <UProgress :model-value="loadedLeagueCount" :max="totalLeagueCount" size="sm" color="primary" status />
       <p class="text-sm text-muted">
-        {{ loadedLeagueCount }} / {{ totalLeagueCount }} Ligen geladen ({{ loadingProgressPercent }}%)
+        {{ t('leaguesLoaded', { loaded: loadedLeagueCount, total: totalLeagueCount, percent: loadingProgressPercent }) }}
       </p>
     </div>
 
@@ -125,7 +125,7 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
       </h2>
 
       <div v-if="league.promoted.length" class="space-y-2">
-        <h3 class="text-base font-semibold text-warning-600">
+        <h3 class="text-base font-semibold text-warning">
           {{ t('promoted') }} ({{ league.promoted.length }} {{ t('teams') }})
         </h3>
         <LazyUPageGrid>
@@ -137,7 +137,7 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
       </div>
 
       <div v-if="league.promotionPlayoff.length" class="space-y-2">
-        <h3 class="text-base font-semibold text-warning-600">
+        <h3 class="text-base font-semibold text-warning">
           {{ t('promotionPlayoff') }} ({{ league.promotionPlayoffSpots }} <span
             v-if="league.promotionPlayoffSpots !== 1"
           >{{ t('ranks') }}</span><span v-else>{{ t('rank')
@@ -152,7 +152,7 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
       </div>
 
       <div v-if="league.relegated.length || league.forcedRelegations.length" class="space-y-2">
-        <h3 class="text-base font-semibold text-warning-600">
+        <h3 class="text-base font-semibold text-warning">
           {{ t('relegated') }} ({{ league.relegated.length + league.forcedRelegations.length }} {{ t('teams')
           }})
         </h3>
@@ -166,7 +166,7 @@ function isForcedRelegation(league: LeagueResult, row: TableRow): boolean {
       </div>
 
       <div v-if="league.relegationPlayoff.length" class="space-y-2">
-        <h3 class="text-base font-semibold text-warning-600">
+        <h3 class="text-base font-semibold text-warning">
           {{ t('relegationPlayoff') }} ({{ league.relegationPlayoffSpots }} <span
             v-if="league.relegationPlayoffSpots !== 1"
           >{{ t('ranks') }}</span><span v-else>{{ t('rank')
