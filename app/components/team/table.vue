@@ -22,6 +22,9 @@ const columns: TableColumn<Team>[] = [{
   accessorKey: 'name',
   header: t('name'),
 }, {
+  accessorKey: 'league.name',
+  header: t('league'),
+}, {
   id: 'favorite',
   header: '',
   cell: ({ row }) => {
@@ -83,9 +86,9 @@ function onRowSelected(e: Event, row: TableRow<Team>) {
               @click.stop="toggleFavoriteTeam({ id: team.id.toString(), name: team.name, logo: team.logo })"
             />
           </div>
-          <div v-if="team.club?.name" class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
+          <div v-if="team.league?.name" class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
             <UIcon name="i-heroicons-trophy" class="w-4 h-4" />
-            <span>{{ team.club.name }}</span>
+            <span>{{ team.league.name }}</span>
           </div>
         </div>
       </UCard>

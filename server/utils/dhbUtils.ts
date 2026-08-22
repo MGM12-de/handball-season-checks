@@ -150,11 +150,15 @@ export function getPlayerStatsUrl() {
 }
 
 /**
- * Fetch every page of a club's teams. The new API requires `federation_id`
- * alongside `club_id` - without it the endpoint returns no/wrong results, so
- * we resolve it from the club itself first.
+ * Fetch a club's teams, reshaped for this app's UI. The new API requires
+ * `federation_id` alongside `club_id` - without it the endpoint returns
+ * no/wrong results, so we resolve it from the club itself first.
+ *
+ * Each team is enriched with its current league (`team.league`) since the
+ * new API's team object doesn't include it - teams with the same name
+ * (e.g. "II"/"III") are otherwise indistinguishable in a team list.
  */
-export async function fetchTeamsForClub(clubId: string | number) {
+export async function fetchTeamsForClub(clubId: string | number): Promise<Array<import('~~/types').Team>> {
   let federationId: number | undefined
 
   try {
@@ -166,10 +170,22 @@ export async function fetchTeamsForClub(clubId: string | number) {
     // Fall back to fetching teams without federation_id below rather than failing outright.
   }
 
-  return dhbFetchAllPages<any>(getTeamsUrl(), {
+  const teams = await dhbFetchAllPages<any>(getTeamsUrl(), {
     club_id: clubId,
     ...(federationId ? { federation_id: federationId } : {}),
   })
+
+  const leaguesByTeamId = await resolveCurrentPhases(teams.map(team => team.id))
+
+  return teams.map((team: any) => ({
+    id: team.id,
+    name: team.name,
+    logo: team.club?.logo,
+    club: team.club,
+    gender: team.gender,
+    ageCategory: team.age_category,
+    league: leaguesByTeamId.get(String(team.id)),
+  }))
 }
 
 /**
@@ -194,6 +210,42 @@ export function mapStandingsRow(row: any) {
         }
       : row.team,
   }
+}
+
+/**
+ * Resolve the phase (league/Staffel) a team is currently playing in.
+ *
+ * The new API has no direct "team's current league" field - `phase` is only
+ * embedded in match objects, so we peek at the team's first page of matches.
+ * Prefers a phase with `has_standings` (the team's main league) over e.g. a
+ * cup phase.
+ */
+export async function resolveCurrentPhase(teamId: string | number): Promise<{ id: number, name: string } | undefined> {
+  const matches = await dhbFetch<any[]>(getMatchesUrl(), { query: { team_id: teamId, page: 1 } })
+  const withStandings = matches.data.find(match => match.phase?.has_standings)
+  return (withStandings ?? matches.data[0])?.phase
+}
+
+/**
+ * Resolve resolveCurrentPhase() for many teams at once, in small batches so
+ * we don't fire off dozens of requests simultaneously for a large club.
+ */
+export async function resolveCurrentPhases(teamIds: Array<string | number>, batchSize = 5): Promise<Map<string, { id: number, name: string }>> {
+  const phasesByTeamId = new Map<string, { id: number, name: string }>()
+
+  for (let i = 0; i < teamIds.length; i += batchSize) {
+    const batch = teamIds.slice(i, i + batchSize)
+    const phases = await Promise.all(batch.map(teamId => resolveCurrentPhase(teamId).catch(() => undefined)))
+
+    batch.forEach((teamId, index) => {
+      const phase = phases[index]
+      if (phase) {
+        phasesByTeamId.set(String(teamId), phase)
+      }
+    })
+  }
+
+  return phasesByTeamId
 }
 
 /**

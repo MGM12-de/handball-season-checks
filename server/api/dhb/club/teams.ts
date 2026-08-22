@@ -1,4 +1,3 @@
-import type { Team } from '../../../../types'
 import { fetchTeamsForClub } from '../../../../server/utils/dhbUtils'
 
 defineRouteMeta({
@@ -30,16 +29,5 @@ export default defineEventHandler(async (event) => {
     })
   }
   const clubId = query.id as string
-  const teams = await fetchTeamsForClub(clubId)
-
-  return teams.map((team: any) => {
-    return {
-      id: team.id,
-      name: team.name,
-      logo: team.club?.logo,
-      club: team.club,
-      gender: team.gender,
-      ageCategory: team.age_category,
-    } as Team
-  })
+  return fetchTeamsForClub(clubId)
 })

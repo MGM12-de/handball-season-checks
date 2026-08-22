@@ -15,4 +15,6 @@ export interface Team {
   club?: Club
   gender?: { id: string, name: string }
   ageCategory?: { id: number, name: string }
+  /** The team's current league/Staffel, derived from its matches - see resolveCurrentPhase(). */
+  league?: { id: number, name: string }
 }
