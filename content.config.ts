@@ -21,6 +21,7 @@ export default defineContentConfig({
       schema: z.object({
         title: z.string(),
         ids: z.array(z.string()),
+        source: z.enum(['dhb', 'h4all']).optional(),
         organization: z.string(),
         sort: z.number(),
         promoted: z.number(),

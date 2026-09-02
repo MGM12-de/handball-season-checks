@@ -82,6 +82,12 @@ export default defineNuxtConfig({
         'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=60',
       },
     },
+    '/api/h4all/tournament/**': {
+      swr: 60 * 15,
+      headers: {
+        'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=60',
+      },
+    },
 
     // 3. Spezifische Regeln: Spiele und Tabellenplätze (sehr aktuell, z. B. 5 Minuten)
     '/api/dhb/team/games': {
@@ -123,6 +129,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       dhbBaseUrl: process.env.DHB_BASE_URL || 'https://handball.net/api/new',
+      h4allBaseUrl: process.env.H4ALL_BASE_URL || 'https://spo.handball4all.de/service/if_g_json.php',
     },
   },
   vite: {

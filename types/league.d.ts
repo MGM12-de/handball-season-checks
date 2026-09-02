@@ -11,6 +11,8 @@ export interface OrganizationListItem {
 export interface LeagueConfig {
   title: string
   ids: string[]
+  /** Data source for `ids` - defaults to 'dhb' when omitted. */
+  source?: 'dhb' | 'h4all'
   organization: string
   sort: number
   promoted: number

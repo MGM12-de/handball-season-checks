@@ -70,8 +70,9 @@ export function useOrganizationLeagues(organizationId: Ref<string>, type: Ref<'m
       const rawLeagues: RawLeague[] = []
 
       for (const config of filteredConfigs) {
+        const source = config.source ?? 'dhb'
         const tables = await Promise.all(
-          config.ids.map(id => $fetch<TableRow[]>(`/api/dhb/tournament/table?id=${id}`)),
+          config.ids.map(id => $fetch<TableRow[]>(`/api/${source}/tournament/table?id=${id}`)),
         )
 
         if (requestId !== requestCounter)
