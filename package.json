@@ -46,7 +46,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^9.3.0",
     "@nuxt/test-utils": "^4.1.0",
-    "@vite-pwa/assets-generator": "^1.0.2",
+    "@vite-pwa/assets-generator": "^2.0.0",
     "@vitest/ui": "^4.1.11",
     "@vue/test-utils": "^2.4.11",
     "eslint": "^10.9.0",
