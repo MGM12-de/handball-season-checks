@@ -6,7 +6,7 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:4-20-bullseye",
   "features": {
     "ghcr.io/devcontainers/features/node:2": {
-      "version": "24.19.0"
+      "version": "24.21.0"
     }
   },
   "postCreateCommand": "npm install -g pnpm@10.13.1 && pnpm install",
