@@ -80,11 +80,17 @@ async function onSearch() {
   }
 
   loading.value = true
-  const { data } = useAsyncData(`${state.clubName}`, () => $fetch('/api/dhb/searchClub', {
-    query: { clubName: state.clubName },
-  }))
-  clubs.value = data.value
-  loading.value = false
+  try {
+    clubs.value = await $fetch('/api/dhb/searchClub', {
+      query: { clubName: state.clubName },
+    })
+  }
+  catch {
+    clubs.value = []
+  }
+  finally {
+    loading.value = false
+  }
 }
 
 watchDebounced(() => state.clubName, () => {
