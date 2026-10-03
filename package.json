@@ -54,17 +54,5 @@
     "happy-dom": "^20.14.5",
     "vitest": "^5.0.3",
     "wrangler": "^4.147.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@tailwindcss/oxide",
-      "better-sqlite3",
-      "esbuild",
-      "sharp",
-      "unrs-resolver",
-      "vue-demi",
-      "workerd"
-    ]
   }
 }
